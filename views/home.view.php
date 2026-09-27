@@ -8,7 +8,7 @@
       <?php if (!empty($hero_images)): ?>
           <?php foreach ($hero_images as $index => $img): ?>
               <div class="swiper-slide">
-                  <img src="<?= htmlspecialchars($img['image']) ?>" alt="Promo" style="width: 100%; height: 100%; object-fit: fill; display: block;">
+                  <img src="<?= htmlspecialchars($img['image']) ?>" alt="Promo" style="width: 100%; height: 100%; object-fit: cover; display: block;">
               </div>
           <?php endforeach; ?>
       <?php else: ?>
