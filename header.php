@@ -92,7 +92,7 @@
     padding:6vh 6vw 10vh;
   }
   .welcome-split .col-text{
-    display:flex; flex-direction:column; justify-content:center;
+    display:flex; flex-direction:column; justify-content:flex-start;
     background:var(--card); border:1px solid var(--line); border-radius:20px; padding:32px;
     box-shadow: 0 10px 30px rgba(232, 147, 90, 0.05);
   }

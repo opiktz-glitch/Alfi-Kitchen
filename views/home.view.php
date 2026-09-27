@@ -33,7 +33,6 @@
 
 <div class="welcome-split">
   <div class="col-text">
-    <div class="stars">★★★★★ <span style="color:var(--muted)">4.9 dari 2.300+ ulasan</span></div>
     <h2>Selamat Datang di Alfi Kitchen</h2>
     <p>Puding lembut berlapis buah, Dessert sehat dalam kemasan praktis, dan Salad buah bersaus creamy — semua dibuat rumahan dari bahan pilihan, siap menemani hari-harimu.</p>
   </div>
