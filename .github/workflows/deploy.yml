@@ -30,3 +30,4 @@ jobs:
             .env.example
             README.md
             **/node_modules/**
+            config.php
