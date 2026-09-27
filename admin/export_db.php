@@ -7,21 +7,22 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
     exit;
 }
 
-// Dapatkan semua nama tabel
-$tables = [];
-$stmt = $pdo->query("SHOW TABLES");
-while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-    $tables[] = $row[0];
-}
+// Dapatkan semua nama tabel dengan urutan yang benar (Parent sebelum Child)
+$tables = ['users', 'products', 'product_items', 'hero_images'];
 
 $sqlScript = "-- Export Database Alfi Kitchen\n";
 $sqlScript .= "-- Tanggal: " . date('Y-m-d H:i:s') . "\n\n";
 $sqlScript .= "SET FOREIGN_KEY_CHECKS = 0;\n\n";
 
-foreach ($tables as $table) {
-    // Tambahkan perintah Hapus Tabel
+// Drop tabel dari Child ke Parent (Reverse)
+$reverse_tables = array_reverse($tables);
+foreach ($reverse_tables as $table) {
     $sqlScript .= "DROP TABLE IF EXISTS `$table`;\n";
-    
+}
+$sqlScript .= "\n";
+
+// Create dan Insert dari Parent ke Child
+foreach ($tables as $table) {
     // Tambahkan perintah Buat Tabel
     $stmt = $pdo->query("SHOW CREATE TABLE `$table`");
     $row = $stmt->fetch(PDO::FETCH_NUM);
