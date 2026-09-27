@@ -16,7 +16,7 @@ $wa_footer_number = $wa_footer_row ? $wa_footer_row['setting_value'] : '';
 <style>
   .wa-float {
     position: fixed;
-    bottom: 28px;
+    bottom: 90px;
     right: 24px;
     z-index: 9999;
     background: #25d366;
