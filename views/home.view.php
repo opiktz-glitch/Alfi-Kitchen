@@ -33,7 +33,7 @@
 
 <div class="welcome-split">
   <div class="col-text">
-    <h2>Selamat Datang di Alfi Kitchen</h2>
+    <h2>Selamat Datang di<br>Alfi Kitchen</h2>
     <p>Puding lembut berlapis buah, Dessert sehat dalam kemasan praktis, dan Salad buah bersaus creamy — semua dibuat rumahan dari bahan pilihan, siap menemani hari-harimu.</p>
   </div>
   <div class="col-product">
