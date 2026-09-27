@@ -16,6 +16,7 @@ while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
 
 $sqlScript = "-- Export Database Alfi Kitchen\n";
 $sqlScript .= "-- Tanggal: " . date('Y-m-d H:i:s') . "\n\n";
+$sqlScript .= "SET FOREIGN_KEY_CHECKS = 0;\n\n";
 
 foreach ($tables as $table) {
     // Tambahkan perintah Hapus Tabel
@@ -44,6 +45,8 @@ foreach ($tables as $table) {
     }
     $sqlScript .= "\n\n";
 }
+
+$sqlScript .= "SET FOREIGN_KEY_CHECKS = 1;\n";
 
 // Download file otomatis
 header('Content-Type: application/sql');
