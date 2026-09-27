@@ -22,11 +22,15 @@ Sebelum deploy, tambahkan 3 secrets di **Settings → Secrets → Actions**:
 
 ## ⚙️ Konfigurasi Lokal (XAMPP)
 1. Clone repository ini
-2. Salin `.env.example` menjadi `.env` dan isi dengan data database lokal
-3. Import tabel database via phpMyAdmin (lihat bagian SQL di bawah)
+2. Sesuaikan kredensial database di `config.php` (host, dbname, user, password)
+3. Import tabel database via phpMyAdmin
 4. Jalankan via XAMPP → `localhost/Alfi_Kitchen`
 
 ## 🔐 Keamanan
-- File `.env` **tidak** di-commit ke GitHub (sudah ada di `.gitignore`)
+- File `config.php` **tidak** di-deploy ulang oleh GitHub Actions — wajib dikonfigurasi manual di server hosting
 - Folder `uploads/` **tidak** di-commit — gambar dikelola langsung di server
 - Password admin dapat diubah melalui panel **Admin → Pengaturan**
+
+## 💾 Backup
+- **Database** dapat diekspor via tombol **📥 Backup Database** di **Admin → Pengaturan**
+- **Gambar** dapat diekspor via tombol **🖼️ Backup Semua Gambar** di **Admin → Pengaturan**
