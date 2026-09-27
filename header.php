@@ -134,7 +134,7 @@
   }
 
   footer{
-    padding:30px 6vw; padding-bottom:calc(30px + env(safe-area-inset-bottom,0px));
+    padding:30px 6vw; padding-bottom:calc(90px + env(safe-area-inset-bottom,0px));
     border-top:1px solid var(--line); color:var(--muted); font-size:.85rem;
     display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px;
   }
