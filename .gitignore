@@ -1,0 +1,14 @@
+# Environment & credentials (JANGAN pernah di-commit!)
+.env
+
+# Folder uploads - gambar disimpan di server, bukan di Git
+/uploads/*
+!/uploads/.gitkeep
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+*.swp
