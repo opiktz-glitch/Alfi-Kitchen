@@ -32,7 +32,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['logo'])) {
     } else {
         $message = "Terjadi kesalahan saat mengubah password.";
     }
+} elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_whatsapp'])) {
+    $wa_number = preg_replace('/[^0-9]/', '', $_POST['whatsapp_number']);
+    $stmt = $pdo->prepare("INSERT INTO settings (setting_key, setting_value) VALUES ('whatsapp_number', ?) ON DUPLICATE KEY UPDATE setting_value = ?");
+    if ($stmt->execute([$wa_number, $wa_number])) {
+        $message = "Nomor WhatsApp berhasil disimpan!";
+    } else {
+        $message = "Gagal menyimpan nomor WhatsApp.";
+    }
 }
+
+// Ambil nomor WhatsApp dari database
+$wa_stmt = $pdo->prepare("SELECT setting_value FROM settings WHERE setting_key = 'whatsapp_number'");
+$wa_stmt->execute();
+$wa_row = $wa_stmt->fetch();
+$current_wa = $wa_row ? $wa_row['setting_value'] : '';
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -85,6 +99,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['logo'])) {
             <a href="export_db.php" class="btn" style="background: #28a745; text-align: center;">📥 Backup Database</a>
             <a href="export_images.php" class="btn" style="background: #17a2b8; text-align: center;">🖼️ Backup Semua Gambar</a>
         </div>
+        <hr style="margin: 30px 0; border: 0; border-top: 1px solid #f0ddc0;">
+
+        <h3>Nomor WhatsApp</h3>
+        <p style="font-size: 14px; margin-bottom: 15px;">Nomor ini akan digunakan untuk tombol "Pesan via WhatsApp" yang muncul di semua halaman. Gunakan format internasional tanpa tanda + (contoh: 6281234567890).</p>
+        <form action="" method="post">
+            <div class="form-group">
+                <label>Nomor WhatsApp</label>
+                <input type="text" name="whatsapp_number" value="<?= htmlspecialchars($current_wa) ?>" placeholder="Contoh: 6281234567890" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+            </div>
+            <button type="submit" name="save_whatsapp" class="btn" style="background: #25d366;">💬 Simpan Nomor WhatsApp</button>
+        </form>
+
         <hr style="margin: 30px 0; border: 0; border-top: 1px solid #f0ddc0;">
 
         <h3>Ubah Password Admin</h3>
