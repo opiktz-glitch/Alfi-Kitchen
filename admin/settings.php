@@ -79,6 +79,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['logo'])) {
 
         <hr style="margin: 30px 0; border: 0; border-top: 1px solid #f0ddc0;">
 
+        <h3>Backup Database</h3>
+        <p style="font-size: 14px; margin-bottom: 15px;">Anda bisa mengekspor (download) semua data menu dan produk dalam format .sql. Berguna untuk backup atau memindahkannya ke laptop.</p>
+        <a href="export_db.php" class="btn" style="background: #28a745; display: inline-block; text-align: center; margin-bottom: 10px;">📥 Download Backup Database</a>
+
+        <hr style="margin: 30px 0; border: 0; border-top: 1px solid #f0ddc0;">
+
         <h3>Ubah Password Admin</h3>
         <form action="" method="post">
             <div class="form-group">

@@ -1,0 +1,57 @@
+<?php
+session_start();
+require '../config.php';
+
+if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
+    header('Location: ../login.php');
+    exit;
+}
+
+// Dapatkan semua nama tabel
+$tables = [];
+$stmt = $pdo->query("SHOW TABLES");
+while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+    $tables[] = $row[0];
+}
+
+$sqlScript = "-- Export Database Alfi Kitchen\n";
+$sqlScript .= "-- Tanggal: " . date('Y-m-d H:i:s') . "\n\n";
+
+foreach ($tables as $table) {
+    // Tambahkan perintah Hapus Tabel
+    $sqlScript .= "DROP TABLE IF EXISTS `$table`;\n";
+    
+    // Tambahkan perintah Buat Tabel
+    $stmt = $pdo->query("SHOW CREATE TABLE `$table`");
+    $row = $stmt->fetch(PDO::FETCH_NUM);
+    $sqlScript .= $row[1] . ";\n\n";
+    
+    // Tambahkan data
+    $stmt = $pdo->query("SELECT * FROM `$table`");
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    foreach ($rows as $row) {
+        $sqlScript .= "INSERT INTO `$table` VALUES(";
+        $values = [];
+        foreach ($row as $value) {
+            if ($value === null) {
+                $values[] = "NULL";
+            } else {
+                $values[] = $pdo->quote($value);
+            }
+        }
+        $sqlScript .= implode(", ", $values) . ");\n";
+    }
+    $sqlScript .= "\n\n";
+}
+
+// Download file otomatis
+header('Content-Type: application/sql');
+header('Content-Disposition: attachment; filename="alfi_kitchen_backup_' . date('Ymd_His') . '.sql"');
+header('Cache-Control: no-cache, no-store, must-revalidate'); 
+header('Pragma: no-cache'); 
+header('Expires: 0'); 
+
+echo $sqlScript;
+exit;
+?>
