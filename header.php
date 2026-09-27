@@ -98,7 +98,7 @@
   }
   .welcome-split .col-text h2{font-size:clamp(1.8rem,3.2vw,2.6rem); margin:0 0 14px; font-weight: 800; text-align: center;}
   .welcome-split .col-text .stars{margin-bottom:10px;}
-  .welcome-split .col-text p{color:var(--muted); font-size:1rem; margin:0 0 24px; line-height:1.6; text-align: center;}
+  .welcome-split .col-text p{color:var(--muted); font-size:1rem; margin:0 0 24px; line-height:1.6; text-align: justify;}
   
   .col-product{
     background:var(--card); border:1px solid var(--line); border-radius:20px; padding:32px;
