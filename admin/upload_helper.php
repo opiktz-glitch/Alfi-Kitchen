@@ -46,12 +46,13 @@ function store_uploaded_image($file, $prefix = 'image', $required = false, $allo
 
     $extension = $extensions[$mimeType];
     $uploadDirectory = dirname(__DIR__) . '/uploads';
-    if (!is_dir($uploadDirectory) && !mkdir($uploadDirectory, 0777, true) && !is_dir($uploadDirectory)) {
+    if (!is_dir($uploadDirectory) && !mkdir($uploadDirectory, 0755, true) && !is_dir($uploadDirectory)) {
         return ['path' => null, 'error' => 'Folder upload tidak dapat dibuat.'];
     }
 
+    @chmod($uploadDirectory, 0755);
     if (!is_writable($uploadDirectory)) {
-        @chmod($uploadDirectory, 0777);
+        return ['path' => null, 'error' => 'Folder uploads tidak dapat ditulis. Atur izin folder menjadi 0755 di hosting.'];
     }
 
     $prefix = preg_replace('/[^a-z0-9_-]/i', '', $prefix);
