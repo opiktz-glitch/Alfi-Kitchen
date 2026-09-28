@@ -39,6 +39,8 @@ if ($slugParam !== '') {
     $main_product = $stmt->fetch();
 
     if ($main_product) {
+        // $id tidak di-set di jalur slug — pakai id hasil query agar daftar item tampil
+        $id = (int) $main_product['id'];
         // Kalau diakses lewat URL lama product.php?slug=..., pindahkan ke /produk/{slug}.
         // Deteksi pakai REQUEST_URI (bukan SCRIPT_NAME): saat URL pretty di-rewrite internal
         // ke product.php, SCRIPT_NAME ikut berubah menjadi /product.php sehingga kondisi
