@@ -19,19 +19,24 @@ function store_uploaded_image($file, $prefix = 'image', $required = false, $allo
     $extensions = [
         'image/jpeg' => 'jpg',
         'image/png' => 'png',
+        'image/x-png' => 'png',
         'image/gif' => 'gif',
         'image/webp' => 'webp',
     ];
     $mimeTypes = $allowedMimeTypes ?? array_keys($extensions);
+
     $fileInfo = new finfo(FILEINFO_MIME_TYPE);
     $mimeType = $fileInfo->file($temporaryPath);
-    $imageInfo = @getimagesize($temporaryPath);
+    if (!$mimeType || !isset($extensions[$mimeType])) {
+        $mimeType = is_array($file['type'] ?? null) ? '' : (string) ($file['type'] ?? '');
+    }
 
+    $imageInfo = @getimagesize($temporaryPath);
     if (
         !isset($extensions[$mimeType])
         || !in_array($mimeType, $mimeTypes, true)
         || !$imageInfo
-        || ($imageInfo['mime'] ?? '') !== $mimeType
+        || !in_array(($imageInfo['mime'] ?? ''), $mimeTypes, true)
         || ($imageInfo[0] * $imageInfo[1]) > 40000000
     ) {
         return ['path' => null, 'error' => 'File harus berupa gambar JPEG, PNG, GIF, atau WEBP yang valid.'];
@@ -39,8 +44,12 @@ function store_uploaded_image($file, $prefix = 'image', $required = false, $allo
 
     $extension = $extensions[$mimeType];
     $uploadDirectory = dirname(__DIR__) . '/uploads';
-    if (!is_dir($uploadDirectory) && !mkdir($uploadDirectory, 0755, true) && !is_dir($uploadDirectory)) {
+    if (!is_dir($uploadDirectory) && !mkdir($uploadDirectory, 0777, true) && !is_dir($uploadDirectory)) {
         return ['path' => null, 'error' => 'Folder upload tidak dapat dibuat.'];
+    }
+
+    if (!is_writable($uploadDirectory)) {
+        @chmod($uploadDirectory, 0777);
     }
 
     $prefix = preg_replace('/[^a-z0-9_-]/i', '', $prefix);
@@ -50,9 +59,15 @@ function store_uploaded_image($file, $prefix = 'image', $required = false, $allo
     }
 
     $destination = $uploadDirectory . '/' . $filename;
-    if (!move_uploaded_file($temporaryPath, $destination)) {
+    if (file_exists($destination)) {
+        @unlink($destination);
+    }
+
+    if (!@move_uploaded_file($temporaryPath, $destination)) {
         return ['path' => null, 'error' => 'Gambar gagal disimpan di server.'];
     }
+
+    @chmod($destination, 0644);
 
     return ['path' => 'uploads/' . $filename, 'error' => null];
 }
