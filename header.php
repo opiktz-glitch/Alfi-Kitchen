@@ -88,28 +88,28 @@
   .ph.c{background:linear-gradient(150deg,#e8b27a,#a85c2e);}
 
   .welcome-split{
-    display:grid; grid-template-columns:1fr 1fr; gap:40px; align-items:stretch;
-    padding:6vh 6vw 10vh;
+    display:grid; grid-template-columns:minmax(0, 1fr) minmax(0, 1fr); gap:24px; align-items:stretch;
+    padding:clamp(24px, 4vw, 52px) 6vw clamp(36px, 6vw, 72px);
   }
   .welcome-split .col-text{
-    display:flex; flex-direction:column; justify-content:center; align-items:center;
-    background:var(--card); border:1px solid var(--line); border-radius:20px; padding:32px;
+    display:flex; flex-direction:column; justify-content:center; align-items:flex-start;
+    background:var(--card); border:1px solid var(--line); border-radius:16px; padding:28px;
     box-shadow: 0 10px 30px rgba(232, 147, 90, 0.05);
   }
-  .welcome-split .col-text h2{font-size:clamp(1.8rem,3.2vw,2.6rem); margin:0 0 14px; font-weight: 800; text-align: center;}
+  .welcome-split .col-text h2{font-size:2.35rem; line-height:1.12; margin:0 0 14px; font-weight:800; text-align:left;}
   .welcome-split .col-text .stars{margin-bottom:10px;}
-  .welcome-split .col-text p{color:var(--muted); font-size:1rem; margin:0 0 24px; line-height:1.6; text-align: justify;}
+  .welcome-split .col-text p{color:var(--muted); font-size:1.02rem; margin:0; line-height:1.75; text-align:left; max-width:45ch;}
   
   .col-product{
-    background:var(--card); border:1px solid var(--line); border-radius:20px; padding:32px;
+    background:var(--card); border:1px solid var(--line); border-radius:16px; padding:28px;
     display:flex; flex-direction:column; justify-content:center;
     box-shadow: 0 10px 30px rgba(232, 147, 90, 0.05);
   }
-  .col-product .col-product-title{margin:0 0 20px; font-size:1.2rem; font-weight:700; flex: 0 0 auto;}
+  .col-product .col-product-title{margin:0 0 14px; font-size:1.2rem; font-weight:700; flex:0 0 auto;}
   .product-list{
     display:flex; flex-direction:column; gap:16px; 
     overflow-y:auto; flex:1; padding-right:10px;
-    max-height: 310px; /* Membatasi tinggi pas untuk 3 item (90px * 3 + gap) */
+    max-height:250px;
   }
   
   /* Custom Scrollbar untuk Produk Kami */
@@ -129,8 +129,17 @@
   .pl-info .price{color:var(--accent); font-weight:800; font-size:.9rem; margin-top:4px;}
 
   @media (max-width:820px){
-    .welcome-split{grid-template-columns:1fr; padding-top: 4vh;}
+    .welcome-split{grid-template-columns:1fr; gap:18px; padding:28px 5vw 44px;}
+    .welcome-split .col-text, .col-product{padding:24px;}
+    .welcome-split .col-text h2{font-size:2rem;}
     .hero{height: 65vh;}
+  }
+
+  @media (max-width:480px){
+    .welcome-split .col-text, .col-product{padding:20px;}
+    .welcome-split .col-text h2{font-size:1.75rem;}
+    .welcome-split .col-text p{font-size:.98rem;}
+    .pl-item .ph{width:60px; height:60px;}
   }
 
   footer{
