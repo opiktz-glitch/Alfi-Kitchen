@@ -59,7 +59,7 @@
     position: relative;
     display:block; /* Swiper butuh display default / block */
     width: calc(100% - 12vw) !important;
-    height: 65vh; /* Besarkan tinggi slider menggantikan ruang logo */
+    height: min(50vh, 560px);
     margin: 32px auto 0 !important; /* Tambahkan sedikit margin atas agar tidak mentok tepi layar */
     border-radius: 24px;
     overflow: hidden;
@@ -133,10 +133,11 @@
     .welcome-split{grid-template-columns:1fr; gap:18px; padding:28px 5vw 44px;}
     .welcome-split .col-text, .col-product{padding:24px;}
     .welcome-split .col-text h2{font-size:2rem;}
-    .hero{height: 65vh;}
+    .hero{height: 45vh;}
   }
 
   @media (max-width:480px){
+    .hero{height:42vh;}
     .welcome-split .col-text, .col-product{padding:20px;}
     .welcome-split .col-text h2{font-size:1.75rem;}
     .welcome-split .col-text p{font-size:.98rem;}
