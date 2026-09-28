@@ -9,4 +9,10 @@ $products = $stmt->fetchAll();
 $stmt2 = $pdo->query("SELECT * FROM hero_images ORDER BY id DESC");
 $hero_images = $stmt2->fetchAll();
 
+$homeSettings = $pdo->query(
+	"SELECT setting_key, setting_value FROM settings WHERE setting_key IN ('home_title', 'home_description')"
+)->fetchAll(PDO::FETCH_KEY_PAIR);
+$homeTitle = $homeSettings['home_title'] ?? "Selamat Datang di\nAlfi Kitchen";
+$homeDescription = $homeSettings['home_description'] ?? 'Puding lembut berlapis buah, Dessert sehat dalam kemasan praktis, dan Salad buah bersaus creamy — semua dibuat rumahan dari bahan pilihan, siap menemani hari-harimu.';
+
 require 'views/home.view.php';

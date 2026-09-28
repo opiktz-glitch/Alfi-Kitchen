@@ -33,8 +33,8 @@
 
 <div class="welcome-split">
   <div class="col-text">
-    <h2>Selamat Datang di<br>Alfi Kitchen</h2>
-    <p>Puding lembut berlapis buah, Dessert sehat dalam kemasan praktis, dan Salad buah bersaus creamy — semua dibuat rumahan dari bahan pilihan, siap menemani hari-harimu.</p>
+    <h2><?= nl2br(htmlspecialchars($homeTitle, ENT_QUOTES, 'UTF-8')) ?></h2>
+    <p><?= nl2br(htmlspecialchars($homeDescription, ENT_QUOTES, 'UTF-8')) ?></p>
   </div>
   <div class="col-product">
     <h3 class="col-product-title">Produk Kami</h3>

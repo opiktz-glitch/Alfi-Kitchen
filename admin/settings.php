@@ -37,6 +37,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['logo'])) {
     } else {
         $message = "Terjadi kesalahan saat mengubah password.";
     }
+} elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_home_content'])) {
+    if (!verify_csrf_token($_POST['csrf_token'] ?? '')) {
+        die('Token CSRF tidak valid.');
+    }
+
+    $home_title = trim(is_string($_POST['home_title'] ?? null) ? $_POST['home_title'] : '');
+    $home_description = trim(is_string($_POST['home_description'] ?? null) ? $_POST['home_description'] : '');
+
+    if ($home_title === '' || $home_description === '') {
+        $message = 'Judul dan deskripsi homepage wajib diisi.';
+        $messageClass = 'alert alert-error';
+    } elseif (strlen($home_title) > 640 || strlen($home_description) > 4800) {
+        $message = 'Judul atau deskripsi terlalu panjang.';
+        $messageClass = 'alert alert-error';
+    } else {
+        $stmt = $pdo->prepare(
+            'INSERT INTO settings (setting_key, setting_value) VALUES (?, ?), (?, ?) '
+            . 'ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)'
+        );
+        if ($stmt->execute(['home_title', $home_title, 'home_description', $home_description])) {
+            log_admin_action('SAVE_HOME_CONTENT', 'fields=title,description');
+            $message = 'Judul dan deskripsi homepage berhasil disimpan!';
+        } else {
+            $message = 'Gagal menyimpan konten homepage.';
+            $messageClass = 'alert alert-error';
+        }
+    }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_whatsapp'])) {
     if (!verify_csrf_token($_POST['csrf_token'] ?? '')) {
         die('Token CSRF tidak valid.');
@@ -57,6 +84,13 @@ $wa_stmt = $pdo->prepare("SELECT setting_value FROM settings WHERE setting_key =
 $wa_stmt->execute();
 $wa_row = $wa_stmt->fetch();
 $current_wa = $wa_row ? $wa_row['setting_value'] : '';
+
+$home_content_stmt = $pdo->query(
+    "SELECT setting_key, setting_value FROM settings WHERE setting_key IN ('home_title', 'home_description')"
+);
+$home_content = $home_content_stmt->fetchAll(PDO::FETCH_KEY_PAIR);
+$current_home_title = $home_content['home_title'] ?? "Selamat Datang di\nAlfi Kitchen";
+$current_home_description = $home_content['home_description'] ?? 'Puding lembut berlapis buah, Dessert sehat dalam kemasan praktis, dan Salad buah bersaus creamy — semua dibuat rumahan dari bahan pilihan, siap menemani hari-harimu.';
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -101,6 +135,23 @@ $current_wa = $wa_row ? $wa_row['setting_value'] : '';
                 <input type="file" name="logo" accept="image/png,image/jpeg,image/jpg,image/gif,image/webp" required>
             </div>
             <button type="submit" class="btn">Simpan Logo</button>
+        </form>
+
+        <hr style="margin: 30px 0; border: 0; border-top: 1px solid #f0ddc0;">
+
+        <h3>Konten Sambutan Homepage</h3>
+        <p style="font-size: 14px; margin-bottom: 15px;">Ubah judul dan deskripsi yang tampil di halaman utama.</p>
+        <form action="" method="post">
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token(), ENT_QUOTES, 'UTF-8') ?>">
+            <div class="form-group">
+                <label for="home-title">Judul</label>
+                <textarea id="home-title" name="home_title" rows="2" maxlength="160" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;"><?= htmlspecialchars($current_home_title, ENT_QUOTES, 'UTF-8') ?></textarea>
+            </div>
+            <div class="form-group">
+                <label for="home-description">Deskripsi</label>
+                <textarea id="home-description" name="home_description" rows="5" maxlength="1200" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;"><?= htmlspecialchars($current_home_description, ENT_QUOTES, 'UTF-8') ?></textarea>
+            </div>
+            <button type="submit" name="save_home_content" class="btn">Simpan Konten Homepage</button>
         </form>
 
         <hr style="margin: 30px 0; border: 0; border-top: 1px solid #f0ddc0;">

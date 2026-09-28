@@ -32,6 +32,7 @@ Sebelum deploy, tambahkan 3 secrets di **Settings → Secrets → Actions**:
 - Upload gambar dibatasi maksimal 5 MB dan divalidasi berdasarkan MIME serta struktur gambar di server; logo hanya menerima PNG
 - Password admin dapat diubah melalui panel **Admin → Pengaturan**
 - Terapkan [database/login_attempts.sql](database/login_attempts.sql) pada database lokal dan hosting sebelum memakai pembatasan percobaan login baru
+- Terapkan [database/settings_utf8mb4.sql](database/settings_utf8mb4.sql) sekali pada database lokal dan hosting sebelum menyimpan teks homepage dari CMS
 
 ## 💾 Backup
 - **Database** dapat diekspor via tombol **📥 Backup Database** di **Admin → Pengaturan**
