@@ -1,5 +1,7 @@
 <?php 
 require 'config.php';
+$pageTitle = 'Puding, Dessert & Salad Buah Rumahan | Alfi Kitchen';
+$pageDescription = 'Pesan puding, dessert, dan salad buah rumahan dari Alfi Kitchen. Dibuat dari bahan pilihan dan dapat dipesan langsung melalui WhatsApp.';
 
 // Fetch products from database
 $stmt = $pdo->query("SELECT * FROM products ORDER BY id ASC");

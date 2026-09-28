@@ -1,4 +1,8 @@
-<?php include 'header.php'; ?>
+<?php
+$pageTitle = 'Kebijakan Privasi | Alfi Kitchen';
+$pageDescription = 'Pelajari informasi yang digunakan Alfi Kitchen saat pemesanan melalui WhatsApp dan cara informasi tersebut digunakan.';
+include 'header.php';
+?>
 
 <!-- Override Header positioning untuk halaman non-hero -->
 <style>

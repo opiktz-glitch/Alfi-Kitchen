@@ -1,5 +1,6 @@
 <?php
 $pageTitle = 'Tentang Kami | Alfi Kitchen';
+$pageDescription = 'Kenali Alfi Kitchen, pilihan puding, dessert, dan salad buah buatan rumahan dari bahan pilihan untuk menemani hari-hari dan momen istimewa.';
 require 'config.php';
 include 'header.php';
 ?>

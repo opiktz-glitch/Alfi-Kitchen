@@ -1,4 +1,8 @@
-<?php include 'header.php'; ?>
+<?php
+$pageTitle = 'Syarat & Ketentuan Pemesanan | Alfi Kitchen';
+$pageDescription = 'Informasi pemesanan Alfi Kitchen melalui WhatsApp, konfirmasi produk, dan pengiriman langsung ke alamat tujuan.';
+include 'header.php';
+?>
 
 <!-- Override Header positioning untuk halaman non-hero -->
 <style>

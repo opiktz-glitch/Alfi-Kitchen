@@ -15,6 +15,9 @@ if(!$main_product) {
     die("Produk tidak ditemukan.");
 }
 
+$pageTitle = $main_product['name'] . ' | Alfi Kitchen';
+$pageDescription = 'Lihat pilihan ' . $main_product['name'] . ' dari Alfi Kitchen. Tanyakan ketersediaan, harga, dan pengiriman langsung melalui WhatsApp.';
+
 // Mengambil produk untuk ditampilkan di kolom
 $stmt3 = $pdo->prepare("SELECT * FROM product_items WHERE product_id = ? ORDER BY id DESC");
 $stmt3->execute([$id]);
