@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/config.php';
+
 // Ambil nomor WhatsApp dari database
 $wa_footer_stmt = $pdo->prepare("SELECT setting_value FROM settings WHERE setting_key = 'whatsapp_number'");
 $wa_footer_stmt->execute();
@@ -8,7 +10,7 @@ $wa_footer_number = $wa_footer_row ? $wa_footer_row['setting_value'] : '';
 
 <footer>
   <span>© <?php echo date("Y"); ?> Alfi Kitchen</span>
-  <span><a href="privacy.php">Kebijakan Privasi</a> · <a href="terms.php">Syarat & Ketentuan</a></span>
+  <span><a href="about.php">Tentang Kami</a> · <a href="privacy.php">Kebijakan Privasi</a> · <a href="terms.php">Syarat & Ketentuan</a></span>
 </footer>
 
 <?php if ($wa_footer_number): ?>

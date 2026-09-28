@@ -56,28 +56,29 @@
     <div class="content-box">
         <p><strong>Terakhir Diperbarui:</strong> <?php echo date("d F Y"); ?></p>
         
-        <p>Selamat datang di <strong>Alfi Kitchen</strong>. Dengan mengakses dan menggunakan situs web ini, Anda setuju untuk terikat oleh Syarat dan Ketentuan berikut. Jika Anda tidak menyetujui salah satu dari syarat ini, mohon untuk tidak menggunakan situs web kami.</p>
+        <p>Situs <strong>Alfi Kitchen</strong> menampilkan katalog produk. Dengan menggunakan situs ini atau memesan melalui WhatsApp, Anda menyetujui ketentuan berikut.</p>
 
         <h3>1. Ketentuan Penggunaan</h3>
-        <p>Anda setuju untuk menggunakan situs web ini hanya untuk tujuan yang sah, dan dengan cara yang tidak melanggar hak orang lain, atau membatasi maupun menghalangi penggunaan serta kenyamanan orang lain terhadap situs web ini.</p>
+        <p>Gunakan situs ini untuk melihat informasi produk dan menghubungi Alfi Kitchen secara wajar. Pemesanan hanya diterima melalui WhatsApp; situs ini tidak menyediakan checkout atau pembayaran online.</p>
 
         <h3>2. Informasi Produk</h3>
-        <p>Kami berusaha sebaik mungkin untuk menampilkan gambar, spesifikasi, dan detail produk seakurat mungkin. Namun, kami tidak menjamin bahwa deskripsi produk atau konten lain di situs ini sepenuhnya akurat, lengkap, dapat diandalkan, atau bebas dari kesalahan ketik. Warna produk mungkin sedikit berbeda tergantung pada resolusi layar perangkat Anda.</p>
+        <p>Foto dan deskripsi produk ditampilkan sebagai informasi katalog. Tampilan dapat sedikit berbeda dari produk sebenarnya. Jika ada pertanyaan tentang komposisi atau detail produk, konfirmasikan melalui WhatsApp sebelum memesan.</p>
 
-        <h3>3. Harga dan Ketersediaan</h3>
+        <h3>3. Pemesanan dan Pengiriman</h3>
         <ul>
-            <li>Harga yang tercantum dapat berubah sewaktu-waktu tanpa pemberitahuan sebelumnya.</li>
-            <li>Ketersediaan barang tidak selalu dijamin 100% pada saat Anda memesan. Jika barang habis, kami akan memberitahu Anda secepatnya.</li>
+            <li>Kirim pilihan produk dan jumlah pesanan melalui WhatsApp untuk konfirmasi ketersediaan dan harga.</li>
+            <li>Pengiriman dilakukan langsung ke alamat tujuan (door-to-door) setelah alamat dan pesanan disepakati.</li>
+            <li>Jangkauan, jadwal, biaya pengiriman, dan metode pembayaran dikonfirmasi melalui WhatsApp sebelum pesanan disepakati.</li>
         </ul>
 
         <h3>4. Hak Kekayaan Intelektual</h3>
         <p>Semua konten yang terdapat di situs ini, termasuk namun tidak terbatas pada teks, grafis, logo, ikon tombol, gambar, dan klip video adalah milik <strong>Alfi Kitchen</strong> atau pemasok kontennya dan dilindungi oleh undang-undang hak cipta.</p>
 
-        <h3>5. Penyangkalan (Disclaimer)</h3>
-        <p>Situs web ini disediakan "sebagaimana adanya". Kami tidak memberikan jaminan apa pun, baik tersurat maupun tersirat, mengenai pengoperasian situs ini atau informasi, konten, maupun material yang termasuk di dalamnya.</p>
+        <h3>5. Perubahan Informasi</h3>
+        <p>Informasi katalog, harga, dan ketersediaan dapat berubah. Konfirmasi terbaru untuk pesanan berlaku berdasarkan kesepakatan melalui WhatsApp.</p>
 
         <h3>6. Perubahan Syarat & Ketentuan</h3>
-        <p>Kami memiliki hak penuh untuk mengubah, memodifikasi, menambah, atau menghapus bagian mana pun dari Syarat & Ketentuan ini kapan saja. Merupakan tanggung jawab Anda untuk secara berkala memeriksa halaman ini untuk melihat perubahan.</p>
+        <p>Alfi Kitchen dapat memperbarui syarat ini jika layanan berubah. Tanggal pembaruan terbaru tercantum di bagian atas halaman. Jika Anda memiliki pertanyaan, silakan hubungi kami melalui WhatsApp.</p>
         
         <div style="text-align:center; margin-top: 40px;">
             <a href="index.php" style="display:inline-block; padding: 12px 24px; background:var(--accent); color:white; text-decoration:none; border-radius:10px; font-weight:bold; box-shadow:0 4px 12px rgba(232,147,90,0.3);">Kembali ke Halaman Utama</a>

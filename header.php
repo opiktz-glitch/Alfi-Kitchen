@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Alfi Kitchen — Landing Page</title>
+<title><?= htmlspecialchars($pageTitle ?? 'Alfi Kitchen — Landing Page', ENT_QUOTES, 'UTF-8') ?></title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Playfair+Display:ital,wght@1,600&display=swap');
 

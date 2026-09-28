@@ -36,7 +36,7 @@
     <h2><?= nl2br(htmlspecialchars($homeTitle, ENT_QUOTES, 'UTF-8')) ?></h2>
     <p><?= nl2br(htmlspecialchars($homeDescription, ENT_QUOTES, 'UTF-8')) ?></p>
   </div>
-  <div class="col-product">
+  <div class="col-product" id="menu">
     <h3 class="col-product-title">Produk Kami</h3>
     <div class="product-list">
       <?php foreach($products as $p): ?>

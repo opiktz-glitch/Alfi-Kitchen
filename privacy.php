@@ -56,34 +56,35 @@
     <div class="content-box">
         <p><strong>Terakhir Diperbarui:</strong> <?php echo date("d F Y"); ?></p>
         
-        <p>Selamat datang di <strong>Alfi Kitchen</strong>. Privasi Anda adalah prioritas kami. Halaman Kebijakan Privasi ini menjelaskan bagaimana kami mengumpulkan, menggunakan, dan melindungi informasi pribadi Anda saat Anda mengunjungi situs web kami.</p>
+        <p><strong>Alfi Kitchen</strong> menggunakan situs ini sebagai katalog produk. Pemesanan dan komunikasi pelanggan dilakukan melalui WhatsApp, bukan melalui formulir checkout di situs.</p>
 
         <h3>1. Informasi yang Kami Kumpulkan</h3>
-        <p>Kami hanya mengumpulkan informasi yang Anda berikan secara sukarela kepada kami, seperti:</p>
+        <p>Saat menghubungi dan memesan melalui WhatsApp, Anda dapat memberikan informasi yang diperlukan untuk memproses pesanan, seperti:</p>
         <ul>
-            <li>Nama dan detail kontak (jika Anda menghubungi kami secara langsung atau melalui form).</li>
-            <li>Data analitik anonim (seperti jenis browser dan waktu kunjungan) untuk membantu kami meningkatkan pengalaman pengguna.</li>
+            <li>Nama dan nomor kontak.</li>
+            <li>Produk, jumlah pesanan, dan alamat tujuan pengiriman door-to-door.</li>
+            <li>Informasi lain yang Anda sertakan dalam percakapan pemesanan.</li>
         </ul>
 
-        <h3>2. Bagaimana Kami Menggunakan Informasi Anda</h3>
-        <p>Informasi yang kami kumpulkan digunakan secara eksklusif untuk:</p>
+        <h3>2. Bagaimana Informasi Digunakan</h3>
+        <p>Informasi yang Anda sampaikan digunakan untuk:</p>
         <ul>
-            <li>Meningkatkan kualitas layanan dan produk di Alfi Kitchen.</li>
-            <li>Menjawab pertanyaan, masukan, atau keluhan dari pelanggan.</li>
-            <li>Menganalisis performa website untuk memberikan pengalaman yang lebih baik.</li>
+            <li>Menjawab pertanyaan dan mengonfirmasi detail pesanan.</li>
+            <li>Memeriksa ketersediaan produk serta menyepakati biaya dan jadwal pengiriman.</li>
+            <li>Mengantarkan pesanan ke alamat tujuan yang disepakati.</li>
         </ul>
 
-        <h3>3. Perlindungan Data</h3>
-        <p>Kami menerapkan langkah-langke keamanan teknis dan organisasional yang wajar untuk melindungi informasi pribadi Anda dari akses, perubahan, pengungkapan, atau penghancuran yang tidak sah. Kami <strong>tidak pernah</strong> menjual atau menyewakan data pribadi Anda kepada pihak ketiga.</p>
+        <h3>3. Penggunaan WhatsApp</h3>
+        <p>Pesan pemesanan dikirim melalui WhatsApp, layanan yang dikelola pihak ketiga. Penggunaan dan pemrosesan data oleh WhatsApp mengikuti kebijakan privasi mereka. Hindari mengirimkan informasi yang tidak diperlukan untuk pesanan Anda.</p>
 
-        <h3>4. Tautan ke Situs Web Pihak Ketiga</h3>
-        <p>Situs web kami mungkin berisi tautan ke situs web lain. Kami tidak bertanggung jawab atas praktik privasi atau konten dari situs-situs tersebut. Kami menyarankan Anda untuk membaca kebijakan privasi mereka sebelum memberikan informasi apa pun.</p>
+        <h3>4. Keamanan</h3>
+        <p>Kami membatasi penggunaan informasi pesanan untuk komunikasi dan pemenuhan pesanan. Untuk keamanan operasional, sistem juga mencatat aktivitas panel admin, termasuk alamat IP admin yang mengaksesnya.</p>
 
-        <h3>5. Perubahan pada Kebijakan Privasi</h3>
-        <p>Alfi Kitchen berhak untuk memperbarui Kebijakan Privasi ini sewaktu-waktu tanpa pemberitahuan sebelumnya. Setiap perubahan akan diumumkan di halaman ini bersama dengan tanggal pembaruan di bagian atas halaman.</p>
+        <h3>5. Tautan dan Perubahan Kebijakan</h3>
+        <p>Tautan WhatsApp akan membawa Anda ke layanan pihak ketiga. Kebijakan ini dapat diperbarui jika cara layanan atau pengelolaan informasi berubah; tanggal pembaruan tercantum di bagian atas halaman.</p>
 
         <h3>6. Hubungi Kami</h3>
-        <p>Jika Anda memiliki pertanyaan lebih lanjut mengenai Kebijakan Privasi ini atau cara kami menangani data Anda, silakan hubungi kami melalui kontak resmi Alfi Kitchen.</p>
+        <p>Untuk pertanyaan tentang privasi atau penggunaan informasi pesanan, hubungi Alfi Kitchen melalui WhatsApp yang tersedia di situs ini.</p>
         
         <div style="text-align:center; margin-top: 40px;">
             <a href="index.php" style="display:inline-block; padding: 12px 24px; background:var(--accent); color:white; text-decoration:none; border-radius:10px; font-weight:bold; box-shadow:0 4px 12px rgba(232,147,90,0.3);">Kembali ke Halaman Utama</a>
