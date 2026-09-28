@@ -1,6 +1,7 @@
 <?php
-session_start();
+require 'auth.php';
 require '../config.php';
+require 'upload_helper.php';
 
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
     header('Location: ../login.php');
@@ -24,30 +25,26 @@ if (!$product) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $name = $_POST['name'];
-    $imagePath = $product['image']; // default ke gambar lama
-    
-    // Cek jika ada upload gambar baru
-    if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
-        $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
-        $newName = uniqid() . '.' . $ext;
-        $targetDir = '../uploads/';
-        if (!is_dir($targetDir)) mkdir($targetDir, 0777, true);
-        
-        // Hapus gambar lama jika ada
-        if ($imagePath && file_exists('../' . $imagePath)) {
-            unlink('../' . $imagePath);
-        }
-        
-        move_uploaded_file($_FILES['image']['tmp_name'], $targetDir . $newName);
-        $imagePath = 'uploads/' . $newName;
+    if (!verify_csrf_token($_POST['csrf_token'] ?? '')) {
+        die('Token CSRF tidak valid.');
     }
 
-    $stmt = $pdo->prepare("UPDATE products SET name = ?, image = ? WHERE id = ?");
-    $stmt->execute([$name, $imagePath, $id]);
-    
-    header('Location: index.php');
-    exit;
+    $name = $_POST['name'];
+    $upload = store_uploaded_image($_FILES['image'] ?? null, 'category');
+    if ($upload['error']) {
+        $uploadError = $upload['error'];
+    } else {
+        $imagePath = $upload['path'] ?? $product['image'];
+        $stmt = $pdo->prepare("UPDATE products SET name = ?, image = ? WHERE id = ?");
+        $stmt->execute([$name, $imagePath, $id]);
+        if ($upload['path']) {
+            delete_uploaded_image($product['image']);
+        }
+        log_admin_action('EDIT_PRODUCT', 'id=' . $id . ', name=' . $name . ', image=' . $imagePath);
+
+        header('Location: index.php');
+        exit;
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -102,7 +99,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <header><h2>Alfi Kitchen Admin</h2></header>
     <div class="container">
         <h3>Edit Kategori Produk</h3>
+        <?php if (!empty($uploadError)): ?>
+            <p role="alert" style="color:#721c24;"><?= htmlspecialchars($uploadError, ENT_QUOTES, 'UTF-8') ?></p>
+        <?php endif; ?>
         <form method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
             
             <div class="form-group">
                 <label>Nama Kategori</label>
@@ -114,7 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <?php if($product['image']): ?>
                     <img src="../<?= htmlspecialchars($product['image']) ?>" class="preview-img" alt="Preview">
                 <?php endif; ?>
-                <input type="file" name="image" accept="image/*">
+                <input type="file" name="image" accept="image/jpeg,image/png,image/gif,image/webp">
                 <small style="color: #888; display: block; margin-top: 5px;">Biarkan kosong jika tidak ingin mengubah gambar.</small>
             </div>
             

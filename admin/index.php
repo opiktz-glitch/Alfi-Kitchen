@@ -1,5 +1,5 @@
 <?php
-session_start();
+require 'auth.php';
 require '../config.php';
 
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
@@ -8,17 +8,24 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
 }
 
 // Menangani Hapus Produk
-if (isset($_GET['delete'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
+    if (!verify_csrf_token($_POST['csrf_token'] ?? '')) {
+        die('Token CSRF tidak valid.');
+    }
+
+    $productId = (int) $_POST['delete'];
+
     // Ambil path gambar sebelum hapus
     $stmt = $pdo->prepare("SELECT image FROM products WHERE id = ?");
-    $stmt->execute([$_GET['delete']]);
+    $stmt->execute([$productId]);
     $prod = $stmt->fetch();
     if ($prod && $prod['image'] && file_exists('../' . $prod['image'])) {
         unlink('../' . $prod['image']);
     }
 
     $stmt = $pdo->prepare("DELETE FROM products WHERE id = ?");
-    $stmt->execute([$_GET['delete']]);
+    $stmt->execute([$productId]);
+    log_admin_action('DELETE_PRODUCT', 'id=' . $productId);
     header('Location: index.php');
     exit;
 }
@@ -92,6 +99,7 @@ $products = $stmt->fetchAll();
             <div>
                 <a href="manage_hero.php" class="btn btn-secondary">Kelola Slider</a>
                 <a href="settings.php" class="btn btn-secondary">Pengaturan</a>
+                <a href="activity_log.php" class="btn btn-secondary">Log Aktivitas</a>
                 <a href="add_product.php" class="btn btn-primary">+ Tambah Kategori</a>
             </div>
         </div>
@@ -121,7 +129,11 @@ $products = $stmt->fetchAll();
                         <td>
                             <a href="manage_items.php?product_id=<?= $p['id'] ?>" class="btn btn-secondary">Kelola Jenis</a>
                             <a href="edit_product.php?id=<?= $p['id'] ?>" class="btn btn-cancel">Edit</a>
-                            <a href="index.php?delete=<?= $p['id'] ?>" class="btn btn-danger" onclick="return confirm('Yakin ingin menghapus?')">Hapus</a>
+                            <form method="POST" action="index.php" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus?')">
+                                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
+                                <input type="hidden" name="delete" value="<?= (int) $p['id'] ?>">
+                                <button type="submit" class="btn btn-danger">Hapus</button>
+                            </form>
                         </td>
                     </tr>
                     <?php endforeach; ?>

@@ -1,6 +1,7 @@
 <?php
-session_start();
+require 'auth.php';
 require '../config.php';
+require 'upload_helper.php';
 
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
     header('Location: ../login.php');
@@ -11,9 +12,14 @@ $error = '';
 $success = '';
 
 // Handle Delete
-if (isset($_GET['delete'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
+    if (!verify_csrf_token($_POST['csrf_token'] ?? '')) {
+        die('Token CSRF tidak valid.');
+    }
+
+    $deleteId = (int) $_POST['delete'];
     $stmt = $pdo->prepare("SELECT image FROM hero_images WHERE id = ?");
-    $stmt->execute([$_GET['delete']]);
+    $stmt->execute([$deleteId]);
     $img = $stmt->fetch();
     
     if ($img && file_exists('../' . $img['image'])) {
@@ -21,37 +27,27 @@ if (isset($_GET['delete'])) {
     }
     
     $stmt = $pdo->prepare("DELETE FROM hero_images WHERE id = ?");
-    $stmt->execute([$_GET['delete']]);
+    $stmt->execute([$deleteId]);
+    log_admin_action('DELETE_HERO_IMAGE', 'id=' . $deleteId);
     header("Location: manage_hero.php");
     exit;
 }
 
 // Handle Upload
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['hero_image'])) {
-    $file = $_FILES['hero_image'];
-    if ($file['error'] === UPLOAD_ERR_OK) {
-        $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-        $allowed = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
-        
-        if (in_array($ext, $allowed)) {
-            $filename = uniqid('hero_') . '.' . $ext;
-            $path = '../uploads/' . $filename;
-            
-            if (!is_dir('../uploads')) {
-                mkdir('../uploads', 0777, true);
-            }
-            
-            if (move_uploaded_file($file['tmp_name'], $path)) {
-                $db_path = 'uploads/' . $filename;
-                $stmt = $pdo->prepare("INSERT INTO hero_images (image) VALUES (?)");
-                $stmt->execute([$db_path]);
-                $success = "Gambar berhasil ditambahkan!";
-            } else {
-                $error = "Gagal mengunggah gambar.";
-            }
-        } else {
-            $error = "Format file tidak didukung (gunakan JPG, PNG, WEBP).";
-        }
+    if (!verify_csrf_token($_POST['csrf_token'] ?? '')) {
+        die('Token CSRF tidak valid.');
+    }
+
+    $upload = store_uploaded_image($_FILES['hero_image'], 'hero', true);
+    if ($upload['error']) {
+        $error = $upload['error'];
+    } else {
+        $db_path = $upload['path'];
+        $stmt = $pdo->prepare("INSERT INTO hero_images (image) VALUES (?)");
+        $stmt->execute([$db_path]);
+        log_admin_action('ADD_HERO_IMAGE', 'file=' . $db_path);
+        $success = "Gambar berhasil ditambahkan!";
     }
 }
 
@@ -147,9 +143,10 @@ $hero_images = $stmt->fetchAll();
 
         <div class="form-card">
             <form action="" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
                 <div class="form-group">
                     <label>Unggah Gambar Animasi Baru</label>
-                    <input type="file" name="hero_image" class="form-control" required>
+                    <input type="file" name="hero_image" class="form-control" accept="image/jpeg,image/png,image/gif,image/webp" required>
                     <small style="color: var(--muted); margin-top: 5px; display: block;">
                         <strong>Ketentuan Gambar yang Ideal (Agar Tidak Distorsi/Penyok):</strong><br>
                         1. <strong>Rasio Landscape (16:9 atau 2:1)</strong> - Resolusi yang sangat direkomendasikan adalah <strong>1920 x 1080 pixel</strong> atau <strong>1600 x 800 pixel</strong>.<br>
@@ -180,7 +177,11 @@ $hero_images = $stmt->fetchAll();
                         </td>
                         <td style="color:var(--muted);"><?= htmlspecialchars($h['image']) ?></td>
                         <td>
-                            <a href="manage_hero.php?delete=<?= $h['id'] ?>" class="btn btn-danger" onclick="return confirm('Yakin ingin menghapus gambar animasi ini?')">Hapus</a>
+                            <form method="POST" action="manage_hero.php" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus gambar animasi ini?')">
+                                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
+                                <input type="hidden" name="delete" value="<?= (int) $h['id'] ?>">
+                                <button type="submit" class="btn btn-danger">Hapus</button>
+                            </form>
                         </td>
                     </tr>
                     <?php endforeach; ?>

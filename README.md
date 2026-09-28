@@ -28,8 +28,10 @@ Sebelum deploy, tambahkan 3 secrets di **Settings → Secrets → Actions**:
 
 ## 🔐 Keamanan
 - File `config.php` **tidak** di-deploy ulang oleh GitHub Actions — wajib dikonfigurasi manual di server hosting
-- Folder `uploads/` **tidak** di-commit — gambar dikelola langsung di server
+- Folder `uploads/` tidak meng-commit gambar; `.gitkeep` dan `.htaccess` ikut deploy untuk mempertahankan folder dan memblokir eksekusi skrip
+- Upload gambar dibatasi maksimal 5 MB dan divalidasi berdasarkan MIME serta struktur gambar di server; logo hanya menerima PNG
 - Password admin dapat diubah melalui panel **Admin → Pengaturan**
+- Terapkan [database/login_attempts.sql](database/login_attempts.sql) pada database lokal dan hosting sebelum memakai pembatasan percobaan login baru
 
 ## 💾 Backup
 - **Database** dapat diekspor via tombol **📥 Backup Database** di **Admin → Pengaturan**

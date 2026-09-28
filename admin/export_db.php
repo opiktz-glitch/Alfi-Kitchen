@@ -1,5 +1,5 @@
 <?php
-session_start();
+require 'auth.php';
 require '../config.php';
 
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
@@ -8,7 +8,7 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
 }
 
 // Dapatkan semua nama tabel dengan urutan yang benar (Parent sebelum Child)
-$tables = ['users', 'products', 'product_items', 'hero_images', 'settings'];
+$tables = ['users', 'login_attempts', 'products', 'product_items', 'hero_images', 'settings'];
 
 $sqlScript = "-- Export Database Alfi Kitchen\n";
 $sqlScript .= "-- Tanggal: " . date('Y-m-d H:i:s') . "\n\n";

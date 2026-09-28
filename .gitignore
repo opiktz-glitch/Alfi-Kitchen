@@ -1,9 +1,14 @@
 # Environment & credentials (JANGAN pernah di-commit!)
 .env
+config.php
+
+# Runtime/generated files
+logs/
 
 # Folder uploads - gambar disimpan di server, bukan di Git
 /uploads/*
 !/uploads/.gitkeep
+!/uploads/.htaccess
 
 # OS files
 .DS_Store

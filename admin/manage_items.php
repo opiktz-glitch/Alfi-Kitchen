@@ -1,6 +1,7 @@
 <?php
-session_start();
+require 'auth.php';
 require '../config.php';
+require 'upload_helper.php';
 
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
     header('Location: ../login.php');
@@ -8,6 +9,7 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
 }
 
 $product_id = $_GET['product_id'] ?? null;
+$uploadError = '';
 if(!$product_id) {
     die("Product ID tidak valid.");
 }
@@ -22,41 +24,47 @@ if(!$main_product) {
 }
 
 // Menangani Hapus Jenis Produk
-if (isset($_GET['delete'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
+    if (!verify_csrf_token($_POST['csrf_token'] ?? '')) {
+        die('Token CSRF tidak valid.');
+    }
+
+    $deleteId = (int) $_POST['delete'];
     $stmt = $pdo->prepare("SELECT image FROM product_items WHERE id = ?");
-    $stmt->execute([$_GET['delete']]);
+    $stmt->execute([$deleteId]);
     $item = $stmt->fetch();
     if ($item && $item['image'] && file_exists('../' . $item['image'])) {
         unlink('../' . $item['image']);
     }
 
     $stmt = $pdo->prepare("DELETE FROM product_items WHERE id = ?");
-    $stmt->execute([$_GET['delete']]);
+    $stmt->execute([$deleteId]);
+    log_admin_action('DELETE_PRODUCT_ITEM', 'product_id=' . $product_id . ', id=' . $deleteId);
     header("Location: manage_items.php?product_id=$product_id");
     exit;
 }
 
 // Tambah Jenis Produk Cepat
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_item'])) {
+    if (!verify_csrf_token($_POST['csrf_token'] ?? '')) {
+        die('Token CSRF tidak valid.');
+    }
+
     $name = $_POST['name'];
     $price = $_POST['price'];
     $description = $_POST['description'];
     
-    // Upload Gambar
-    $imagePath = '';
-    if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-        $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
-        $newFilename = uniqid('item_') . '.' . $ext;
-        $dest = '../uploads/' . $newFilename;
-        if (move_uploaded_file($_FILES['image']['tmp_name'], $dest)) {
-            $imagePath = 'uploads/' . $newFilename;
-        }
+    $upload = store_uploaded_image($_FILES['image'] ?? null, 'item');
+    if ($upload['error']) {
+        $uploadError = $upload['error'];
+    } else {
+        $imagePath = $upload['path'] ?? '';
+        $stmt = $pdo->prepare("INSERT INTO product_items (product_id, name, description, price, image) VALUES (?, ?, ?, ?, ?)");
+        $stmt->execute([$product_id, $name, $description, $price, $imagePath]);
+        log_admin_action('ADD_PRODUCT_ITEM', 'product_id=' . $product_id . ', name=' . $name . ', image=' . $imagePath);
+        header("Location: manage_items.php?product_id=$product_id");
+        exit;
     }
-
-    $stmt = $pdo->prepare("INSERT INTO product_items (product_id, name, description, price, image) VALUES (?, ?, ?, ?, ?)");
-    $stmt->execute([$product_id, $name, $description, $price, $imagePath]);
-    header("Location: manage_items.php?product_id=$product_id");
-    exit;
 }
 
 // Mengambil Daftar Jenis Produk
@@ -137,7 +145,11 @@ $items = $stmt->fetchAll();
 
         <div class="form-card">
             <h3>Tambah Jenis Produk Baru</h3>
+            <?php if ($uploadError): ?>
+                <p role="alert" style="color:#721c24;"><?= htmlspecialchars($uploadError, ENT_QUOTES, 'UTF-8') ?></p>
+            <?php endif; ?>
             <form action="manage_items.php?product_id=<?= $product_id ?>" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
                 <div class="form-group">
                     <label>Nama Varian/Jenis</label>
                     <input type="text" name="name" required placeholder="Contoh: Puding Mangga">
@@ -152,7 +164,7 @@ $items = $stmt->fetchAll();
                 </div>
                 <div class="form-group">
                     <label>Gambar <span style="font-weight:normal; color:#888; font-size:0.85rem;">(Opsional) - Rekomendasi rasio gambar 1:1 (Persegi)</span></label>
-                    <input type="file" name="image" accept="image/*">
+                    <input type="file" name="image" accept="image/jpeg,image/png,image/gif,image/webp">
                 </div>
                 <button type="submit" name="add_item" class="btn btn-primary">Simpan Jenis Produk</button>
             </form>
@@ -185,7 +197,11 @@ $items = $stmt->fetchAll();
                     <td style="color:var(--accent); font-weight:bold;">Rp<?= number_format($item['price'], 0, ',', '.') ?></td>
                     <td>
                         <a href="edit_item.php?id=<?= $item['id'] ?>&product_id=<?= $product_id ?>" class="btn btn-cancel" style="margin-right:8px;">Edit</a>
-                        <a href="manage_items.php?product_id=<?= $product_id ?>&delete=<?= $item['id'] ?>" class="btn btn-danger" onclick="return confirm('Yakin ingin menghapus jenis ini?')">Hapus</a>
+                        <form method="POST" action="manage_items.php?product_id=<?= $product_id ?>" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus jenis ini?')">
+                            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
+                            <input type="hidden" name="delete" value="<?= (int) $item['id'] ?>">
+                            <button type="submit" class="btn btn-danger">Hapus</button>
+                        </form>
                     </td>
                 </tr>
                 <?php endforeach; ?>

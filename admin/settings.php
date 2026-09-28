@@ -1,6 +1,7 @@
 <?php
-session_start();
+require 'auth.php';
 require '../config.php';
+require 'upload_helper.php';
 
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
     header('Location: ../login.php');
@@ -8,34 +9,43 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
 }
 
 $message = '';
+$messageClass = 'alert';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['logo'])) {
-    $target_dir = "../uploads/";
-    $target_file = $target_dir . "logo.png";
-    $imageFileType = strtolower(pathinfo($_FILES["logo"]["name"], PATHINFO_EXTENSION));
+    if (!verify_csrf_token($_POST['csrf_token'] ?? '')) {
+        die('Token CSRF tidak valid.');
+    }
 
-    if (in_array($imageFileType, ['jpg', 'jpeg', 'png'])) {
-        if (move_uploaded_file($_FILES["logo"]["tmp_name"], $target_file)) {
-            $message = "Logo berhasil diperbarui!";
-        } else {
-            $message = "Maaf, terjadi kesalahan saat mengunggah file.";
-        }
+    $upload = store_uploaded_image($_FILES['logo'], 'logo', true, ['image/png'], 'logo.png');
+    if ($upload['error']) {
+        $message = $upload['error'];
+        $messageClass = 'alert alert-error';
     } else {
-        $message = "Maaf, hanya file JPG, JPEG & PNG yang diperbolehkan.";
+        $message = "Logo berhasil diperbarui!";
     }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
+    if (!verify_csrf_token($_POST['csrf_token'] ?? '')) {
+        die('Token CSRF tidak valid.');
+    }
+
     $new_password = $_POST['new_password'];
     $hashed = password_hash($new_password, PASSWORD_DEFAULT);
     
     $stmt = $pdo->prepare("UPDATE users SET password = ? WHERE username = 'admin'");
     if ($stmt->execute([$hashed])) {
+        log_admin_action('CHANGE_ADMIN_PASSWORD', 'password_updated=true');
         $message = "Password berhasil diubah! Gunakan password baru ini untuk login berikutnya.";
     } else {
         $message = "Terjadi kesalahan saat mengubah password.";
     }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_whatsapp'])) {
+    if (!verify_csrf_token($_POST['csrf_token'] ?? '')) {
+        die('Token CSRF tidak valid.');
+    }
+
     $wa_number = preg_replace('/[^0-9]/', '', $_POST['whatsapp_number']);
     $stmt = $pdo->prepare("INSERT INTO settings (setting_key, setting_value) VALUES ('whatsapp_number', ?) ON DUPLICATE KEY UPDATE setting_value = ?");
     if ($stmt->execute([$wa_number, $wa_number])) {
+        log_admin_action('SAVE_WHATSAPP_NUMBER', 'number=' . $wa_number);
         $message = "Nomor WhatsApp berhasil disimpan!";
     } else {
         $message = "Gagal menyimpan nomor WhatsApp.";
@@ -62,6 +72,7 @@ $current_wa = $wa_row ? $wa_row['setting_value'] : '';
         .form-group label { display: block; margin-bottom: 5px; font-weight: bold;}
         .btn { padding: 10px 15px; background: #e8935a; color: white; text-decoration: none; border-radius: 5px; border: none; cursor: pointer; }
         .alert { padding: 10px; background: #d4edda; color: #155724; border-radius: 5px; margin-bottom: 15px; }
+        .alert-error { background: #f8d7da; color: #721c24; }
         .current-logo { width: 80px; height: 80px; object-fit: cover; border-radius: 50%; margin-bottom: 15px; border: 1px solid #ccc; }
     </style>
 </head>
@@ -76,7 +87,7 @@ $current_wa = $wa_row ? $wa_row['setting_value'] : '';
     <div class="container">
         <h3>Pengaturan Logo</h3>
         <?php if($message): ?>
-            <div class="alert"><?= htmlspecialchars($message) ?></div>
+            <div class="<?= htmlspecialchars($messageClass) ?>"><?= htmlspecialchars($message) ?></div>
         <?php endif; ?>
         
         <?php if(file_exists('../uploads/logo.png')): ?>
@@ -84,9 +95,10 @@ $current_wa = $wa_row ? $wa_row['setting_value'] : '';
         <?php endif; ?>
 
         <form action="" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
             <div class="form-group">
-                <label>Upload Logo Baru (Rasio 1:1, JPG/PNG)</label>
-                <input type="file" name="logo" accept="image/png, image/jpeg" required>
+                <label>Upload Logo Baru (Rasio 1:1, PNG)</label>
+                <input type="file" name="logo" accept="image/png" required>
             </div>
             <button type="submit" class="btn">Simpan Logo</button>
         </form>
@@ -104,6 +116,7 @@ $current_wa = $wa_row ? $wa_row['setting_value'] : '';
         <h3>Nomor WhatsApp</h3>
         <p style="font-size: 14px; margin-bottom: 15px;">Nomor ini akan digunakan untuk tombol "Pesan via WhatsApp" yang muncul di semua halaman. Gunakan format internasional tanpa tanda + (contoh: 6281234567890).</p>
         <form action="" method="post">
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
             <div class="form-group">
                 <label>Nomor WhatsApp</label>
                 <input type="text" name="whatsapp_number" value="<?= htmlspecialchars($current_wa) ?>" placeholder="Contoh: 6281234567890" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
@@ -115,6 +128,7 @@ $current_wa = $wa_row ? $wa_row['setting_value'] : '';
 
         <h3>Ubah Password Admin</h3>
         <form action="" method="post">
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
             <div class="form-group">
                 <label>Password Baru</label>
                 <input type="password" name="new_password" placeholder="Minimal 6 karakter" required minlength="6" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">

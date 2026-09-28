@@ -1,6 +1,7 @@
 <?php
-session_start();
+require 'auth.php';
 require '../config.php';
+require 'upload_helper.php';
 
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
     header('Location: ../login.php');
@@ -24,30 +25,29 @@ if (!$item) {
 
 // Menangani Update
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_item'])) {
+    if (!verify_csrf_token($_POST['csrf_token'] ?? '')) {
+        die('Token CSRF tidak valid.');
+    }
+
     $name = $_POST['name'];
     $price = $_POST['price'];
     $description = $_POST['description'];
     
     // Upload Gambar Baru (jika ada)
-    $imagePath = $item['image'];
-    if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-        $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
-        $newFilename = uniqid('item_') . '.' . $ext;
-        $dest = '../uploads/' . $newFilename;
-        if (move_uploaded_file($_FILES['image']['tmp_name'], $dest)) {
-            // Hapus gambar lama jika ada dan valid
-            if ($imagePath && file_exists('../' . $imagePath)) {
-                unlink('../' . $imagePath);
-            }
-            $imagePath = 'uploads/' . $newFilename;
+    $upload = store_uploaded_image($_FILES['image'] ?? null, 'item');
+    if ($upload['error']) {
+        $uploadError = $upload['error'];
+    } else {
+        $imagePath = $upload['path'] ?? $item['image'];
+        $stmt = $pdo->prepare("UPDATE product_items SET name = ?, description = ?, price = ?, image = ? WHERE id = ?");
+        $stmt->execute([$name, $description, $price, $imagePath, $id]);
+        if ($upload['path']) {
+            delete_uploaded_image($item['image']);
         }
-    }
 
-    $stmt = $pdo->prepare("UPDATE product_items SET name = ?, description = ?, price = ?, image = ? WHERE id = ?");
-    $stmt->execute([$name, $description, $price, $imagePath, $id]);
-    
-    header("Location: manage_items.php?product_id=$product_id");
-    exit;
+        header("Location: manage_items.php?product_id=$product_id");
+        exit;
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -105,7 +105,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_item'])) {
     </header>
     <div class="container">
         <h3>Edit Jenis Produk</h3>
+        <?php if (!empty($uploadError)): ?>
+            <p role="alert" style="color:#721c24;"><?= htmlspecialchars($uploadError, ENT_QUOTES, 'UTF-8') ?></p>
+        <?php endif; ?>
         <form action="edit_item.php?id=<?= $id ?>&product_id=<?= $product_id ?>" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
             
             <div class="form-group">
                 <label>Nama Varian/Jenis</label>
@@ -127,7 +131,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_item'])) {
                 <?php if($item['image']): ?>
                     <img src="../<?= htmlspecialchars($item['image']) ?>" class="thumb-preview" alt="Preview">
                 <?php endif; ?>
-                <input type="file" name="image" accept="image/*">
+                <input type="file" name="image" accept="image/jpeg,image/png,image/gif,image/webp">
                 <small style="color: #888; display: block; margin-top: 5px;">Biarkan kosong jika tidak ingin mengubah gambar.</small>
             </div>
             

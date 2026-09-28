@@ -3,6 +3,8 @@
 // Untuk production (InfinityFree), file ini dikonfigurasi manual langsung di server
 // dan tidak akan ditimpa oleh GitHub Actions (sudah di-exclude di deploy.yml)
 
+date_default_timezone_set('Asia/Jakarta');
+
 $host     = 'localhost';
 $dbname   = 'alfi_kitchen';
 $username = 'root';
