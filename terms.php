@@ -71,8 +71,11 @@ include 'header.php';
         <h3>3. Pemesanan dan Pengiriman</h3>
         <ul>
             <li>Kirim pilihan produk dan jumlah pesanan melalui WhatsApp untuk konfirmasi ketersediaan dan harga.</li>
+            <li>Pemesanan puding dilakukan minimal tiga hari sebelum tanggal pengiriman (H-3).</li>
+            <li>Jenis atau pilihan buah mengikuti ketersediaan buah saat pesanan diproses.</li>
             <li>Pengiriman dilakukan langsung ke alamat tujuan (door-to-door) setelah alamat dan pesanan disepakati.</li>
-            <li>Jangkauan, jadwal, biaya pengiriman, dan metode pembayaran dikonfirmasi melalui WhatsApp sebelum pesanan disepakati.</li>
+            <li>Area layanan terbatas pada alamat yang dapat dijangkau kurir instan. Jangkauan untuk alamat Anda dikonfirmasi melalui WhatsApp.</li>
+            <li>Jadwal, biaya pengiriman, dan metode pembayaran dikonfirmasi melalui WhatsApp sebelum pesanan disepakati.</li>
         </ul>
 
         <h3>4. Hak Kekayaan Intelektual</h3>
