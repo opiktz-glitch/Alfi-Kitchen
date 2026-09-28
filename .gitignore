@@ -3,7 +3,8 @@
 config.php
 
 # Runtime/generated files
-logs/
+/logs/*
+!/logs/.htaccess
 
 # Folder uploads - gambar disimpan di server, bukan di Git
 /uploads/*
