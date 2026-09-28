@@ -8,6 +8,8 @@ session_set_cookie_params([
     'samesite' => 'Lax'
 ]);
 session_start();
+// SEO: halaman login tidak boleh diindeks mesin pencari
+header('X-Robots-Tag: noindex, nofollow, noarchive');
 require 'config.php';
 require 'admin/login_rate_limit.php';
 
@@ -87,6 +89,8 @@ if (isset($_GET['timeout']) && $_GET['timeout'] == 1) {
 <html lang="id">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow">
     <title>Login Admin - Alfi Kitchen</title>
     <style>
         body { font-family: Arial; background: #fff8ef; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }

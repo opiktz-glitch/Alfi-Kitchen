@@ -22,6 +22,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $imagePath = $upload['path'];
         $stmt = $pdo->prepare("INSERT INTO products (name, price, image) VALUES (?, ?, ?)");
         $stmt->execute([$name, 0, $imagePath]);
+        $newId = (int) $pdo->lastInsertId();
+
+        // SEO: slug URL ramah-SEO /produk/{slug} (anti-bentrok dengan produk lain)
+        require_once __DIR__ . '/../seo_helpers.php';
+        $slug = generate_unique_product_slug($pdo, $name, $newId);
+        if ($slug === '') {
+            $slug = 'produk-' . $newId;
+        }
+        $pdo->prepare("UPDATE products SET slug = ? WHERE id = ?")->execute([$slug, $newId]);
+
         log_admin_action('ADD_PRODUCT', 'name=' . $name . ', image=' . $imagePath);
 
         header('Location: index.php');

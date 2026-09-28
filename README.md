@@ -33,6 +33,7 @@ Sebelum deploy, tambahkan 3 secrets di **Settings → Secrets → Actions**:
 - Password admin dapat diubah melalui panel **Admin → Pengaturan**
 - Terapkan [database/login_attempts.sql](database/login_attempts.sql) pada database lokal dan hosting sebelum memakai pembatasan percobaan login baru
 - Terapkan [database/settings_utf8mb4.sql](database/settings_utf8mb4.sql) sekali pada database lokal dan hosting sebelum menyimpan teks homepage dari CMS
+- Terapkan [database/product_slug_migration.sql](database/product_slug_migration.sql) sekali pada database lokal dan hosting untuk mengaktifkan URL produk ramah-SEO (`/produk/{slug}`) — aman di InfinityFree; bagian trigger tidak diperlukan karena regenerasi slug ditangani di PHP (`admin/edit_product.php`)
 
 ## 💾 Backup
 - **Database** dapat diekspor via tombol **📥 Backup Database** di **Admin → Pengaturan**

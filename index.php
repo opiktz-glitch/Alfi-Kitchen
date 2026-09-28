@@ -17,4 +17,24 @@ $homeSettings = $pdo->query(
 $homeTitle = $homeSettings['home_title'] ?? "Selamat Datang di\nAlfi Kitchen";
 $homeDescription = $homeSettings['home_description'] ?? 'Puding lembut berlapis buah, Dessert sehat dalam kemasan praktis, dan Salad buah bersaus creamy — semua dibuat rumahan dari bahan pilihan, siap menemani hari-harimu.';
 
+// SEO: structured data bisnis (JSON-LD)
+require_once __DIR__ . '/seo_helpers.php';
+$waStmt = $pdo->prepare("SELECT setting_value FROM settings WHERE setting_key = 'whatsapp_number'");
+$waStmt->execute();
+$waDigits = preg_replace('/\D+/', '', (string) ($waStmt->fetchColumn() ?: ''));
+
+$jsonLd = [
+	'@context' => 'https://schema.org',
+	'@type' => 'FoodEstablishment',
+	'name' => 'Alfi Kitchen',
+	'description' => $pageDescription,
+	'url' => site_url(''),
+	'image' => site_url(file_exists(__DIR__ . '/uploads/logo.png') ? 'uploads/logo.png' : 'hero.jpg'),
+	'servesCuisine' => ['Puding', 'Dessert', 'Salad Buah'],
+	'inLanguage' => 'id',
+];
+if ($waDigits !== '') {
+	$jsonLd['telephone'] = '+' . $waDigits;
+}
+
 require 'views/home.view.php';

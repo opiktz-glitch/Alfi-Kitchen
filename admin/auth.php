@@ -4,6 +4,11 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+// SEO: halaman admin tidak boleh diindeks mesin pencari
+if (!headers_sent()) {
+    header('X-Robots-Tag: noindex, nofollow, noarchive');
+}
+
 function generate_csrf_token() {
     if (empty($_SESSION['csrf_token'])) {
         $_SESSION['csrf_token'] = bin2hex(random_bytes(32));

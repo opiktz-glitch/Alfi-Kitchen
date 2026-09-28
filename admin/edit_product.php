@@ -2,6 +2,7 @@
 require 'auth.php';
 require '../config.php';
 require 'upload_helper.php';
+require_once __DIR__ . '/../seo_helpers.php';
 
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
     header('Location: ../login.php');
@@ -35,8 +36,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $uploadError = $upload['error'];
     } else {
         $imagePath = $upload['path'] ?? $product['image'];
-        $stmt = $pdo->prepare("UPDATE products SET name = ?, image = ? WHERE id = ?");
-        $stmt->execute([$name, $imagePath, $id]);
+        // Regenerasi slug saat nama berubah (pengganti trigger yang tidak
+        // didukung shared hosting InfinityFree). Lihat database/product_slug_migration.sql
+        $slug = (string) ($product['slug'] ?? '');
+        if ($name !== $product['name'] || $slug === '') {
+            $slug = generate_unique_product_slug($pdo, $name, (int) $id);
+            if ($slug === '') {
+                $slug = 'produk-' . (int) $id;
+            }
+        }
+        $stmt = $pdo->prepare("UPDATE products SET name = ?, slug = ?, image = ? WHERE id = ?");
+        $stmt->execute([$name, $slug, $imagePath, $id]);
         if ($upload['path']) {
             delete_uploaded_image($product['image']);
         }

@@ -1,0 +1,17 @@
+# SEO: robots.txt & sitemap.xml dibuat dinamis (mengikuti domain yang dipakai)
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Produk URL ramah SEO: /produk/nama-produk
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^produk/([^/]+)/?$ product.php?slug=$1 [L,QSA]
+
+    # Tanpa trailing slash (hindari URL ganda)
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.+)//$ /$1 [R=301,L]
+
+    RewriteRule ^robots\.txt$ robots.php [L]
+    RewriteRule ^sitemap\.xml$ sitemap.php [L]
+</IfModule>

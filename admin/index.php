@@ -38,6 +38,7 @@ $products = $stmt->fetchAll();
 <html lang="id">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="robots" content="noindex, nofollow">
     <title>Admin Panel - Alfi Kitchen</title>
     <style>
         :root { --accent: #e8935a; --accent-hover: #d17d47; --bg: #fff8ef; --text: #4a3728; --card: #ffffff; --line: #f0ddc0;}
