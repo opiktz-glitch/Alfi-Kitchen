@@ -39,8 +39,13 @@ if ($slugParam !== '') {
     $main_product = $stmt->fetch();
 
     if ($main_product) {
-        // Kalau diakses lewat URL lama product.php?slug=..., pindahkan ke /produk/{slug}
-        if (basename($_SERVER['SCRIPT_NAME'] ?? '') === 'product.php') {
+        // Kalau diakses lewat URL lama product.php?slug=..., pindahkan ke /produk/{slug}.
+        // Deteksi pakai REQUEST_URI (bukan SCRIPT_NAME): saat URL pretty di-rewrite internal
+        // ke product.php, SCRIPT_NAME ikut berubah menjadi /product.php sehingga kondisi
+        // basename(SCRIPT_NAME) ikut cocok dan menyebabkan redirect loop 301 tanpa ujung.
+        $reqUri = $_SERVER['REQUEST_URI'] ?? '';
+        $onPrettyUrl = preg_match('#/produk/#', strtok($reqUri, '?') ?: '') === 1;
+        if (!$onPrettyUrl) {
             header('Location: ' . site_url('produk/' . $main_product['slug']), true, 301);
             exit;
         }
