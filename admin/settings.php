@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['logo'])) {
         die('Token CSRF tidak valid.');
     }
 
-    $upload = store_uploaded_image($_FILES['logo'], 'logo', true, ['image/png'], 'logo.png');
+    $upload = store_uploaded_image($_FILES['logo'], 'logo', true, ['image/png', 'image/jpeg', 'image/jpg', 'image/gif', 'image/webp', 'image/pjpeg'], 'logo.png');
     if ($upload['error']) {
         $message = $upload['error'];
         $messageClass = 'alert alert-error';
@@ -97,8 +97,8 @@ $current_wa = $wa_row ? $wa_row['setting_value'] : '';
         <form action="" method="post" enctype="multipart/form-data">
             <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
             <div class="form-group">
-                <label>Upload Logo Baru (Rasio 1:1, PNG)</label>
-                <input type="file" name="logo" accept="image/png" required>
+                <label>Upload Logo Baru (Rasio 1:1, PNG/JPG/GIF/WEBP)</label>
+                <input type="file" name="logo" accept="image/png,image/jpeg,image/jpg,image/gif,image/webp" required>
             </div>
             <button type="submit" class="btn">Simpan Logo</button>
         </form>

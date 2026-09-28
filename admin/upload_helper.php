@@ -18,6 +18,8 @@ function store_uploaded_image($file, $prefix = 'image', $required = false, $allo
 
     $extensions = [
         'image/jpeg' => 'jpg',
+        'image/jpg' => 'jpg',
+        'image/pjpeg' => 'jpg',
         'image/png' => 'png',
         'image/x-png' => 'png',
         'image/gif' => 'gif',
