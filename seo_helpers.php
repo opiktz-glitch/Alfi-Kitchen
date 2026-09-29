@@ -49,6 +49,81 @@ if (!function_exists('site_url')) {
 }
 
 /**
+ * Bangun meta description unik per halaman produk (maks ~160 karakter).
+ * Prioritas: deskripsi item termurah/mewakili + rentang harga + ajakan WA.
+ * Fallback ke format lama bila tidak ada data item.
+ */
+if (!function_exists('build_product_description')) {
+    function build_product_description(string $productName, array $items): string
+    {
+        $productName = trim($productName);
+        if (empty($items)) {
+            return 'Lihat pilihan ' . $productName . ' dari Alfi Kitchen. Tanyakan ketersediaan, harga, dan pengiriman langsung melalui WhatsApp.';
+        }
+
+        // Kumpulkan harga valid & deskripsi pertama yang terisi
+        $prices = [];
+        $sampleDesc = '';
+        $itemNames = [];
+        foreach ($items as $it) {
+            $price = (float) ($it['price'] ?? 0);
+            if ($price > 0) {
+                $prices[] = $price;
+            }
+            if ($sampleDesc === '' && !empty($it['description'])) {
+                $sampleDesc = trim(preg_replace('/\s+/', ' ', (string) $it['description']));
+            }
+            if (!empty($it['name'])) {
+                $itemNames[] = trim((string) $it['name']);
+            }
+        }
+
+        $count = count($items);
+        $pricePart = '';
+        if (!empty($prices)) {
+            $min = min($prices);
+            $max = max($prices);
+            if (count($prices) > 1 && $min !== $max) {
+                $pricePart = ' Mulai Rp ' . number_format($min, 0, ',', '.') . '–Rp ' . number_format($max, 0, ',', '.') . '.';
+            } else {
+                $pricePart = ' Harga Rp ' . number_format($min, 0, ',', '.') . '.';
+            }
+        }
+
+        // Contoh: "Dessert Alfi Kitchen. 2 varian: Classic Tiramisu, Cendol. ..."
+        $variantPart = '';
+        if (!empty($itemNames)) {
+            $shown = array_slice($itemNames, 0, 3);
+            $variantPart = ' ' . $count . ' varian: ' . implode(', ', $shown);
+            if ($count > 3) {
+                $variantPart .= ', dll.';
+            } else {
+                $variantPart .= '.';
+            }
+        }
+
+        $desc = $productName . ' Alfi Kitchen.' . $variantPart;
+        if ($sampleDesc !== '') {
+            $desc .= ' ' . $sampleDesc;
+        }
+        $desc .= $pricePart . ' Pesan via WhatsApp.';
+
+        // Potong rapi di batas kata, maks 160 karakter
+        $desc = trim(preg_replace('/\s+/', ' ', $desc));
+        if (mb_strlen($desc, 'UTF-8') > 160) {
+            $cut = mb_substr($desc, 0, 157, 'UTF-8');
+            $lastSpace = mb_strrpos($cut, ' ', 0, 'UTF-8');
+            if ($lastSpace !== false && $lastSpace > 100) {
+                $cut = mb_substr($cut, 0, $lastSpace, 'UTF-8');
+            }
+            $desc = rtrim($cut, " \t\n\r\0\x0B,.") . '...';
+        }
+
+        return $desc;
+    }
+}
+
+/**
  * Ubah teks menjadi slug URL yang aman (huruf kecil, angka, tanda hubung).
  * Contoh: "Puding Buah Spesial" -> "puding-buah-spesial"
  */

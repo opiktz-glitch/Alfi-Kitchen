@@ -71,12 +71,13 @@ if ($slugParam !== '') {
 }
 
 $pageTitle = $main_product['name'] . ' | Alfi Kitchen';
-$pageDescription = 'Lihat pilihan ' . $main_product['name'] . ' dari Alfi Kitchen. Tanyakan ketersediaan, harga, dan pengiriman langsung melalui WhatsApp.';
 
-// Mengambil produk untuk ditampilkan di kolom
+// Mengambil produk untuk ditampilkan di kolom (dipindah ke atas agar bisa dipakai description)
 $stmt3 = $pdo->prepare("SELECT * FROM product_items WHERE product_id = ? ORDER BY id DESC");
 $stmt3->execute([$id]);
 $related_products = $stmt3->fetchAll();
+
+$pageDescription = build_product_description($main_product['name'], $related_products);
 
 // SEO: canonical, gambar share, dan structured data
 $canonicalPath = 'produk/' . ensure_product_slug($pdo, $main_product);
