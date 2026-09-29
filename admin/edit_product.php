@@ -31,16 +31,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     $name = $_POST['name'];
+
     $upload = store_uploaded_image($_FILES['image'] ?? null, 'category');
     if ($upload['error']) {
         $uploadError = $upload['error'];
     } else {
         $imagePath = $upload['path'] ?? $product['image'];
-        // Regenerasi slug saat nama berubah (pengganti trigger yang tidak
-        // didukung shared hosting InfinityFree). Lihat database/product_slug_migration.sql
+        // SEO: slug dikunci permanen (dibuat sekali saat tambah produk).
+        // Nama boleh diganti kapan pun, URL /produk/{slug} tetap sama agar
+        // ranking Google & link yang sudah tersebar tidak reset/404.
         $slug = (string) ($product['slug'] ?? '');
-        if ($name !== $product['name'] || $slug === '') {
-            $slug = generate_unique_product_slug($pdo, $name, (int) $id);
+        if ($slug === '') {
+            // Backfill sekali untuk produk lama yang belum punya slug
+            $slug = generate_unique_product_slug($pdo, (string) $product['name'], (int) $id);
             if ($slug === '') {
                 $slug = 'produk-' . (int) $id;
             }
@@ -118,6 +121,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <div class="form-group">
                 <label>Nama Kategori</label>
                 <input type="text" name="name" value="<?= htmlspecialchars($product['name']) ?>" required placeholder="Contoh: Puding">
+                <?php if (!empty($product['slug'])): ?>
+                    <small style="color: #888; display: block; margin-top: 5px;">URL permanen: <code>/produk/<?= htmlspecialchars($product['slug']) ?></code> (tidak berubah walau nama diganti)</small>
+                <?php endif; ?>
             </div>
             
             <div class="form-group">
