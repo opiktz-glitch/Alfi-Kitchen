@@ -10,6 +10,8 @@ config.php
 /uploads/*
 !/uploads/.gitkeep
 !/uploads/.htaccess
+# Kecualikan logo WebP (direferensikan kode, ikut ter-deploy agar hemat bandwidth)
+!/uploads/logo.webp
 
 # OS files
 .DS_Store
