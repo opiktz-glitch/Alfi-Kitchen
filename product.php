@@ -158,9 +158,9 @@ include 'header.php';
         <?php endif; ?>
         
         <!-- Judul Kolom (Nama Produk) -->
-        <h3 style="margin: 0 0 12px; font-size: 1.3rem; font-weight: 700; color: var(--fg); text-align: center;">
+        <h2 style="margin: 0 0 12px; font-size: 1.3rem; font-weight: 700; color: var(--fg); text-align: center;">
             <?= htmlspecialchars($rp['name']) ?>
-        </h3>
+        </h2>
         
         <!-- Deskripsi -->
         <p style="color: var(--muted); font-size: 0.95rem; line-height: 1.6; flex-grow: 1; margin: 0 0 20px; text-align: center;">

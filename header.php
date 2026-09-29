@@ -21,6 +21,32 @@ $seoImage = $pageImage ?? (file_exists(__DIR__ . '/uploads/logo.png') ? 'uploads
 if (!preg_match('#^https?://#i', $seoImage)) {
     $seoImage = site_url($seoImage);
 }
+// Dimensi + alt gambar share (WA/FB/Twitter butuh ini agar preview tidak pecah/kepotong)
+$seoImageWidth = null;
+$seoImageHeight = null;
+$seoImageAlt = $seoTitle;
+// Petakan URL gambar ke file lokal: buang base URL situs, sisanya path relatif dari root project
+$__seoBase = rtrim(site_base_url(), '/');
+$__seoImg = strtok($seoImage, '?#');
+if (strpos($__seoImg, $__seoBase . '/') === 0) {
+    $__seoRel = substr($__seoImg, strlen($__seoBase) + 1);
+} else {
+    $__seoRel = ltrim(preg_replace('#^https?://[^/]+/#', '', $__seoImg), '/');
+    // Buang prefix subfolder instalasi (mis. Alfi_Kitchen/) bila ada
+    $__seoBasePath = trim(parse_url($__seoBase, PHP_URL_PATH) ?? '', '/');
+    if ($__seoBasePath !== '' && strpos($__seoRel, $__seoBasePath . '/') === 0) {
+        $__seoRel = substr($__seoRel, strlen($__seoBasePath) + 1);
+    }
+}
+$__seoFile = __DIR__ . '/' . $__seoRel;
+if (is_file($__seoFile)) {
+    $__seoSize = @getimagesize($__seoFile);
+    if (is_array($__seoSize)) {
+        $seoImageWidth = (int) $__seoSize[0];
+        $seoImageHeight = (int) $__seoSize[1];
+    }
+}
+unset($__seoBase, $__seoImg, $__seoRel, $__seoBasePath, $__seoFile, $__seoSize);
 $seoType = $ogType ?? 'website';
 ?>
 <base href="<?= htmlspecialchars(site_url(''), ENT_QUOTES, 'UTF-8') ?>">
@@ -37,6 +63,11 @@ $seoType = $ogType ?? 'website';
 <meta property="og:description" content="<?= htmlspecialchars($seoDescription, ENT_QUOTES, 'UTF-8') ?>">
 <meta property="og:url" content="<?= htmlspecialchars($seoCanonical, ENT_QUOTES, 'UTF-8') ?>">
 <meta property="og:image" content="<?= htmlspecialchars($seoImage, ENT_QUOTES, 'UTF-8') ?>">
+<?php if (!empty($seoImageWidth) && !empty($seoImageHeight)): ?>
+<meta property="og:image:width" content="<?= (int) $seoImageWidth ?>">
+<meta property="og:image:height" content="<?= (int) $seoImageHeight ?>">
+<?php endif; ?>
+<meta property="og:image:alt" content="<?= htmlspecialchars($seoImageAlt, ENT_QUOTES, 'UTF-8') ?>">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="<?= htmlspecialchars($seoTitle, ENT_QUOTES, 'UTF-8') ?>">
 <meta name="twitter:description" content="<?= htmlspecialchars($seoDescription, ENT_QUOTES, 'UTF-8') ?>">
