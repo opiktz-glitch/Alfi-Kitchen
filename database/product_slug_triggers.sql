@@ -1,5 +1,10 @@
 -- ============================================================
--- OPSIONAL: Trigger regenerasi slug saat nama produk diubah.
+-- OPSIONAL/LEGACY: Trigger regenerasi slug saat nama produk diubah.
+--
+-- PERHATIAN: trigger ini BERLAWANAN dengan kebijakan kunci slug permanen
+-- (admin/edit_product.php mempertahankan slug agar URL /produk/{slug} stabil).
+-- JANGAN dipasang bila ingin URL stabil seperti Tokopedia/Shopee.
+-- File ini dipertahankan hanya sebagai dokumentasi/riwayat.
 --
 -- CATATAN: Shared hosting InfinityFree MENOLAK pembuatan trigger
 -- (#1142 TRIGGER command denied). Jangan jalankan file ini di

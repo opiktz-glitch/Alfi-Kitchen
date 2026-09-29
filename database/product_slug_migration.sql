@@ -16,9 +16,12 @@ UPDATE products SET slug = CONCAT('produk-', id) WHERE slug IS NULL OR slug = ''
 CREATE UNIQUE INDEX uq_products_slug ON products(slug);
 
 -- CATATAN (InfinityFree): pembuatan TRIGGER ditolak oleh shared hosting
--- (#1142 TRIGGER command denied). Regenerasi slug saat nama produk diubah
--- dari Admin sudah ditangani di PHP: admin/edit_product.php (lihat fungsi
--- generate_unique_product_slug di seo_helpers.php). Trigger sudah DIHAPUS
+-- (#1142 TRIGGER command denied). Slug produk DIKUNCI permanen: dibuat sekali
+-- saat tambah produk (admin/add_product.php) dan tidak berubah saat nama
+-- diedit (admin/edit_product.php), mengikuti pola Tokopedia/Shopee agar URL
+-- /produk/{slug} stabil dan ranking tidak reset. Trigger sudah DIHAPUS
 -- dari migrasi ini agar aman dijalankan ulang di hosting; trigger opsional
 -- tersedia terpisah di database/product_slug_triggers.sql (hanya untuk
--- hosting yang mengizinkan TRIGGER, mis. XAMPP lokal).
+-- hosting yang mengizinkan TRIGGER, mis. XAMPP lokal). PERHATIAN: trigger
+-- tersebut MEREGENERASI slug saat nama berubah dan BERLAWANAN dengan
+-- kebijakan kunci permanen — jangan dipasang bila ingin URL stabil.
