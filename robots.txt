@@ -3,3 +3,5 @@ Disallow: /admin/
 Disallow: /login.php
 Disallow: /logs/
 Disallow: /database/
+
+Sitemap: https://kitchen.pojokberkah.online/sitemap.xml
