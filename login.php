@@ -92,6 +92,7 @@ if (isset($_GET['timeout']) && $_GET['timeout'] == 1) {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex, nofollow">
     <title>Login Admin - Alfi Kitchen</title>
+    <link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48">
     <style>
         body { font-family: Arial; background: #fff8ef; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
         .login-box { background: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 300px; text-align: center; }
