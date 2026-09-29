@@ -23,6 +23,7 @@ if (!preg_match('#^https?://#i', $seoImage)) {
 }
 $seoType = $ogType ?? 'website';
 ?>
+<base href="<?= htmlspecialchars(site_url(''), ENT_QUOTES, 'UTF-8') ?>">
 <link rel="canonical" href="<?= htmlspecialchars($seoCanonical, ENT_QUOTES, 'UTF-8') ?>">
 <?php if (!empty($noindex)): ?>
 <meta name="robots" content="noindex, nofollow">
