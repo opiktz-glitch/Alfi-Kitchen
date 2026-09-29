@@ -12,7 +12,8 @@ function product_not_found() {
     $pageDescription = 'Produk yang Anda cari tidak ditemukan. Lihat pilihan puding, dessert, dan salad buah dari Alfi Kitchen.';
     $noindex = true;
     include 'header.php';
-    echo '<style>header { display: none !important; }</style>';
+    // Logo melayang (konsisten dengan halaman produk) agar pengunjung 404 mudah kembali ke beranda
+    echo '<a href="index.php" class="floating-logo" title="Kembali ke Beranda" style="position: fixed; z-index: 999;"><img src="' . htmlspecialchars($logo_src) . '" alt="Alfi Kitchen Logo"></a>';
     echo '<main style="padding: 80px 6vw; min-height: 60vh; text-align: center;">';
     echo '<h1 style="font-size: clamp(1.8rem, 4vw, 2.6rem); margin: 0 0 16px;">Produk tidak ditemukan</h1>';
     echo '<p style="color: var(--muted); margin: 0 0 28px;">Produk yang Anda cari mungkin sudah dihapus atau alamatnya salah.</p>';
@@ -126,11 +127,6 @@ $jsonLd = [
 
 include 'header.php';
 ?>
-<style>
-  /* Sembunyikan sisa header karena tidak terpakai */
-  header { display: none !important; }
-</style>
-
 <!-- Logo Melayang Fixed -->
 <a href="index.php" class="floating-logo" title="Kembali ke Beranda" style="position: fixed; z-index: 999;">
     <img src="<?= $logo_src ?>" alt="Alfi Kitchen Logo">
