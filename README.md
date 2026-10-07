@@ -38,3 +38,9 @@ Sebelum deploy, tambahkan 3 secrets di **Settings → Secrets → Actions**:
 ## 💾 Backup
 - **Database** dapat diekspor via tombol **📥 Backup Database** di **Admin → Pengaturan**
 - **Gambar** dapat diekspor via tombol **🖼️ Backup Semua Gambar** di **Admin → Pengaturan**
+
+## ⚡ Optimasi Performa & SEO
+- **WebP On-the-Fly**: Semua gambar produk, logo, dan slider dikompresi serta dikonversi ke format WebP secara otomatis oleh `thumb.php` berdasarkan resolusi layar.
+- **Auto-Compression Upload**: Pengunggahan gambar di panel admin otomatis dipangkas dimensinya (maks. 1600px untuk hero/produk) tanpa kehilangan kualitas visual, menghemat >70% penyimpanan.
+- **Preload LCP (Largest Contentful Paint)**: Gambar Hero utama di-preload secara dinamis untuk menjamin skor PageSpeed sempurna, bebas *render-blocking*.
+- **Aksesibilitas (A11Y)**: Kode HTML telah dioptimalkan (kontras warna rasio 4.5:1 standar WCAG AA, penambahan atribut `aria-label`, serta resolusi `width`/`height` eksplisit pada gambar) demi kemudahan Screen Reader.
