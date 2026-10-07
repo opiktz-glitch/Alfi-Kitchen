@@ -1,7 +1,8 @@
 <?php include 'header.php'; ?>
 
 <!-- Tambahkan CSS Swiper -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css"></noscript>
 
   <div class="hero swiper mySwiper">
   <div class="swiper-wrapper">
@@ -58,7 +59,7 @@
 </main>
 
 <!-- Tambahkan JS Swiper -->
-<script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js" defer></script>
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     var swiper = new Swiper(".mySwiper", {
