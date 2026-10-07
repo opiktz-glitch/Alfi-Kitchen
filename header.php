@@ -87,7 +87,7 @@ $seoType = $ogType ?? 'website';
 <?php endif; ?>
 <style>
   :root{
-    --bg:#fff8ef; --fg:#4a3728; --muted:#8a745e; --accent:#e8935a; --card:#fff1de; --line:#f0ddc0;
+    --bg:#fff8ef; --fg:#4a3728; --muted:#5c4a3d; --accent:#e8935a; --card:#fff1de; --line:#f0ddc0;
     box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
   }
   *{box-sizing:border-box; transition: all 0.2s ease;}
