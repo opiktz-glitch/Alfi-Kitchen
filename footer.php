@@ -21,7 +21,7 @@ $wa_footer_number = $wa_footer_row ? $wa_footer_row['setting_value'] : '';
     bottom: 90px;
     right: 24px;
     z-index: 9999;
-    background: #25d366;
+    background: #075e54; /* Dark WhatsApp Green for contrast */
     color: #fff;
     border-radius: 50px;
     display: flex;
@@ -32,15 +32,15 @@ $wa_footer_number = $wa_footer_row ? $wa_footer_row['setting_value'] : '';
     font-family: 'Inter', sans-serif;
     font-weight: 600;
     font-size: 0.95rem;
-    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+    box-shadow: 0 6px 20px rgba(7, 94, 84, 0.4);
     transition: all 0.3s ease;
     max-width: 220px;
     overflow: hidden;
   }
   .wa-float:hover {
-    background: #1ebe5d;
+    background: #128c7e; /* Lighter WhatsApp teal on hover */
     transform: translateY(-3px);
-    box-shadow: 0 10px 28px rgba(37, 211, 102, 0.5);
+    box-shadow: 0 10px 28px rgba(7, 94, 84, 0.5);
     max-width: 220px;
   }
   .wa-float svg {
