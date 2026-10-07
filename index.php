@@ -10,6 +10,9 @@ $products = $stmt->fetchAll();
 // Fetch hero images
 $stmt2 = $pdo->query("SELECT * FROM hero_images ORDER BY id DESC");
 $hero_images = $stmt2->fetchAll();
+if (!empty($hero_images)) {
+    $preloadImage = $hero_images[0]['image'];
+}
 
 $homeSettings = $pdo->query(
 	"SELECT setting_key, setting_value FROM settings WHERE setting_key IN ('home_title', 'home_description')"
