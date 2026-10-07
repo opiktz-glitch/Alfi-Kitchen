@@ -32,13 +32,13 @@ $origW = $info[0];
 $origH = $info[1];
 $mime = $info['mime'];
 
-if ($origW <= $w) {
-    header('Content-Type: ' . $mime);
-    readfile($filePath);
-    exit;
-}
-
 $h = (int)floor($origH * ($w / $origW));
+
+if ($origW <= $w) {
+    // Keep original dimensions if smaller, but still convert to WebP
+    $w = $origW;
+    $h = $origH;
+}
 
 $im = null;
 if ($mime == 'image/jpeg') $im = @imagecreatefromjpeg($filePath);

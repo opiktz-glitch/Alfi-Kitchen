@@ -9,12 +9,12 @@
       <?php if (!empty($hero_images)): ?>
           <?php foreach ($hero_images as $index => $img): ?>
               <div class="swiper-slide">
-                  <img src="<?= htmlspecialchars($img['image']) ?>" alt="Promo produk Alfi Kitchen: puding, dessert, dan salad buah rumahan" width="1280" height="720" <?= $index === 0 ? 'fetchpriority="high"' : 'loading="lazy"' ?> style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                  <img src="thumb.php?file=<?= urlencode($img['image']) ?>&w=800" alt="Promo produk Alfi Kitchen: puding, dessert, dan salad buah rumahan" width="800" height="450" <?= $index === 0 ? 'fetchpriority="high"' : 'loading="lazy"' ?> style="width: 100%; height: 100%; object-fit: cover; display: block;">
               </div>
           <?php endforeach; ?>
       <?php else: ?>
           <div class="swiper-slide">
-              <img src="hero.jpg" alt="Puding, dessert, dan salad buah rumahan Alfi Kitchen" width="1280" height="720" fetchpriority="high" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+              <img src="thumb.php?file=hero.jpg&w=800" alt="Puding, dessert, dan salad buah rumahan Alfi Kitchen" width="800" height="450" fetchpriority="high" style="width: 100%; height: 100%; object-fit: cover; display: block;">
           </div>
       <?php endif; ?>
   </div>

@@ -11,7 +11,7 @@ $products = $stmt->fetchAll();
 $stmt2 = $pdo->query("SELECT * FROM hero_images ORDER BY id DESC");
 $hero_images = $stmt2->fetchAll();
 if (!empty($hero_images)) {
-    $preloadImage = $hero_images[0]['image'];
+    $preloadImage = 'thumb.php?file=' . urlencode($hero_images[0]['image']) . '&w=800';
 }
 
 $homeSettings = $pdo->query(
