@@ -97,6 +97,15 @@ class SeoAndRoutingTest extends TestCase
         $this->assertStringContainsString("\$cachePath", $thumbContent);
         $this->assertStringContainsString("imagewebp(\$dst, \$cachePath, \$q)", $thumbContent);
     }
+
+    public function testRobotsTxtExistsAndPointsToSitemap(): void
+    {
+        $robotsPath = __DIR__ . '/../../robots.txt';
+        $this->assertFileExists($robotsPath);
+        $content = file_get_contents($robotsPath);
+        $this->assertStringContainsString('User-agent: *', $content);
+        $this->assertStringContainsString('Sitemap:', $content);
+    }
 }
 
 

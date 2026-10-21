@@ -27,6 +27,7 @@
     RewriteRule ^(.+)//$ /$1 [R=301,L]
 
     # SEO: robots.txt & sitemap.xml dibuat dinamis (mengikuti domain yang dipakai)
+    RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^robots\.txt$ robots.php [L]
     RewriteRule ^sitemap\.xml$ sitemap.php [L]
 </IfModule>
