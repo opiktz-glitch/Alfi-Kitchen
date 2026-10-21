@@ -33,3 +33,28 @@
 
 # Matikan directory listing (keamanan + SEO: jangan biarkan /uploads terindeks)
 Options -Indexes
+
+# Lindungi file sensitif dari akses HTTP langsung (kompatibel Apache 2.2 & 2.4)
+<FilesMatch "(\.(sql|log|ini|env|gitignore|clineignore)|phpunit\.xml)$">
+    <IfModule !mod_authz_core.c>
+        Order deny,allow
+        Deny from all
+    </IfModule>
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+</FilesMatch>
+
+# ============================================================================
+# SEO Modern: Hindari indeksasi area admin & sistem lewat X-Robots-Tag
+# Pendekatan ini direkomendasikan Google alih-alih Disallow di robots.txt,
+# karena Disallow hanya mencegah crawling, TIDAK mencegah indeksasi jika
+# URL tersebut ditemukan dari link eksternal.
+# ============================================================================
+<IfModule mod_setenvif.c>
+    SetEnvIf Request_URI "(^|/)(admin/|login\.php|logs/|database/)" NOINDEX
+</IfModule>
+
+<IfModule mod_headers.c>
+    Header set X-Robots-Tag "noindex, nofollow" env=NOINDEX
+</IfModule>

@@ -1,12 +1,9 @@
 <?php
-require 'auth.php';
+require 'auth_check.php';
+require_once __DIR__ . '/helpers/db_helper.php';
 
-if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
-    header('Location: ../login.php');
-    exit;
-}
 
-$dirPath = '../uploads';
+$dirPath = uploads_directory();
 $zipName = 'alfi_kitchen_images_' . date('Ymd_His') . '.zip';
 $zipPath = sys_get_temp_dir() . '/' . $zipName;
 
@@ -31,6 +28,8 @@ if (is_dir($dirPath)) {
         if (!$file->isDir()) {
             $filePath = $file->getRealPath();
             $relativePath = substr($filePath, strlen(realpath($dirPath)) + 1);
+            // Normalisasi separator agar entri ZIP konsisten antar-OS
+            $relativePath = str_replace('\\', '/', $relativePath);
             $zip->addFile($filePath, $relativePath);
         }
     }

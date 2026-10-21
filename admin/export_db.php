@@ -1,11 +1,7 @@
 <?php
-require 'auth.php';
+require 'auth_check.php';
 require '../config.php';
 
-if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
-    header('Location: ../login.php');
-    exit;
-}
 
 // Dapatkan semua nama tabel dengan urutan yang benar (Parent sebelum Child)
 $tables = ['users', 'login_attempts', 'products', 'product_items', 'hero_images', 'settings'];

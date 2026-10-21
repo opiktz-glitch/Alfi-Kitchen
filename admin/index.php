@@ -1,26 +1,19 @@
 <?php
-require 'auth.php';
+require 'auth_check.php';
 require '../config.php';
-
-if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
-    header('Location: ../login.php');
-    exit;
-}
+require_once __DIR__ . '/upload_helper.php';
+require 'csrf_check.php';
 
 // Menangani Hapus Produk
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
-    if (!verify_csrf_token($_POST['csrf_token'] ?? '')) {
-        die('Token CSRF tidak valid.');
-    }
-
     $productId = (int) $_POST['delete'];
 
     // Ambil path gambar sebelum hapus
     $stmt = $pdo->prepare("SELECT image FROM products WHERE id = ?");
     $stmt->execute([$productId]);
     $prod = $stmt->fetch();
-    if ($prod && $prod['image'] && file_exists('../' . $prod['image'])) {
-        unlink('../' . $prod['image']);
+    if ($prod && !empty($prod['image'])) {
+        delete_uploaded_image($prod['image']);
     }
 
     $stmt = $pdo->prepare("DELETE FROM products WHERE id = ?");
@@ -40,61 +33,14 @@ $products = $stmt->fetchAll();
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="robots" content="noindex, nofollow">
     <title>Admin Panel - Alfi Kitchen</title>
-    <style>
-        :root { --accent: #e8935a; --accent-hover: #d17d47; --bg: #fff8ef; --text: #4a3728; --card: #ffffff; --line: #f0ddc0;}
-        body { font-family: 'Inter', Arial, sans-serif; background: var(--bg); margin: 0; color: var(--text); }
-        header { background: var(--text); color: white; padding: 15px 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
-        header h2 { margin: 0; font-size: 1.5rem; }
-        
-        .container { max-width: 1000px; margin: 40px auto; padding: 0 20px;}
-        .header-action { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 15px;}
-        .header-action h2 { margin: 0; font-size: 1.8rem; }
-        
-        .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); border: 1px solid var(--line); background: var(--card); }
-        table { width: 100%; min-width: 500px; border-collapse: collapse; }
-        th, td { padding: 15px; text-align: left; vertical-align: middle; border-bottom: 1px solid var(--line); }
-        th { background: #fff1de; font-weight: 700; color: var(--text); }
-        tr:last-child td { border-bottom: none; }
-        
-        .btn { 
-            padding: 10px 18px; border: none; border-radius: 8px; cursor: pointer; 
-            font-weight: bold; font-size: 0.95rem; text-align: center; display: inline-block;
-            transition: all 0.2s ease; text-decoration: none; margin-right: 5px; margin-bottom: 5px;
-        }
-        .btn-primary { background: var(--accent); color: white; box-shadow: 0 4px 12px rgba(232,147,90,0.3); }
-        .btn-primary:hover { background: var(--accent-hover); transform: translateY(-2px); box-shadow: 0 6px 15px rgba(232,147,90,0.4); }
-        
-        .btn-secondary { background: #8a745e; color: white; }
-        .btn-secondary:hover { background: #73614e; transform: translateY(-2px); }
-        
-        .btn-danger { background: #d9534f; color: white; }
-        .btn-danger:hover { background: #c9302c; transform: translateY(-2px); }
-        
-        .btn-cancel { background: #f0ddc0; color: var(--text); }
-        .btn-cancel:hover { background: #e6ceaa; transform: translateY(-2px); }
-        
-        .thumb { width: 60px; height: 60px; object-fit: cover; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-
-        @media (max-width: 600px) {
-            header { padding: 15px 20px; }
-            .container { margin: 20px auto; }
-            .header-action { flex-direction: column; align-items: flex-start; }
-            .btn { width: 100%; margin-right: 0; box-sizing: border-box; }
-            td { display: block; border-bottom: none; padding: 10px 15px; }
-            td:first-child { padding-top: 15px; }
-            td:last-child { padding-bottom: 15px; border-bottom: 1px solid var(--line); }
-            tr:last-child td:last-child { border-bottom: none; }
-            th { display: none; }
-            table { min-width: 100%; }
-        }
-    </style>
+    <link rel="stylesheet" href="assets/css/admin.css">
 </head>
 <body>
-    <header>
+    <header class="admin-header">
         <h2>Alfi Kitchen Admin</h2>
-        <a href="logout.php" style="color: #e8935a; font-weight: bold; text-decoration: none;">Logout</a>
+        <a href="logout.php" class="btn btn-danger">Logout</a>
     </header>
-    <div class="container">
+    <div class="admin-container">
         <div class="header-action">
             <h2>Daftar Kategori Produk</h2>
             <div>

@@ -1,4 +1,14 @@
 <?php
+/**
+ * Helper upload gambar untuk panel admin Alfi Kitchen.
+ *
+ * Sumber kebenaran untuk path folder uploads dan penghapusan file gambar
+ * ada di admin/helpers/db_helper.php. File ini me-load helper tersebut agar
+ * fungsi delete_uploaded_image() selalu tersedia bagi halaman admin yang
+ * hanya me-require upload_helper.php (tanpa risiko "Cannot redeclare").
+ */
+require_once __DIR__ . '/helpers/db_helper.php';
+
 function store_uploaded_image($file, $prefix = 'image', $required = false, $allowedMimeTypes = null, $fixedFilename = null) {
     if (!$file || ($file['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) {
         return $required
@@ -45,7 +55,7 @@ function store_uploaded_image($file, $prefix = 'image', $required = false, $allo
     }
 
     $extension = $extensions[$mimeType];
-    $uploadDirectory = dirname(__DIR__) . '/uploads';
+    $uploadDirectory = uploads_directory();
     if (!is_dir($uploadDirectory) && !mkdir($uploadDirectory, 0755, true) && !is_dir($uploadDirectory)) {
         return ['path' => null, 'error' => 'Folder upload tidak dapat dibuat.'];
     }
@@ -191,17 +201,5 @@ function compress_uploaded_image($destination, $mimeType, $prefix = '') {
         @chmod($destination, 0644);
     } else {
         @unlink($tmp); // hasil lebih besar / gagal -> pakai asli
-    }
-}
-
-function delete_uploaded_image($relativePath) {
-    if (!is_string($relativePath) || strpos($relativePath, 'uploads/') !== 0) {
-        return;
-    }
-
-    $uploadDirectory = realpath(dirname(__DIR__) . '/uploads');
-    $target = realpath(dirname(__DIR__) . '/' . $relativePath);
-    if ($uploadDirectory && $target && strpos($target, $uploadDirectory . DIRECTORY_SEPARATOR) === 0 && is_file($target)) {
-        unlink($target);
     }
 }

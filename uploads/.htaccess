@@ -1,3 +1,9 @@
 <FilesMatch "\.(?i:php[0-9]?|phtml|phar)$">
-    Require all denied
+    <IfModule !mod_authz_core.c>
+        Order deny,allow
+        Deny from all
+    </IfModule>
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
 </FilesMatch>

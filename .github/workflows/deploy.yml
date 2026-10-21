@@ -29,5 +29,10 @@ jobs:
             .env
             .env.example
             README.md
+            CATATAN.md
+            .clineignore
+            phpunit.xml
+            tests/**
             **/node_modules/**
             config.php
+

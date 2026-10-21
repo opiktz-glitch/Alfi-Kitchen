@@ -1,13 +1,34 @@
 <?php
+/**
+ * Penyaji gambar on-the-fly (WebP + resize) untuk Alfi Kitchen.
+ *
+ * Keamanan: parameter 'file' berasal dari user, jadi WAJIB divalidasi.
+ * File yang boleh disajikan hanya:
+ *  1. Gambar di dalam folder uploads/ di root project (mis. 'uploads/abc.jpg')
+ *  2. Gambar statis di root project (mis. 'hero.jpg', 'apple-touch-icon.png')
+ *
+ * Semua path di luar itu (termasuk file .php seperti config.php) DITOLAK.
+ */
+
+require_once __DIR__ . '/admin/helpers/db_helper.php';
+
 $file = $_GET['file'] ?? '';
 $w = (int)($_GET['w'] ?? 150);
 
-if (!$file || !file_exists(__DIR__ . '/' . $file)) {
-    header("HTTP/1.0 404 Not Found");
+$filePath = resolve_thumbnail_path(is_string($file) ? $file : '');
+
+if ($filePath === null) {
+    header('HTTP/1.0 404 Not Found');
     exit;
 }
 
-$filePath = __DIR__ . '/' . $file;
+// Hanya layani file gambar (dicek lewat isi file, bukan sekadar ekstensi).
+$info = @getimagesize($filePath);
+if (!$info) {
+    header('HTTP/1.0 404 Not Found');
+    exit;
+}
+
 $ext = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
 
 // Cache headers
@@ -21,9 +42,11 @@ if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) && strtotime($_SERVER['HTTP_IF_MOD
     exit;
 }
 
-$info = @getimagesize($filePath);
-if (!$info) {
-    header('Content-Type: ' . mime_content_type($filePath));
+// Tanpa extension GD, kita tidak bisa resize/convert.
+// Fallback aman: layani file gambar aslinya apa adanya (tetap tervalidasi path-nya).
+if (!function_exists('imagecreatetruecolor') || !function_exists('imagewebp')) {
+    $originalMime = $info['mime'] ?? mime_content_type($filePath);
+    header('Content-Type: ' . $originalMime);
     readfile($filePath);
     exit;
 }

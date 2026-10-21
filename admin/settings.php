@@ -1,20 +1,12 @@
 <?php
-require 'auth.php';
+require 'auth_check.php';
 require '../config.php';
-require 'upload_helper.php';
-
-if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
-    header('Location: ../login.php');
-    exit;
-}
+require_once __DIR__ . '/upload_helper.php';
+require 'csrf_check.php';
 
 $message = '';
 $messageClass = 'alert';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['logo'])) {
-    if (!verify_csrf_token($_POST['csrf_token'] ?? '')) {
-        die('Token CSRF tidak valid.');
-    }
-
     $upload = store_uploaded_image($_FILES['logo'], 'logo', true, ['image/png', 'image/jpeg', 'image/jpg', 'image/gif', 'image/webp', 'image/pjpeg'], 'logo.png');
     if ($upload['error']) {
         $message = $upload['error'];
@@ -23,10 +15,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['logo'])) {
         $message = "Logo berhasil diperbarui!";
     }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
-    if (!verify_csrf_token($_POST['csrf_token'] ?? '')) {
-        die('Token CSRF tidak valid.');
-    }
-
     $new_password = $_POST['new_password'];
     $hashed = password_hash($new_password, PASSWORD_DEFAULT);
     
@@ -38,10 +26,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['logo'])) {
         $message = "Terjadi kesalahan saat mengubah password.";
     }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_home_content'])) {
-    if (!verify_csrf_token($_POST['csrf_token'] ?? '')) {
-        die('Token CSRF tidak valid.');
-    }
-
     $home_title = trim(is_string($_POST['home_title'] ?? null) ? $_POST['home_title'] : '');
     $home_description = trim(is_string($_POST['home_description'] ?? null) ? $_POST['home_description'] : '');
 
@@ -65,10 +49,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['logo'])) {
         }
     }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_whatsapp'])) {
-    if (!verify_csrf_token($_POST['csrf_token'] ?? '')) {
-        die('Token CSRF tidak valid.');
-    }
-
     $wa_number = preg_replace('/[^0-9]/', '', $_POST['whatsapp_number']);
     $stmt = $pdo->prepare("INSERT INTO settings (setting_key, setting_value) VALUES ('whatsapp_number', ?) ON DUPLICATE KEY UPDATE setting_value = ?");
     if ($stmt->execute([$wa_number, $wa_number])) {
@@ -97,95 +77,87 @@ $current_home_description = $home_content['home_description'] ?? 'Puding lembut 
 <head>
     <meta charset="UTF-8">
     <title>Pengaturan - Alfi Kitchen</title>
-    <style>
-        body { font-family: Arial, sans-serif; background: #fff8ef; margin: 0; color: #4a3728; }
-        header { background: #4a3728; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
-        header a { color: #e8935a; text-decoration: none; font-weight: bold; margin-left: 15px;}
-        .container { padding: 20px; max-width: 600px; margin: 0 auto; background: white; border-radius: 8px; margin-top: 20px; border: 1px solid #f0ddc0;}
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 5px; font-weight: bold;}
-        .btn { padding: 10px 15px; background: #e8935a; color: white; text-decoration: none; border-radius: 5px; border: none; cursor: pointer; }
-        .alert { padding: 10px; background: #d4edda; color: #155724; border-radius: 5px; margin-bottom: 15px; }
-        .alert-error { background: #f8d7da; color: #721c24; }
-        .current-logo { width: 80px; height: 80px; object-fit: cover; border-radius: 50%; margin-bottom: 15px; border: 1px solid #ccc; }
-    </style>
+    <link rel="stylesheet" href="assets/css/admin.css">
 </head>
 <body>
-    <header>
+    <header class="admin-header">
         <h2>Alfi Kitchen - Pengaturan</h2>
         <div>
-            <a href="index.php">Kembali</a>
-            <a href="logout.php">Logout</a>
+            <a href="index.php" class="btn btn-cancel">Kembali</a>
+            <a href="logout.php" class="btn btn-danger">Logout</a>
         </div>
     </header>
-    <div class="container">
-        <h3>Pengaturan Logo</h3>
-        <?php if($message): ?>
-            <div class="<?= htmlspecialchars($messageClass) ?>"><?= htmlspecialchars($message) ?></div>
-        <?php endif; ?>
-        
-        <?php if(file_exists('../uploads/logo.png')): ?>
-            <img src="../uploads/logo.png?v=<?= time() ?>" class="current-logo" alt="Logo Saat Ini">
-        <?php endif; ?>
+    <div class="admin-container">
+        <div class="form-card form-card-sm">
+            <h3 style="margin-top:0;">Pengaturan Logo</h3>
+            <?php if($message): ?>
+                <div class="<?= htmlspecialchars($messageClass) ?>"><?= htmlspecialchars($message) ?></div>
+            <?php endif; ?>
+            
+            <?php if(file_exists(uploads_directory() . '/logo.png')): ?>
+                <img src="../uploads/logo.png?v=<?= time() ?>" class="current-logo" alt="Logo Saat Ini">
+            <?php endif; ?>
 
-        <form action="" method="post" enctype="multipart/form-data">
-            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
-            <div class="form-group">
-                <label>Upload Logo Baru (Rasio 1:1, PNG/JPG/GIF/WEBP)</label>
-                <input type="file" name="logo" accept="image/png,image/jpeg,image/jpg,image/gif,image/webp" required>
+            <form action="" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
+                <div class="form-group">
+                    <label>Upload Logo Baru (Rasio 1:1, PNG/JPG/GIF/WEBP)</label>
+                    <input type="file" name="logo" accept="image/png,image/jpeg,image/jpg,image/gif,image/webp" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Simpan Logo</button>
+            </form>
+
+            <hr class="section-hr">
+
+            <h3>Konten Sambutan Homepage</h3>
+            <p style="font-size: 14px; margin-bottom: 15px; color: var(--muted);">Ubah judul dan deskripsi yang tampil di halaman utama.</p>
+            <form action="" method="post">
+                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token(), ENT_QUOTES, 'UTF-8') ?>">
+                <div class="form-group">
+                    <label for="home-title">Judul</label>
+                    <textarea id="home-title" name="home_title" rows="2" maxlength="160" required><?= htmlspecialchars($current_home_title, ENT_QUOTES, 'UTF-8') ?></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="home-description">Deskripsi</label>
+                    <textarea id="home-description" name="home_description" rows="5" maxlength="1200" required><?= htmlspecialchars($current_home_description, ENT_QUOTES, 'UTF-8') ?></textarea>
+                </div>
+                <button type="submit" name="save_home_content" class="btn btn-primary">Simpan Konten Homepage</button>
+            </form>
+
+            <hr class="section-hr">
+
+            <h3>Backup Data & Gambar</h3>
+            <p style="font-size: 14px; margin-bottom: 15px; color: var(--muted);">Anda bisa mengekspor database (.sql) dan seluruh gambar produk (.zip) ke laptop Anda.</p>
+            <div style="display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap;">
+                <a href="export_db.php" class="btn" style="background: #28a745; color: white;">📥 Backup Database</a>
+                <a href="export_images.php" class="btn" style="background: #17a2b8; color: white;">🖼️ Backup Semua Gambar</a>
             </div>
-            <button type="submit" class="btn">Simpan Logo</button>
-        </form>
 
-        <hr style="margin: 30px 0; border: 0; border-top: 1px solid #f0ddc0;">
+            <hr class="section-hr">
 
-        <h3>Konten Sambutan Homepage</h3>
-        <p style="font-size: 14px; margin-bottom: 15px;">Ubah judul dan deskripsi yang tampil di halaman utama.</p>
-        <form action="" method="post">
-            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token(), ENT_QUOTES, 'UTF-8') ?>">
-            <div class="form-group">
-                <label for="home-title">Judul</label>
-                <textarea id="home-title" name="home_title" rows="2" maxlength="160" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;"><?= htmlspecialchars($current_home_title, ENT_QUOTES, 'UTF-8') ?></textarea>
-            </div>
-            <div class="form-group">
-                <label for="home-description">Deskripsi</label>
-                <textarea id="home-description" name="home_description" rows="5" maxlength="1200" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;"><?= htmlspecialchars($current_home_description, ENT_QUOTES, 'UTF-8') ?></textarea>
-            </div>
-            <button type="submit" name="save_home_content" class="btn">Simpan Konten Homepage</button>
-        </form>
+            <h3>Nomor WhatsApp</h3>
+            <p style="font-size: 14px; margin-bottom: 15px; color: var(--muted);">Nomor ini akan digunakan untuk tombol "Pesan via WhatsApp" yang muncul di semua halaman. Gunakan format internasional tanpa tanda + (contoh: 6281234567890).</p>
+            <form action="" method="post">
+                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
+                <div class="form-group">
+                    <label>Nomor WhatsApp</label>
+                    <input type="text" name="whatsapp_number" value="<?= htmlspecialchars($current_wa) ?>" placeholder="Contoh: 6281234567890" required>
+                </div>
+                <button type="submit" name="save_whatsapp" class="btn" style="background: #25d366; color: white;">💬 Simpan Nomor WhatsApp</button>
+            </form>
 
-        <hr style="margin: 30px 0; border: 0; border-top: 1px solid #f0ddc0;">
+            <hr class="section-hr">
 
-        <h3>Backup Data & Gambar</h3>
-        <p style="font-size: 14px; margin-bottom: 15px;">Anda bisa mengekspor database (.sql) dan seluruh gambar produk (.zip) ke laptop Anda.</p>
-        <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-            <a href="export_db.php" class="btn" style="background: #28a745; text-align: center;">📥 Backup Database</a>
-            <a href="export_images.php" class="btn" style="background: #17a2b8; text-align: center;">🖼️ Backup Semua Gambar</a>
+            <h3>Ubah Password Admin</h3>
+            <form action="" method="post">
+                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
+                <div class="form-group">
+                    <label>Password Baru</label>
+                    <input type="password" name="new_password" placeholder="Minimal 6 karakter" required minlength="6">
+                </div>
+                <button type="submit" name="change_password" class="btn btn-secondary">Update Password</button>
+            </form>
         </div>
-        <hr style="margin: 30px 0; border: 0; border-top: 1px solid #f0ddc0;">
-
-        <h3>Nomor WhatsApp</h3>
-        <p style="font-size: 14px; margin-bottom: 15px;">Nomor ini akan digunakan untuk tombol "Pesan via WhatsApp" yang muncul di semua halaman. Gunakan format internasional tanpa tanda + (contoh: 6281234567890).</p>
-        <form action="" method="post">
-            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
-            <div class="form-group">
-                <label>Nomor WhatsApp</label>
-                <input type="text" name="whatsapp_number" value="<?= htmlspecialchars($current_wa) ?>" placeholder="Contoh: 6281234567890" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
-            </div>
-            <button type="submit" name="save_whatsapp" class="btn" style="background: #25d366;">💬 Simpan Nomor WhatsApp</button>
-        </form>
-
-        <hr style="margin: 30px 0; border: 0; border-top: 1px solid #f0ddc0;">
-
-        <h3>Ubah Password Admin</h3>
-        <form action="" method="post">
-            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
-            <div class="form-group">
-                <label>Password Baru</label>
-                <input type="password" name="new_password" placeholder="Minimal 6 karakter" required minlength="6" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
-            </div>
-            <button type="submit" name="change_password" class="btn" style="background: #8a745e;">Update Password</button>
-        </form>
     </div>
 </body>
 </html>
