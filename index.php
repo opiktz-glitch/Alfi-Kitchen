@@ -21,7 +21,7 @@ $homeTitle = $homeSettings['home_title'] ?? "Selamat Datang di\nAlfi Kitchen";
 $homeDescription = $homeSettings['home_description'] ?? 'Puding lembut berlapis buah, Dessert sehat dalam kemasan praktis, dan Salad buah bersaus creamy — semua dibuat rumahan dari bahan pilihan, siap menemani hari-harimu.';
 
 // SEO: structured data bisnis (JSON-LD)
-require_once __DIR__ . '/seo_helpers.php';
+require_once __DIR__ . '/includes/seo_helpers.php';
 $waStmt = $pdo->prepare("SELECT setting_value FROM settings WHERE setting_key = 'whatsapp_number'");
 $waStmt->execute();
 $waDigits = preg_replace('/\D+/', '', (string) ($waStmt->fetchColumn() ?: ''));

@@ -47,6 +47,7 @@ class SyntaxTest extends TestCase
             'database/migrate.php',
             'includes/fallback_logo.php',
             'includes/env_loader.php',
+            'includes/seo_helpers.php',
             'config.example.php',
             'thumb.php',
         ];

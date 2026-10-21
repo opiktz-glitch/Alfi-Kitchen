@@ -1,5 +1,5 @@
 <?php
-require 'seo_helpers.php';
+require_once __DIR__ . '/includes/seo_helpers.php';
 
 // Samakan dengan versi statis agar crawler dapat Sitemap walau mod_rewrite mati.
 // (Isi Sitemap tetap memakai domain resmi via site_url().)

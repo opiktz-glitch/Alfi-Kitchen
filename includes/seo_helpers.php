@@ -1,9 +1,14 @@
 <?php
 /**
- * Helper SEO: URL absolut selalu memakai domain resmi (SITE_URL).
- * - SITE_URL didefinisikan di config.php (tidak ikut deploy, beda lokal vs hosting).
- * - Fallback dinamis hanya dipakai kalau SITE_URL belum di-set (mis. robots.php
- *   yang tidak load config.php, atau CLI tanpa $_SERVER).
+ * Alfi Kitchen — Helper SEO & Routing
+ * Lokasi: includes/seo_helpers.php
+ *
+ * Fungsi:
+ * - site_base_url() & site_url(): Mengonstruksi URL absolut menggunakan domain resmi SITE_URL.
+ * - build_product_description(): Membuat meta deskripsi kaya kata kunci dan varian harga.
+ * - slugify_text(): Mengonversi judul/nama menjadi slug URL yang bersih.
+ * - generate_unique_product_slug(): Menghindari bentrok slug antar produk.
+ * - ensure_product_slug(): Memastikan produk memiliki slug tersimpan di database.
  */
 
 if (!function_exists('site_base_url')) {
@@ -15,9 +20,6 @@ if (!function_exists('site_base_url')) {
         }
 
         // 2. Fallback: host lokal (dev) boleh dinamis, host lain kunci ke domain resmi.
-        //    Ini penting karena config.php production di-maintain manual di server
-        //    (di-exclude dari deploy) sehingga SITE_URL bisa belum ada di sana,
-        //    dan karena robots.php tidak me-load config.php sama sekali.
         $host = $_SERVER['HTTP_HOST'] ?? ($_SERVER['SERVER_NAME'] ?? 'localhost');
         // Cegah Host header injection: hanya izinkan karakter host yang valid.
         if (!preg_match('/^[A-Za-z0-9.\-]+(:\d{1,5})?$/', $host)) {
@@ -90,7 +92,6 @@ if (!function_exists('build_product_description')) {
             }
         }
 
-        // Contoh: "Dessert Alfi Kitchen. 2 varian: Classic Tiramisu, Cendol. ..."
         $variantPart = '';
         if (!empty($itemNames)) {
             $shown = array_slice($itemNames, 0, 3);

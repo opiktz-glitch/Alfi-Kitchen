@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $newId = (int) $pdo->lastInsertId();
 
         // SEO: slug URL ramah-SEO /produk/{slug} (anti-bentrok dengan produk lain)
-        require_once __DIR__ . '/../seo_helpers.php';
+        require_once __DIR__ . '/../includes/seo_helpers.php';
         $slug = generate_unique_product_slug($pdo, $name, $newId);
         if ($slug === '') {
             $slug = 'produk-' . $newId;

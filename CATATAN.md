@@ -65,6 +65,10 @@ Selama proses audit dan pengujian, ditemukan beberapa regresi styling dan celah 
     - Ditambahkan fitur rotasi log otomatis pada `log_admin_action()` jika file log mencapai > 2 MB.
     - Disediakan tombol *"Bersihkan Log"* dengan konfirmasi dan proteksi CSRF di `admin/activity_log.php`.
     - Dibuat unit test `tests/Unit/BackupAndLogTest.php` untuk menguji fungsionalitas ini secara otomatis.
+12. **Perapihan Root Direktori (Relokasi Helper & Konfigurasi Testing)**:
+    - Memindahkan `seo_helpers.php` dari root direktori ke `includes/seo_helpers.php` agar sejajar dengan modul helper lainnya.
+    - Memindahkan konfigurasi pengujian `phpunit.xml` ke dalam folder `tests/phpunit.xml`.
+    - Memperbarui seluruh dependensi path require di controller publik (`index.php`, `header.php`, `product.php`, `robots.php`, `sitemap.php`) dan admin (`add_product.php`, `edit_product.php`).
 
 ---
 

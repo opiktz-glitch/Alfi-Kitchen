@@ -7,7 +7,7 @@
 <title><?= htmlspecialchars($pageTitle ?? 'Alfi Kitchen — Landing Page', ENT_QUOTES, 'UTF-8') ?></title>
 <meta name="description" content="<?= htmlspecialchars($pageDescription ?? 'Puding, dessert, dan salad buah buatan rumahan dari Alfi Kitchen. Pesan langsung melalui WhatsApp.', ENT_QUOTES, 'UTF-8') ?>">
 <?php
-require_once __DIR__ . '/seo_helpers.php';
+require_once __DIR__ . '/includes/seo_helpers.php';
 
 // Nilai SEO bisa di-override per halaman sebelum include 'header.php':
 // $canonicalPath (mis. 'product.php?id=3'), $pageImage (path/URL gambar), $ogType, $noindex

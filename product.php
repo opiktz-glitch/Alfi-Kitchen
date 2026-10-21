@@ -1,7 +1,7 @@
 <?php
 require 'config.php';
 
-require_once __DIR__ . '/seo_helpers.php';
+require_once __DIR__ . '/includes/seo_helpers.php';
 
 // Tampilkan halaman 404 yang benar (status HTTP 404 + noindex) agar tidak dianggap soft-404
 function product_not_found() {

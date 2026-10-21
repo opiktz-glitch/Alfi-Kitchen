@@ -1,6 +1,6 @@
 <?php
 require 'config.php';
-require 'seo_helpers.php';
+require_once __DIR__ . '/includes/seo_helpers.php';
 
 header('Content-Type: application/xml; charset=UTF-8');
 

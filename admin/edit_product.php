@@ -3,7 +3,7 @@ require 'auth_check.php';
 require '../config.php';
 require_once __DIR__ . '/upload_helper.php';
 require 'csrf_check.php';
-require_once __DIR__ . '/../seo_helpers.php';
+require_once __DIR__ . '/../includes/seo_helpers.php';
 
 if (!isset($_GET['id'])) {
     header('Location: index.php');
