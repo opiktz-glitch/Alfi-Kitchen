@@ -46,4 +46,27 @@ class SeoAndRoutingTest extends TestCase
         $this->assertSame('puding-cokelat-spesial', slugify_text('Puding Cokelat Spesial!'));
         $this->assertSame('salad-buah-creamy-lezat', slugify_text('  Salad Buah Creamy & Lezat  '));
     }
+
+    public function testWebManifestExistsAndIsValidJson(): void
+    {
+        $manifestPath = __DIR__ . '/../../manifest.webmanifest';
+        $this->assertFileExists($manifestPath);
+
+        $json = json_decode(file_get_contents($manifestPath), true);
+        $this->assertIsArray($json);
+        $this->assertArrayHasKey('name', $json);
+        $this->assertArrayHasKey('short_name', $json);
+        $this->assertArrayHasKey('icons', $json);
+        $this->assertNotEmpty($json['icons']);
+        $this->assertSame('standalone', $json['display'] ?? '');
+    }
+
+    public function testHeaderIncludesManifestAndMobileMetaTags(): void
+    {
+        $headerContent = file_get_contents(__DIR__ . '/../../header.php');
+        $this->assertStringContainsString('rel="manifest"', $headerContent);
+        $this->assertStringContainsString('manifest.webmanifest', $headerContent);
+        $this->assertStringContainsString('name="apple-mobile-web-app-capable"', $headerContent);
+    }
 }
+

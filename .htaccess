@@ -95,10 +95,17 @@ ErrorDocument 404 404.php
     ExpiresByType font/ttf "access plus 1 month"
     ExpiresByType font/woff "access plus 1 month"
     ExpiresByType font/woff2 "access plus 1 month"
+
+    # Web App Manifest PWA (1 Minggu)
+    ExpiresByType application/manifest+json "access plus 1 week"
+</IfModule>
+
+<IfModule mod_mime.c>
+    AddType application/manifest+json .webmanifest
 </IfModule>
 
 <IfModule mod_headers.c>
-    <FilesMatch "\.(ico|jpe?g|png|gif|webp|svg|css|js|woff2?)$">
+    <FilesMatch "\.(ico|jpe?g|png|gif|webp|svg|css|js|woff2?|webmanifest)$">
         Header set Cache-Control "max-age=2592000, public"
     </FilesMatch>
 </IfModule>
