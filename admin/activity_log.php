@@ -1,5 +1,18 @@
 <?php
 require 'auth_check.php';
+require 'csrf_check.php';
+
+$message = '';
+$messageClass = 'alert alert-success';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['clear_log'])) {
+    if (clear_admin_activity_log()) {
+        $message = "Log aktivitas berhasil dibersihkan.";
+    } else {
+        $message = "Gagal membersihkan log aktivitas.";
+        $messageClass = 'alert alert-error';
+    }
+}
 
 $logFile = __DIR__ . '/../logs/admin_activity.log';
 $logs = [];
@@ -9,9 +22,12 @@ if (is_readable($logFile)) {
     $handle = fopen($logFile, 'rb');
     if ($handle) {
         while (($line = fgets($handle)) !== false) {
-            $logs[] = trim($line);
-            if (count($logs) > $maxEntries) {
-                array_shift($logs);
+            $line = trim($line);
+            if ($line !== '') {
+                $logs[] = $line;
+                if (count($logs) > $maxEntries) {
+                    array_shift($logs);
+                }
             }
         }
         fclose($handle);
@@ -34,8 +50,22 @@ $logs = array_reverse($logs);
         <nav><a href="index.php" class="btn btn-cancel">Dashboard</a> &nbsp; <a href="logout.php" class="btn btn-danger">Logout</a></nav>
     </header>
     <div class="admin-container">
-        <p class="summary">Menampilkan <?= count($logs) ?> aktivitas terbaru (maksimal <?= $maxEntries ?> entri).</p>
-        <div class="table-wrap">
+        <?php if ($message): ?>
+            <div class="<?= $messageClass ?>" style="margin-bottom: 16px;"><?= htmlspecialchars($message) ?></div>
+        <?php endif; ?>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+            <p class="summary" style="margin: 0;">Menampilkan <?= count($logs) ?> aktivitas terbaru (maksimal <?= $maxEntries ?> entri).</p>
+            <?php if (!empty($logs)): ?>
+                <form method="POST" onsubmit="return confirm('Apakah Anda yakin ingin mengosongkan seluruh riwayat log aktivitas?');" style="margin: 0;">
+                    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token'] ?? '') ?>">
+                    <input type="hidden" name="clear_log" value="1">
+                    <button type="submit" class="btn btn-danger" style="padding: 6px 14px; font-size: 13px;">🗑️ Bersihkan Log</button>
+                </form>
+            <?php endif; ?>
+        </div>
+
+        <div class="table-wrap table-responsive">
             <table>
                 <thead>
                     <tr><th>Waktu</th><th>Event</th><th>Detail</th></tr>

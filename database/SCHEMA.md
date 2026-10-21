@@ -47,8 +47,40 @@ Tabel keamanan log untuk melindungi halaman admin dari serangan *Brute Force*.
 - **`locked_until`** (INT unsigned): Unix timestamp yang menunjukkan sampai kapan pengguna dari IP ini diblokir.
 - **`updated_at`** (INT unsigned): Timestamp pembaruan record terakhir.
 
+## 7. Tabel `schema_migrations`
+Tabel pelacak versi database otomatis untuk mencatat file migrasi yang telah dieksekusi.
+- **`version`** (VARCHAR 190, PK): Nama file migrasi (contoh: `v01_initial_schema.sql`, `v04_add_product_slug.sql`).
+- **`applied_at`** (TIMESTAMP): Waktu eksekusi migrasi diterapkan.
+
+---
+
+## 🚀 Alur Migrasi Database Berversi (Database Versioning)
+
+Aplikasi Alfi Kitchen menggunakan sistem migrasi terstandarisasi di folder `database/migrations/`:
+1. `v01_initial_schema.sql`: Struktur awal tabel `users`, `settings`, `products`, `product_items`, `hero_images`.
+2. `v02_create_login_attempts.sql`: Pembuatan tabel rate limiting login admin.
+3. `v03_settings_utf8mb4.sql`: Konversi kolom setting ke charset `utf8mb4` untuk mendukung emoji.
+4. `v04_add_product_slug.sql`: Penambahan kolom `slug` dan unique index untuk URL ramah SEO.
+
+### Cara Menambah Migrasi Baru:
+Cukup buat file SQL baru di folder `database/migrations/` dengan format:
+`vXX_deskripsi_perubahan.sql` (contoh: `v05_add_product_discount.sql`).
+
+### Cara Menjalankan Migrasi:
+- **Di Laptop / XAMPP (CLI):**
+  ```bash
+  # Cek status migrasi
+  php database/migrate.php status
+
+  # Terapkan migrasi
+  php database/migrate.php
+  ```
+- **Di Hosting InfinityFree (Web):**
+  Masuk ke panel **Admin → Pengaturan**, periksa bagian **Versi & Migrasi Database**, lalu klik tombol **🚀 Jalankan Migrasi Database**.
+
 ---
 
 ### Catatan Tambahan:
-* Seluruh tabel diatur dengan *character set* `utf8mb4` dan *collation* `utf8mb4_general_ci` / `utf8mb4_unicode_ci` agar sepenuhnya mendung emoji 🎂 dan berbagai simbol Unicode tanpa risiko teks terpotong.
+* Seluruh tabel diatur dengan *character set* `utf8mb4` dan *collation* `utf8mb4_general_ci` / `utf8mb4_unicode_ci` agar sepenuhnya mendukung emoji 🍮 dan berbagai simbol Unicode tanpa risiko teks terpotong.
 * Gambar aktual **tidak disimpan di database**. Database hanya menyimpan path atau nama file gambar (kolom `image`). File fisik secara utuh disimpan di direktori `/uploads/`.
+

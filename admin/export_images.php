@@ -3,6 +3,15 @@ require 'auth_check.php';
 require_once __DIR__ . '/helpers/db_helper.php';
 
 
+// Proteksi rate-limit cooldown: cegah server overload di InfinityFree (jeda minimal 60 detik)
+$remainingWait = check_backup_cooldown('images', 60);
+if ($remainingWait !== null) {
+    header('Location: settings.php?error=backup_cooldown&type=images&wait=' . $remainingWait);
+    exit;
+}
+
+log_admin_action('EXPORT_IMAGES_BACKUP', 'status=success');
+
 $dirPath = uploads_directory();
 $zipName = 'alfi_kitchen_images_' . date('Ymd_His') . '.zip';
 $zipPath = sys_get_temp_dir() . '/' . $zipName;

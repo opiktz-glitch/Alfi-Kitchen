@@ -20,14 +20,22 @@ Sebelum deploy, tambahkan 3 secrets di **Settings → Secrets → Actions**:
 | `FTP_USER` | FTP Username dari cPanel |
 | `FTP_PASS` | FTP Password dari cPanel |
 
-## ⚙️ Konfigurasi Lokal (XAMPP)
-1. Clone repository ini
-2. Sesuaikan kredensial database di `config.php` (host, dbname, user, password)
-3. Import tabel database via phpMyAdmin
-4. Jalankan via XAMPP → `localhost/Alfi_Kitchen`
+## ⚙️ Konfigurasi Lingkungan (.env)
+1. Salin file template `.env.example` menjadi `.env`:
+   ```bash
+   cp .env.example .env
+   ```
+2. Sesuaikan kredensial database & URL situs di file `.env` (host, dbname, user, password, SITE_URL).
+3. Atau gunakan `config.example.php` disalin ke `config.php` jika server tidak memakai format `.env`.
+4. Jalankan migrasi database otomatis:
+   ```bash
+   php database/migrate.php
+   ```
+5. Akses via browser → `http://localhost/Alfi_Kitchen`
 
 ## 🔐 Keamanan
-- File `config.php` **tidak** di-deploy ulang oleh GitHub Actions — wajib dikonfigurasi manual di server hosting
+- File `.env` dan `config.php` **tidak** di-commit ke Git (sudah masuk `.gitignore`) dan tidak ikut ditimpa oleh deploy FTP.
+- Akses HTTP langsung ke file `.env`, `.sql`, `.log`, `.git*` diblokir oleh aturan ketat di root `.htaccess`.
 - Folder `uploads/` tidak meng-commit gambar; `.gitkeep` dan `.htaccess` ikut deploy untuk mempertahankan folder dan memblokir eksekusi skrip
 - Upload gambar dibatasi maksimal 5 MB dan divalidasi berdasarkan MIME serta struktur gambar di server; logo hanya menerima PNG
 - Password admin dapat diubah melalui panel **Admin → Pengaturan**

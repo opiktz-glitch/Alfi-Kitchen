@@ -114,6 +114,7 @@ class AdminRefactorTest extends TestCase
             ['settings.php'],
             ['edit_item.php'],
             ['index.php'],
+            ['activity_log.php'],
         ];
     }
 }

@@ -3,6 +3,15 @@ require 'auth_check.php';
 require '../config.php';
 
 
+// Proteksi rate-limit cooldown: cegah server overload di InfinityFree (jeda minimal 60 detik)
+$remainingWait = check_backup_cooldown('database', 60);
+if ($remainingWait !== null) {
+    header('Location: settings.php?error=backup_cooldown&type=database&wait=' . $remainingWait);
+    exit;
+}
+
+log_admin_action('EXPORT_DATABASE_BACKUP', 'status=success');
+
 // Dapatkan semua nama tabel dengan urutan yang benar (Parent sebelum Child)
 $tables = ['users', 'login_attempts', 'products', 'product_items', 'hero_images', 'settings'];
 

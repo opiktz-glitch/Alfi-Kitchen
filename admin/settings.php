@@ -6,6 +6,14 @@ require 'csrf_check.php';
 
 $message = '';
 $messageClass = 'alert';
+
+if (isset($_GET['error']) && $_GET['error'] === 'backup_cooldown') {
+    $wait = (int)($_GET['wait'] ?? 60);
+    $typeLabel = ($_GET['type'] ?? '') === 'images' ? 'Gambar' : 'Database';
+    $message = "Terlalu banyak permintaan backup {$typeLabel}. Harap tunggu {$wait} detik sebelum mengunduh kembali demi menjaga stabilitas server.";
+    $messageClass = 'alert alert-error';
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['logo'])) {
     $upload = store_uploaded_image($_FILES['logo'], 'logo', true, ['image/png', 'image/jpeg', 'image/jpg', 'image/gif', 'image/webp', 'image/pjpeg'], 'logo.png');
     if ($upload['error']) {
@@ -56,6 +64,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['logo'])) {
         $message = "Nomor WhatsApp berhasil disimpan!";
     } else {
         $message = "Gagal menyimpan nomor WhatsApp.";
+    }
+} elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['run_migrations'])) {
+    require_once __DIR__ . '/../includes/DatabaseMigrator.php';
+    $migrator = new DatabaseMigrator($pdo);
+    $res = $migrator->migrate();
+    if ($res['success']) {
+        $count = count($res['executed']);
+        $message = $count > 0 
+            ? "Berhasil menerapkan $count migrasi database!" 
+            : "Database sudah berada pada versi terbaru.";
+        $messageClass = 'alert alert-success';
+        log_admin_action('DATABASE_MIGRATE', 'executed=' . implode(',', $res['executed']));
+    } else {
+        $message = "Gagal menerapkan migrasi: " . implode(', ', $res['errors']);
+        $messageClass = 'alert alert-error';
     }
 }
 
@@ -132,6 +155,48 @@ $current_home_description = $home_content['home_description'] ?? 'Puding lembut 
                 <a href="export_db.php" class="btn" style="background: #28a745; color: white;">📥 Backup Database</a>
                 <a href="export_images.php" class="btn" style="background: #17a2b8; color: white;">🖼️ Backup Semua Gambar</a>
             </div>
+
+            <hr class="section-hr">
+
+            <?php
+            require_once __DIR__ . '/../includes/DatabaseMigrator.php';
+            $migrator = new DatabaseMigrator($pdo);
+            $statusList = $migrator->getStatus();
+            $pendingMigrations = $migrator->getPendingMigrations();
+            $lastApplied = null;
+            foreach ($statusList as $st) {
+                if ($st['status'] === 'applied') {
+                    $lastApplied = $st['version'];
+                }
+            }
+            ?>
+            <h3>Versi & Migrasi Database</h3>
+            <p style="font-size: 14px; margin-bottom: 15px; color: var(--muted);">
+                Sistem migrasi skema database otomatis. Anda dapat menerapkan pembaruan struktur tabel langsung dari panel admin ini tanpa harus membuka phpMyAdmin cPanel.
+            </p>
+            <div style="background: #fff8ef; border: 1px solid var(--line); border-radius: 8px; padding: 15px; margin-bottom: 15px;">
+                <div style="margin-bottom: 8px;">
+                    <strong>Versi Skema Terakhir:</strong> <code><?= htmlspecialchars($lastApplied ?? 'Belum ada migrasi tercatat') ?></code>
+                </div>
+                <div>
+                    <?php if (empty($pendingMigrations)): ?>
+                        <span style="color: #155724; font-weight: bold;">✓ Database up-to-date (Semua versi migrasi sudah aktif)</span>
+                    <?php else: ?>
+                        <span style="color: #856404; font-weight: bold;">⚠️ Ada <?= count($pendingMigrations) ?> migrasi yang belum diterapkan:</span>
+                        <ul style="margin: 8px 0 0 20px; font-size: 13px; color: #856404;">
+                            <?php foreach ($pendingMigrations as $p): ?>
+                                <li><code><?= htmlspecialchars($p) ?></code></li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <?php if (!empty($pendingMigrations)): ?>
+            <form action="" method="post" style="margin-bottom: 15px;">
+                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
+                <button type="submit" name="run_migrations" class="btn btn-primary" onclick="return confirm('Terapkan migrasi database sekarang?')">🚀 Jalankan Migrasi Database</button>
+            </form>
+            <?php endif; ?>
 
             <hr class="section-hr">
 

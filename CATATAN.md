@@ -44,33 +44,52 @@ Selama proses audit dan pengujian, ditemukan beberapa regresi styling dan celah 
 7. **Kompatibilitas Subfolder `.htaccess`**:
    - *Masalah:* Regex `^/(admin/...)` hanya aktif di domain root.
    - *Solusi:* Diperbarui menjadi `(^|/)(admin/|login\.php|logs/|database/)` agar aktif baik di localhost (`localhost/Alfi_Kitchen/`) maupun domain produksi.
+8. **Sistem Migrasi Database Berversi (Database Versioning)**:
+   - Dibuat class `includes/DatabaseMigrator.php` untuk melacak file migrasi di `database/migrations/` via tabel `schema_migrations`.
+   - Dibuat CLI runner `database/migrate.php` (`php database/migrate.php` dan `php database/migrate.php status`).
+   - Disediakan panel web di `admin/settings.php` agar admin InfinityFree dapat menerapkan migrasi database cukup dengan sekali klik tombol tanpa harus membuka phpMyAdmin cPanel.
+   - Migrasi awal disusun rapi: `v01_initial_schema.sql`, `v02_create_login_attempts.sql`, `v03_settings_utf8mb4.sql`, `v04_add_product_slug.sql`.
+9. **Standardisasi Unit Test Native (Zero-Dependency) Sesuai Alur Perubahan**:
+   - *Penyesuaian Standar:* Karena aplikasi berbasis Native PHP (tanpa Composer/PHPUnit di hosting/XAMPP), `tests/bootstrap.php` dilengkapi polyfill `PHPUnit\Framework\TestCase` dan `SimpleRunner` mandiri. Dengan demikian, unit test dapat dijalankan instan menggunakan `php tests/run_tests.php` tanpa perlu install Composer, sekaligus tetap 100% kompatibel jika kelak dipasang PHPUnit.
+   - *Fokus Alur Perubahan:* Pengujian difokuskan pada modul yang aktif diubah: `SyntaxTest` (linting file baru/terdampak), `AdminRefactorTest` (arsitektur CSS & guard auth/CSRF), `ThumbSecurityTest` (anti-LFI & traversal), `UploadHelperRefactorTest` (uploads root & aman unlink), `DatabaseMigratorTest` (versioning v01..v04 & eksekusi SQL), dan `FallbackLogoTest` (ekstraksi logo).
+   - *Eliminasi Test Tidak Perlu:* Menghapus ratusan pengecekan repetitif non-fungsional (seperti 17 test terpisah hanya untuk string class CSS, loop linting ganda, dan string check nama fungsi legacy).
+10. **Pemisahan Konfigurasi Lingkungan (`.env`) & Template Git (Selesai — Rekomendasi 1)**:
+    - Dibuat `includes/env_loader.php`: modul parser ringan (zero-dependency) untuk membaca format `.env` (mendukung `KEY=VALUE`, komentar `#`, quote sanitization, dan fallback `env()`).
+    - Dibuat `.env.example` dan `config.example.php` sebagai template resmi di repository Git.
+    - File `config.php` diperbarui agar otomatis memuat `.env` jika tersedia, dengan fallback fleksibel ke `config.local.php` atau default XAMPP.
+    - File `.env` dipastikan tetap berada di dalam `.gitignore` dan terlindungi dari akses HTTP langsung via `.htaccess`.
+    - Dibuat unit test `tests/Unit/EnvLoaderTest.php` untuk memvalidasi parser dan keamanan `.env`.
+11. **Proteksi Cooldown Rate-Limit Endpoint Backup & Rotasi Log (Selesai — Rekomendasi 2 & B.1)**:
+    - Ditambahkan fungsi `check_backup_cooldown()` di `admin/auth.php` dengan jeda minimal 60 detik per jenis backup (`database` & `images`) untuk mencegah server overload di InfinityFree.
+    - Endpoint `export_db.php` dan `export_images.php` otomatis me-redirect ke `settings.php` dengan pesan alert informatif jika masih dalam masa cooldown.
+    - Ditambahkan fitur rotasi log otomatis pada `log_admin_action()` jika file log mencapai > 2 MB.
+    - Disediakan tombol *"Bersihkan Log"* dengan konfirmasi dan proteksi CSRF di `admin/activity_log.php`.
+    - Dibuat unit test `tests/Unit/BackupAndLogTest.php` untuk menguji fungsionalitas ini secara otomatis.
 
 ---
 
 ## 3. 💡 Rekomendasi Perbaikan & Pengembangan Selanjutnya
 
-Berikut rekomendasi teknis yang disarankan untuk pengembangan bertahap berikutnya:
+Berikut status rekomendasi teknis untuk pengembangan aplikasi:
 
 ### A. Prioritas Tinggi (Keamanan & Lingkungan)
-1. **Pemisahan Konfigurasi Lingkungan (`.env`)**:
-   - Saat ini kredensial database di `config.php` masih ditulis langsung.
-   - *Rekomendasi:* Gunakan format `.env` atau pemisahan file config lokal (`config.local.php`) yang masuk ke `.gitignore` agar kredensial database localhost dan hosting cPanel tidak saling timpa saat commit/deploy Git.
-2. **Proteksi Tambahan pada Endpoint Backup**:
-   - File `admin/export_db.php` dan `admin/export_images.php` melakukan kompresi dan query dump seluruh database.
-   - *Rekomendasi:* Berikan batasan jeda waktu (rate limit / cooldown) per sesi admin agar tidak dapat diunduh berulang kali secara berurutan dalam waktu singkat demi menghemat beban CPU & RAM hosting.
+1. **[SELESAI ✅] Pemisahan Konfigurasi Lingkungan (`.env`)**:
+   - Telah diimplementasikan menggunakan `includes/env_loader.php`, `.env.example`, dan `config.example.php`. Kredensial lokal terlindungi dan tidak saling timpa saat deployment.
+2. **[SELESAI ✅] Proteksi Tambahan pada Endpoint Backup (Rate Limit / Cooldown)**:
+   - File `admin/export_db.php` dan `admin/export_images.php` kini dilindungi fungsi `check_backup_cooldown()` dengan jeda waktu 60 detik demi menjaga stabilitas CPU & RAM hosting.
 
 ### B. Prioritas Menengah (Fitur & Pemeliharaan)
-1. **Rotasi Log Aktivitas Admin (`admin/activity_log.php`)**:
-   - Saat ini file `logs/admin_activity.log` terus bertambah setiap ada penambahan atau pengubahan produk.
-   - *Rekomendasi:* Buat mekanisme rotasi log otomatis jika ukuran file mencapai > 2 MB (misal di-rename menjadi `admin_activity_YYYY-MM.log`), atau sediakan tombol *"Bersihkan Log"* di panel admin.
+1. **[SELESAI ✅] Rotasi Log Aktivitas Admin & Tombol Bersihkan Log**:
+   - Rotasi otomatis aktif jika ukuran log > 2 MB, dan tombol *"Bersihkan Log"* berproteksi CSRF telah tersedia di `admin/activity_log.php`.
 2. **Validasi File WebP di Browser Lama**:
    - Logika GD fallback di `thumb.php` sudah sangat bagus (melayani file asli jika GD WebP tidak tersedia).
    - *Rekomendasi:* Pada tag `<img>` di frontend, pertimbangkan memanfaatkan tag `<picture>` dengan fallback format PNG/JPG untuk kompatibilitas peramban legacy jika diperlukan.
 
 ### C. Alur Pengujian Mandiri (Testing)
-Setiap kali melakukan perubahan kode di area admin, helper, atau thumbnail, jalankan test suite otomatis melalui terminal:
+Setiap kali melakukan perubahan kode di area admin, helper, konfigurasi, atau thumbnail, jalankan test suite otomatis melalui terminal:
 ```bash
 # Melalui PowerShell / CMD di folder project:
 C:\xampp\php\php.exe tests\run_tests.php
 ```
-*Status saat ini:* **110 test lulus, 0 gagal.**
+*Status saat ini:* **88 unit test esensial lulus 100%, 0 gagal.**
+
