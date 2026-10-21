@@ -69,6 +69,10 @@ Selama proses audit dan pengujian, ditemukan beberapa regresi styling dan celah 
     - Memindahkan `seo_helpers.php` dari root direktori ke `includes/seo_helpers.php` agar sejajar dengan modul helper lainnya.
     - Memindahkan konfigurasi pengujian `phpunit.xml` ke dalam folder `tests/phpunit.xml`.
     - Memperbarui seluruh dependensi path require di controller publik (`index.php`, `header.php`, `product.php`, `robots.php`, `sitemap.php`) dan admin (`add_product.php`, `edit_product.php`).
+13. **Browser Caching, Dynamic Robots & Custom 404 Page**:
+    - Dikonfigurasikan `mod_expires` dan `Cache-Control` pada `.htaccess` untuk menyimpan aset statis (gambar, font, css, js) di cache browser hingga 1 bulan demi menghemat CPU hits & bandwidth InfinityFree.
+    - Dihapus file fisik `robots.txt` agar aturan rewrite ke `robots.php` dinamis aktif penuh sesuai domain yang digunakan.
+    - Dibuat halaman error ramah pengunjung `404.php` dengan tema visual Alfi Kitchen dan didaftarkan pada `.htaccess` (`ErrorDocument 404 404.php`).
 
 ---
 

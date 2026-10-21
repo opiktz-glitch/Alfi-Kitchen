@@ -50,6 +50,7 @@ class SyntaxTest extends TestCase
             'includes/seo_helpers.php',
             'config.example.php',
             'thumb.php',
+            '404.php',
         ];
 
         $php = $this->getPhpBinary();
