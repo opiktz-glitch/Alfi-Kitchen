@@ -105,6 +105,9 @@ Berikut status rekomendasi teknis untuk pengembangan aplikasi:
    - Fungsi `format_whatsapp_number()` dan `whatsapp_url()` di `includes/seo_helpers.php` mengonversi format lokal (seperti `0812...` atau `+62...`) menjadi format internasional murni `62812...` untuk tautan `wa.me/` di footer dan halaman 404 tanpa resiko link rusak.
 4. **[SELESAI ✅] CI/CD Quality Gate Otomatis**:
    - Workflow `.github/workflows/deploy.yml` kini mengeksekusi PHP unit test suite secara otomatis sebelum proses rilis/FTP dijalankan.
+5. **[SELESAI ✅] Optimasi Google PageSpeed Insights (Cache Lifetimes & Image Delivery)**:
+   - **Self-Host Swiper JS & CSS**: Berkas pustaka slider dipindahkan dari CDN jsDelivr ke folder lokal `assets/vendor/swiper/` sehingga disajikan langsung dengan cache 30 hari (`max-age=2592000, public`), mengeliminasi peringatan *"Use efficient cache lifetimes"*.
+   - **Responsive Image Srcset & Quality Tuning**: Slider hero di `views/home.view.php` dan preloader di `header.php` kini menyajikan atribut `srcset` dengan varian `480w` untuk mobile dan `800w` untuk desktop, serta rasio kompresi WebP disesuaikan ke kualitas `75` di `thumb.php`, menghemat ~16 KiB data pada perangkat mobile sesuai rekomendasi Google Lighthouse.
 
 ### D. Usulan Pengembangan Baru (Dikerjakan Bertahap Satu per Satu)
 1. **[SELESAI ✅] Usulan 1: Progressive Web App (PWA)**:
@@ -124,8 +127,9 @@ Setiap kali melakukan perubahan kode di area admin, helper, konfigurasi, atau ta
 # Melalui PowerShell / CMD di folder project:
 C:\xampp\php\php.exe tests\run_tests.php
 ```
-*Status saat ini:* **101 unit test esensial lulus 100%, 0 gagal.**
-*Verifikasi Runtime Live:* Seluruh halaman (`index.php`, `about.php`, `privacy.php`, `terms.php`, `404.php`, `login.php`, `thumb.php`, `sitemap.php`, `robots.php`, `manifest.webmanifest`, dan area admin) telah diverifikasi langsung via Apache & PHP runtime menghasilkan status 200/404 normal dengan header keamanan dan navigasi aktif.
+*Status saat ini:* **104 unit test esensial lulus 100%, 0 gagal.**
+*Verifikasi Runtime Live:* Seluruh halaman (`index.php`, `about.php`, `privacy.php`, `terms.php`, `404.php`, `login.php`, `thumb.php`, `sitemap.php`, `robots.php`, `manifest.webmanifest`, dan area admin) telah diverifikasi langsung via Apache & PHP runtime menghasilkan status 200/404 normal dengan header keamanan, browser cache 30 hari, dan responsif srcset aktif.
+
 
 
 

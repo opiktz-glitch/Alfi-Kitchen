@@ -11,7 +11,14 @@ $products = $stmt->fetchAll();
 $stmt2 = $pdo->query("SELECT * FROM hero_images ORDER BY id DESC");
 $hero_images = $stmt2->fetchAll();
 if (!empty($hero_images)) {
-    $preloadImage = 'thumb.php?file=' . urlencode($hero_images[0]['image']) . '&w=800';
+    $firstHero = urlencode($hero_images[0]['image']);
+    $preloadImage = 'thumb.php?file=' . $firstHero . '&w=800';
+    $preloadImageSrcset = 'thumb.php?file=' . $firstHero . '&w=480 480w, thumb.php?file=' . $firstHero . '&w=800 800w';
+    $preloadImageSizes = '(max-width: 640px) 100vw, 800px';
+} else {
+    $preloadImage = 'thumb.php?file=hero.jpg&w=800';
+    $preloadImageSrcset = 'thumb.php?file=hero.jpg&w=480 480w, thumb.php?file=hero.jpg&w=800 800w';
+    $preloadImageSizes = '(max-width: 640px) 100vw, 800px';
 }
 
 $homeSettings = $pdo->query(

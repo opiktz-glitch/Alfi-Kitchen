@@ -1,20 +1,39 @@
 <?php include 'header.php'; ?>
 
-<!-- Tambahkan CSS Swiper -->
-<link rel="preload" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css"></noscript>
+<!-- Swiper CSS (Lokal dengan Cache 30 Hari) -->
+<link rel="preload" href="assets/vendor/swiper/swiper-bundle.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="assets/vendor/swiper/swiper-bundle.min.css"></noscript>
 
   <div class="hero swiper mySwiper">
   <div class="swiper-wrapper">
       <?php if (!empty($hero_images)): ?>
           <?php foreach ($hero_images as $index => $img): ?>
+              <?php
+              $heroFile = urlencode($img['image']);
+              $heroSrc480 = 'thumb.php?file=' . $heroFile . '&w=480';
+              $heroSrc800 = 'thumb.php?file=' . $heroFile . '&w=800';
+              ?>
               <div class="swiper-slide">
-                  <img src="thumb.php?file=<?= urlencode($img['image']) ?>&w=800" alt="Promo produk Alfi Kitchen: puding, dessert, dan salad buah rumahan" width="800" height="450" <?= $index === 0 ? 'fetchpriority="high"' : 'loading="lazy"' ?> style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                  <img src="<?= $heroSrc800 ?>"
+                       srcset="<?= $heroSrc480 ?> 480w, <?= $heroSrc800 ?> 800w"
+                       sizes="(max-width: 640px) 100vw, 800px"
+                       alt="Promo produk Alfi Kitchen: puding, dessert, dan salad buah rumahan"
+                       width="800" height="450"
+                       <?= $index === 0 ? 'fetchpriority="high"' : 'loading="lazy"' ?>
+                       decoding="async"
+                       style="width: 100%; height: 100%; object-fit: cover; display: block;">
               </div>
           <?php endforeach; ?>
       <?php else: ?>
           <div class="swiper-slide">
-              <img src="thumb.php?file=hero.jpg&w=800" alt="Puding, dessert, dan salad buah rumahan Alfi Kitchen" width="800" height="450" fetchpriority="high" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+              <img src="thumb.php?file=hero.jpg&w=800"
+                   srcset="thumb.php?file=hero.jpg&w=480 480w, thumb.php?file=hero.jpg&w=800 800w"
+                   sizes="(max-width: 640px) 100vw, 800px"
+                   alt="Puding, dessert, dan salad buah rumahan Alfi Kitchen"
+                   width="800" height="450"
+                   fetchpriority="high"
+                   decoding="async"
+                   style="width: 100%; height: 100%; object-fit: cover; display: block;">
           </div>
       <?php endif; ?>
   </div>
@@ -59,8 +78,8 @@
   </div>
 </main>
 
-<!-- Tambahkan JS Swiper -->
-<script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js" defer></script>
+<!-- Swiper JS (Lokal dengan Cache 30 Hari) -->
+<script src="assets/vendor/swiper/swiper-bundle.min.js" defer></script>
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     var swiper = new Swiper(".mySwiper", {

@@ -68,5 +68,37 @@ class SeoAndRoutingTest extends TestCase
         $this->assertStringContainsString('manifest.webmanifest', $headerContent);
         $this->assertStringContainsString('name="apple-mobile-web-app-capable"', $headerContent);
     }
+
+    public function testLocalSwiperAssetsExistAndUsedInHomeView(): void
+    {
+        $swiperCss = __DIR__ . '/../../assets/vendor/swiper/swiper-bundle.min.css';
+        $swiperJs = __DIR__ . '/../../assets/vendor/swiper/swiper-bundle.min.js';
+        $this->assertFileExists($swiperCss);
+        $this->assertFileExists($swiperJs);
+        $this->assertGreaterThan(10000, filesize($swiperCss));
+        $this->assertGreaterThan(50000, filesize($swiperJs));
+
+        $homeView = file_get_contents(__DIR__ . '/../../views/home.view.php');
+        $this->assertStringContainsString('assets/vendor/swiper/swiper-bundle.min.css', $homeView);
+        $this->assertStringContainsString('assets/vendor/swiper/swiper-bundle.min.js', $homeView);
+        $this->assertStringNotContainsString('cdn.jsdelivr.net/npm/swiper', $homeView);
+    }
+
+    public function testHomeViewUsesResponsiveHeroSrcset(): void
+    {
+        $homeView = file_get_contents(__DIR__ . '/../../views/home.view.php');
+        $this->assertStringContainsString('srcset=', $homeView);
+        $this->assertStringContainsString('480w', $homeView);
+        $this->assertStringContainsString('800w', $homeView);
+        $this->assertStringContainsString('sizes="(max-width: 640px) 100vw, 800px"', $homeView);
+    }
+
+    public function testThumbPhpSupportsAmpQueryParamAndOptimalQuality(): void
+    {
+        $thumbContent = file_get_contents(__DIR__ . '/../../thumb.php');
+        $this->assertStringContainsString("\$_GET['amp;w']", $thumbContent);
+        $this->assertStringContainsString("imagewebp(\$dst, null, 75)", $thumbContent);
+    }
 }
+
 

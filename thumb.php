@@ -13,7 +13,7 @@
 require_once __DIR__ . '/admin/helpers/db_helper.php';
 
 $file = $_GET['file'] ?? '';
-$w = (int)($_GET['w'] ?? 150);
+$w = (int)($_GET['w'] ?? $_GET['amp;w'] ?? 150);
 
 $filePath = resolve_thumbnail_path(is_string($file) ? $file : '');
 
@@ -89,16 +89,16 @@ $acceptsWebp = !isset($_SERVER['HTTP_ACCEPT']) || strpos($_SERVER['HTTP_ACCEPT']
 
 if ($acceptsWebp && function_exists('imagewebp')) {
     header('Content-Type: image/webp');
-    imagewebp($dst, null, 80);
+    imagewebp($dst, null, 75);
 } elseif ($mime === 'image/png' && function_exists('imagepng')) {
     header('Content-Type: image/png');
     imagepng($dst, null, 8);
 } elseif ($mime === 'image/jpeg' && function_exists('imagejpeg')) {
     header('Content-Type: image/jpeg');
-    imagejpeg($dst, null, 82);
+    imagejpeg($dst, null, 78);
 } else {
     header('Content-Type: image/webp');
-    imagewebp($dst, null, 80);
+    imagewebp($dst, null, 75);
 }
 
 imagedestroy($im);
