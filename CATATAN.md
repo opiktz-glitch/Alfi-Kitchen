@@ -73,6 +73,10 @@ Selama proses audit dan pengujian, ditemukan beberapa regresi styling dan celah 
     - Dikonfigurasikan `mod_expires` dan `Cache-Control` pada `.htaccess` untuk menyimpan aset statis (gambar, font, css, js) di cache browser hingga 1 bulan demi menghemat CPU hits & bandwidth InfinityFree.
     - Dihapus file fisik `robots.txt` agar aturan rewrite ke `robots.php` dinamis aktif penuh sesuai domain yang digunakan.
     - Dibuat halaman error ramah pengunjung `404.php` dengan tema visual Alfi Kitchen dan didaftarkan pada `.htaccess` (`ErrorDocument 404 404.php`).
+14. **Sentralisasi Log Login & Kompatibilitas Fallback WebP (Selesai — Rekomendasi B.2)**:
+    - Diintegrasikan pencatatan login berhasil di `login.php` dengan fungsi terpusat `log_admin_action()` di `admin/auth.php` sehingga otomatis mewarisi fitur rotasi log > 2 MB.
+    - Ditambahkan deteksi kemampuan browser klien pada `thumb.php` (memeriksa `HTTP_ACCEPT` untuk `image/webp`): jika browser klien mendukung WebP, server menyajikan WebP terkompresi; jika browser lawas tidak mendukung WebP, server otomatis menyajikan format JPEG/PNG aslinya.
+    - Dihapus file konfigurasi editor eksternal `.clineignore` untuk semakin merampingkan root direktori.
 
 ---
 
@@ -89,9 +93,8 @@ Berikut status rekomendasi teknis untuk pengembangan aplikasi:
 ### B. Prioritas Menengah (Fitur & Pemeliharaan)
 1. **[SELESAI ✅] Rotasi Log Aktivitas Admin & Tombol Bersihkan Log**:
    - Rotasi otomatis aktif jika ukuran log > 2 MB, dan tombol *"Bersihkan Log"* berproteksi CSRF telah tersedia di `admin/activity_log.php`.
-2. **Validasi File WebP di Browser Lama**:
-   - Logika GD fallback di `thumb.php` sudah sangat bagus (melayani file asli jika GD WebP tidak tersedia).
-   - *Rekomendasi:* Pada tag `<img>` di frontend, pertimbangkan memanfaatkan tag `<picture>` dengan fallback format PNG/JPG untuk kompatibilitas peramban legacy jika diperlukan.
+2. **[SELESAI ✅] Kompatibilitas File WebP di Browser Lama**:
+   - Telah diselesaikan di level server pada `thumb.php`: server otomatis mengecek header peramban (`HTTP_ACCEPT`) dan menyajikan format JPEG/PNG asli secara dinamis jika browser pengunjung adalah peramban legacy yang belum mendukung WebP.
 
 ### C. Alur Pengujian Mandiri (Testing)
 Setiap kali melakukan perubahan kode di area admin, helper, konfigurasi, atau thumbnail, jalankan test suite otomatis melalui terminal:

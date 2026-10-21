@@ -12,6 +12,7 @@ session_start();
 header('X-Robots-Tag: noindex, nofollow, noarchive');
 require 'config.php';
 require 'admin/login_rate_limit.php';
+require_once __DIR__ . '/admin/auth.php';
 
 if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true) {
     header('Location: admin/index.php');
@@ -54,13 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $_SESSION['last_activity'] = time();
                     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 
-                    $logFile = __DIR__ . '/logs/admin_activity.log';
-                    $logDir = dirname($logFile);
-                    if (!is_dir($logDir)) {
-                        mkdir($logDir, 0777, true);
-                    }
-                    $logEntry = date('Y-m-d H:i:s') . ' | LOGIN_SUCCESS | username=' . $user . ' | ip=' . $ip . PHP_EOL;
-                    file_put_contents($logFile, $logEntry, FILE_APPEND | LOCK_EX);
+                    log_admin_action('LOGIN_SUCCESS', 'username=' . $user);
 
                     header('Location: admin/index.php');
                     exit;

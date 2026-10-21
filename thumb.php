@@ -84,9 +84,22 @@ if ($mime == 'image/png' || $mime == 'image/webp') {
 
 imagecopyresampled($dst, $im, 0, 0, 0, 0, $w, $h, $origW, $origH);
 
-// Serve as WebP if supported, else original type
-header('Content-Type: image/webp');
-imagewebp($dst, null, 80);
+// Sajikan sebagai WebP jika browser mendukung, atau fallback ke JPEG/PNG untuk browser lawas
+$acceptsWebp = !isset($_SERVER['HTTP_ACCEPT']) || strpos($_SERVER['HTTP_ACCEPT'], 'image/webp') !== false || strpos($_SERVER['HTTP_ACCEPT'], '*/*') !== false;
+
+if ($acceptsWebp && function_exists('imagewebp')) {
+    header('Content-Type: image/webp');
+    imagewebp($dst, null, 80);
+} elseif ($mime === 'image/png' && function_exists('imagepng')) {
+    header('Content-Type: image/png');
+    imagepng($dst, null, 8);
+} elseif ($mime === 'image/jpeg' && function_exists('imagejpeg')) {
+    header('Content-Type: image/jpeg');
+    imagejpeg($dst, null, 82);
+} else {
+    header('Content-Type: image/webp');
+    imagewebp($dst, null, 80);
+}
 
 imagedestroy($im);
 imagedestroy($dst);
