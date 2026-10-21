@@ -42,6 +42,31 @@ body {
   opacity: 1;
 }
 
+.admin-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.btn-site-preview {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff !important;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  text-decoration: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+.btn-site-preview:hover {
+  background: rgba(255, 255, 255, 0.28);
+  border-color: rgba(255, 255, 255, 0.6);
+  color: #fff !important;
+}
+
 /* Header action (judul + aksi di header) */
 .header-action {
   display: flex;

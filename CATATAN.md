@@ -109,8 +109,8 @@ Berikut status rekomendasi teknis untuk pengembangan aplikasi:
 ### D. Usulan Pengembangan Baru (Dikerjakan Bertahap Satu per Satu)
 1. **[SELESAI ✅] Usulan 1: Progressive Web App (PWA)**:
    - Dibuat file standar `manifest.webmanifest`, integrasi link manifest dan meta tag mobile web app di `header.php`, konfigurasi theme-color `#fff8ef`, background-color `#fff8ef`, icons 192x192 & 512x512, serta caching & MIME type di `.htaccess` agar website dapat diinstal ke layar utama HP Android & iOS (*Add to Home Screen*).
-2. **[ANTRIAN 📋] Usulan 2: Navigasi Cepat Admin Panel**:
-   - Menambahkan tombol *"Lihat Website ↗"* di header admin dan navigasi konsisten *"← Kembali ke Dashboard"* di seluruh sub-halaman admin.
+2. **[SELESAI ✅] Usulan 2: Navigasi Cepat Admin Panel**:
+   - Menambahkan tombol *"Lihat Website ↗"* di seluruh header halaman admin (`index.php`, `manage_hero.php`, `settings.php`, `activity_log.php`, `manage_items.php`, `add_product.php`, `edit_product.php`, `edit_item.php`), class CSS `.btn-site-preview` di `admin.css`, serta penyeragaman tombol navigasi *"Dashboard"* dan *"Logout"*.
 3. **[ANTRIAN 📋] Usulan 3: Proteksi Batas Ukuran File Upload Admin**:
    - Pembatasan ukuran upload maksimal 5MB di `admin/upload_helper.php` dengan pesan error yang jelas untuk mencegah PHP memory exhaustion.
 4. **[ANTRIAN 📋] Usulan 4: Filter / Pencarian Menu Cepat di Beranda**:
@@ -124,8 +124,9 @@ Setiap kali melakukan perubahan kode di area admin, helper, konfigurasi, atau ta
 # Melalui PowerShell / CMD di folder project:
 C:\xampp\php\php.exe tests\run_tests.php
 ```
-*Status saat ini:* **93 unit test esensial lulus 100%, 0 gagal.**
-*Verifikasi Runtime Live:* Seluruh halaman (`index.php`, `about.php`, `privacy.php`, `terms.php`, `404.php`, `login.php`, `thumb.php`, `sitemap.php`, `robots.php`, `manifest.webmanifest`) telah diverifikasi langsung via Apache & PHP runtime menghasilkan status 200/404 normal dengan header keamanan dan MIME type aktif.
+*Status saat ini:* **101 unit test esensial lulus 100%, 0 gagal.**
+*Verifikasi Runtime Live:* Seluruh halaman (`index.php`, `about.php`, `privacy.php`, `terms.php`, `404.php`, `login.php`, `thumb.php`, `sitemap.php`, `robots.php`, `manifest.webmanifest`, dan area admin) telah diverifikasi langsung via Apache & PHP runtime menghasilkan status 200/404 normal dengan header keamanan dan navigasi aktif.
+
 
 
 

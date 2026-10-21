@@ -117,4 +117,30 @@ class AdminRefactorTest extends TestCase
             ['activity_log.php'],
         ];
     }
-}
+
+    /**
+     * @dataProvider provideAdminFilesWithSitePreview
+     */
+    public function testAdminPagesIncludeSitePreviewLink(string $file): void
+    {
+        $path = self::ADMIN_DIR . '/' . $file;
+        $this->assertFileExists($path, "File $file harus ada");
+        $content = file_get_contents($path);
+        $this->assertStringContainsString('Lihat Website ↗', $content, "File $file harus memiliki tombol navigasi Lihat Website ↗");
+        $this->assertStringContainsString('btn-site-preview', $content, "File $file harus menggunakan kelas btn-site-preview");
+    }
+
+    public static function provideAdminFilesWithSitePreview(): array
+    {
+        return [
+            ['index.php'],
+            ['manage_hero.php'],
+            ['settings.php'],
+            ['activity_log.php'],
+            ['manage_items.php'],
+            ['add_product.php'],
+            ['edit_product.php'],
+            ['edit_item.php'],
+        ];
+    }
+}

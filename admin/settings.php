@@ -105,8 +105,9 @@ $current_home_description = $home_content['home_description'] ?? 'Puding lembut 
 <body>
     <header class="admin-header">
         <h2>Alfi Kitchen - Pengaturan</h2>
-        <div>
-            <a href="index.php" class="btn btn-cancel">Kembali</a>
+        <div class="admin-header-actions">
+            <a href="../" target="_blank" rel="noopener noreferrer" class="btn-site-preview">Lihat Website ↗</a>
+            <a href="index.php" class="btn btn-cancel">Dashboard</a>
             <a href="logout.php" class="btn btn-danger">Logout</a>
         </div>
     </header>

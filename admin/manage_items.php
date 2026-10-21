@@ -70,7 +70,11 @@ $items = $stmt->fetchAll();
 <body>
     <header class="admin-header">
         <h2>Alfi Kitchen Admin</h2>
-        <a href="logout.php" class="btn btn-danger">Logout</a>
+        <div class="admin-header-actions">
+            <a href="../" target="_blank" rel="noopener noreferrer" class="btn-site-preview">Lihat Website ↗</a>
+            <a href="index.php" class="btn btn-cancel">Dashboard</a>
+            <a href="logout.php" class="btn btn-danger">Logout</a>
+        </div>
     </header>
     <div class="admin-container">
         
