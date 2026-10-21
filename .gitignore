@@ -10,11 +10,14 @@ config.php
 /uploads/*
 !/uploads/.gitkeep
 !/uploads/.htaccess
+!/uploads/cache/
+!/uploads/cache/*
 
 # OS files
 .DS_Store
 Thumbs.db
 
-# Editor files
+# Editor & temp files
 .vscode/
 *.swp
+scratch/

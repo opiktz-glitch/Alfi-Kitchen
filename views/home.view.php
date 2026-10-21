@@ -101,7 +101,7 @@
   $logo_file = __DIR__ . '/../' . $logo_path;
   // Pakai filemtime (bukan time()) agar logo tetap bisa di-cache browser/CDN
   $fallbackLogo = require __DIR__ . '/../includes/fallback_logo.php';
-  $logo_src = file_exists($logo_file) ? 'thumb.php?file=' . urlencode($logo_path) . '&w=150&v=' . filemtime($logo_file) : $fallbackLogo;
+  $logo_src = file_exists($logo_file) ? 'uploads/logo.png?v=' . filemtime($logo_file) : $fallbackLogo;
   ?>
   <a href="index.php" class="floating-logo" title="Alfi Kitchen">
       <img src="<?= $logo_src ?>" width="75" height="75" alt="Alfi Kitchen Logo">
