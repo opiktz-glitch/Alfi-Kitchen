@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<?php if (!empty($preloadImage)): ?>
+<link rel="preload" as="image" href="<?= htmlspecialchars($preloadImage, ENT_QUOTES, 'UTF-8') ?>" fetchpriority="high"<?php if (!empty($preloadImageSrcset)): ?> imagesrcset="<?= htmlspecialchars($preloadImageSrcset, ENT_QUOTES, 'UTF-8') ?>" imagesizes="<?= htmlspecialchars($preloadImageSizes ?? '100vw', ENT_QUOTES, 'UTF-8') ?>"<?php endif; ?>>
+<?php endif; ?>
 <meta name="theme-color" content="#fff8ef">
 <title><?= htmlspecialchars($pageTitle ?? 'Alfi Kitchen — Landing Page', ENT_QUOTES, 'UTF-8') ?></title>
 <meta name="description" content="<?= htmlspecialchars($pageDescription ?? 'Puding, dessert, dan salad buah buatan rumahan dari Alfi Kitchen. Pesan langsung melalui WhatsApp.', ENT_QUOTES, 'UTF-8') ?>">
@@ -87,9 +90,6 @@ $seoType = $ogType ?? 'website';
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Playfair+Display:ital,wght@1,600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Playfair+Display:ital,wght@1,600&display=swap"></noscript>
-<?php if (!empty($preloadImage)): ?>
-<link rel="preload" as="image" href="<?= htmlspecialchars($preloadImage, ENT_QUOTES, 'UTF-8') ?>" fetchpriority="high"<?php if (!empty($preloadImageSrcset)): ?> imagesrcset="<?= htmlspecialchars($preloadImageSrcset, ENT_QUOTES, 'UTF-8') ?>" imagesizes="<?= htmlspecialchars($preloadImageSizes ?? '100vw', ENT_QUOTES, 'UTF-8') ?>"<?php endif; ?>>
-<?php endif; ?>
 <style>
   :root{
     --bg:#fff8ef; --fg:#4a3728; --muted:#5c4a3d; --accent:#e8935a; --card:#fff1de; --line:#f0ddc0;

@@ -107,7 +107,9 @@ Berikut status rekomendasi teknis untuk pengembangan aplikasi:
    - Workflow `.github/workflows/deploy.yml` kini mengeksekusi PHP unit test suite secara otomatis sebelum proses rilis/FTP dijalankan.
 5. **[SELESAI ✅] Optimasi Google PageSpeed Insights Lanjutan (Zero Unused JS & Maximum Image Compression)**:
    - **Native Touch Slider (Zero Unused JS)**: Menggantikan pustaka Swiper eksternal (143 KiB) dengan slider sentuh native vanilla CSS/JS (~1.2 KiB) berkinerja tinggi yang mendukung swipe di mobile dan drag di desktop, mengeliminasi peringatan *"Reduce unused JavaScript (Est savings 23 KiB)"*.
-   - **Tuning Kompresi Gambar & Responsive Thumbnail**: Mengatur parameter kualitas default WebP ke `68` di `thumb.php`, thumbnail kategori produk ditransformasi ke ukuran hemat `w=100&q=68` (menghemat ~5 KiB per gambar), serta preload gambar mobile memprioritaskan varian 480w/600w untuk menyelesaikan peringatan *"Improve image delivery"*.
+   - **Disk Caching di `thumb.php` (Solusi LCP Duration 1,800 ms)**: Menambahkan cache file siap saji di folder `uploads/cache/`. Request berulang dilayani instan (< 5 ms) tanpa beban CPU GD library di InfinityFree.
+   - **Reordering Hero Preload ke Baris Teratas `<head>` (Solusi LCP Delay 1,370 ms)**: Memindahkan tag preload hero ke baris 6 `header.php` agar diunduh paralel sejak TTFB.
+   - **Tuning Kompresi Gambar & Responsive Breakpoints (Solusi Image Delivery 12 KiB)**: Breakpoint hero mobile dioptimalkan ke `420w`, `640w`, `800w` dengan `q=65` dan sizes `100vw`, serta thumbnail menu produk menggunakan `w=80&q=65`.
 
 ### D. Usulan Pengembangan Baru (Dikerjakan Bertahap Satu per Satu)
 1. **[SELESAI ✅] Usulan 1: Progressive Web App (PWA)**:

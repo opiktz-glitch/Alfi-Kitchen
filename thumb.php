@@ -44,6 +44,26 @@ if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) && strtotime($_SERVER['HTTP_IF_MOD
     exit;
 }
 
+// Sajikan sebagai WebP jika browser mendukung, atau fallback ke JPEG/PNG untuk browser lawas
+$acceptsWebp = !isset($_SERVER['HTTP_ACCEPT']) || strpos($_SERVER['HTTP_ACCEPT'], 'image/webp') !== false || strpos($_SERVER['HTTP_ACCEPT'], '*/*') !== false;
+
+// Disk Caching: hindari kompresi ulang CPU-heavy di shared hosting
+$cacheDir = __DIR__ . '/uploads/cache';
+if (!is_dir($cacheDir)) {
+    @mkdir($cacheDir, 0755, true);
+}
+
+$cacheExt = ($acceptsWebp && function_exists('imagewebp')) ? 'webp' : ($ext === 'png' ? 'png' : 'jpg');
+$cacheKey = md5($filePath . '_' . $lastModified . '_' . $w . '_' . $q . '_' . $cacheExt);
+$cachePath = $cacheDir . '/' . $cacheKey . '.' . $cacheExt;
+
+if (file_exists($cachePath) && filemtime($cachePath) >= $lastModified) {
+    $mimeType = ($cacheExt === 'webp') ? 'image/webp' : ($cacheExt === 'png' ? 'image/png' : 'image/jpeg');
+    header('Content-Type: ' . $mimeType);
+    readfile($cachePath);
+    exit;
+}
+
 // Tanpa extension GD, kita tidak bisa resize/convert.
 // Fallback aman: layani file gambar aslinya apa adanya (tetap tervalidasi path-nya).
 if (!function_exists('imagecreatetruecolor') || !function_exists('imagewebp')) {
@@ -91,16 +111,36 @@ $acceptsWebp = !isset($_SERVER['HTTP_ACCEPT']) || strpos($_SERVER['HTTP_ACCEPT']
 
 if ($acceptsWebp && function_exists('imagewebp')) {
     header('Content-Type: image/webp');
-    imagewebp($dst, null, $q);
+    @imagewebp($dst, $cachePath, $q);
+    if (file_exists($cachePath)) {
+        readfile($cachePath);
+    } else {
+        imagewebp($dst, null, $q);
+    }
 } elseif ($mime === 'image/png' && function_exists('imagepng')) {
     header('Content-Type: image/png');
-    imagepng($dst, null, 8);
+    @imagepng($dst, $cachePath, 8);
+    if (file_exists($cachePath)) {
+        readfile($cachePath);
+    } else {
+        imagepng($dst, null, 8);
+    }
 } elseif ($mime === 'image/jpeg' && function_exists('imagejpeg')) {
     header('Content-Type: image/jpeg');
-    imagejpeg($dst, null, min(75, $q + 4));
+    @imagejpeg($dst, $cachePath, min(75, $q + 4));
+    if (file_exists($cachePath)) {
+        readfile($cachePath);
+    } else {
+        imagejpeg($dst, null, min(75, $q + 4));
+    }
 } else {
     header('Content-Type: image/webp');
-    imagewebp($dst, null, $q);
+    @imagewebp($dst, $cachePath, $q);
+    if (file_exists($cachePath)) {
+        readfile($cachePath);
+    } else {
+        imagewebp($dst, null, $q);
+    }
 }
 
 imagedestroy($im);

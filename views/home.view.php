@@ -66,14 +66,14 @@
           <?php foreach ($hero_images as $index => $img): ?>
               <?php
               $heroFile = urlencode($img['image']);
-              $heroSrc480 = 'thumb.php?file=' . $heroFile . '&w=480&q=68';
-              $heroSrc600 = 'thumb.php?file=' . $heroFile . '&w=600&q=68';
+              $heroSrc420 = 'thumb.php?file=' . $heroFile . '&w=420&q=65';
+              $heroSrc640 = 'thumb.php?file=' . $heroFile . '&w=640&q=65';
               $heroSrc800 = 'thumb.php?file=' . $heroFile . '&w=800&q=68';
               ?>
               <div class="swiper-slide">
-                  <img src="<?= $heroSrc600 ?>"
-                       srcset="<?= $heroSrc480 ?> 480w, <?= $heroSrc600 ?> 600w, <?= $heroSrc800 ?> 800w"
-                       sizes="(max-width: 480px) 480px, (max-width: 768px) 600px, 800px"
+                  <img src="<?= $heroSrc640 ?>"
+                       srcset="<?= $heroSrc420 ?> 420w, <?= $heroSrc640 ?> 640w, <?= $heroSrc800 ?> 800w"
+                       sizes="(max-width: 480px) 100vw, (max-width: 768px) 640px, 800px"
                        alt="Promo produk Alfi Kitchen: puding, dessert, dan salad buah rumahan"
                        width="800" height="450"
                        <?= $index === 0 ? 'fetchpriority="high"' : 'loading="lazy"' ?>
@@ -83,9 +83,9 @@
           <?php endforeach; ?>
       <?php else: ?>
           <div class="swiper-slide">
-              <img src="thumb.php?file=hero.jpg&w=600&q=68"
-                   srcset="thumb.php?file=hero.jpg&w=480&q=68 480w, thumb.php?file=hero.jpg&w=600&q=68 600w, thumb.php?file=hero.jpg&w=800&q=68 800w"
-                   sizes="(max-width: 480px) 480px, (max-width: 768px) 600px, 800px"
+              <img src="thumb.php?file=hero.jpg&w=640&q=65"
+                   srcset="thumb.php?file=hero.jpg&w=420&q=65 420w, thumb.php?file=hero.jpg&w=640&q=65 640w, thumb.php?file=hero.jpg&w=800&q=68 800w"
+                   sizes="(max-width: 480px) 100vw, (max-width: 768px) 640px, 800px"
                    alt="Puding, dessert, dan salad buah rumahan Alfi Kitchen"
                    width="800" height="450"
                    fetchpriority="high"
@@ -122,7 +122,7 @@
       <?php foreach($products as $p): ?>
       <a href="produk/<?= htmlspecialchars(ensure_product_slug($pdo, $p), ENT_QUOTES, 'UTF-8') ?>" class="pl-item" style="text-decoration:none; color:inherit;">
         <?php if(!empty($p['image'])): ?>
-            <img class="ph" src="thumb.php?file=<?= urlencode($p['image']) ?>&w=100&q=68" width="70" height="70" alt="<?= htmlspecialchars($p['name']) ?>" loading="lazy" decoding="async" style="object-fit:cover;">
+            <img class="ph" src="thumb.php?file=<?= urlencode($p['image']) ?>&w=80&q=65" width="70" height="70" alt="<?= htmlspecialchars($p['name']) ?>" loading="lazy" decoding="async" style="object-fit:cover;">
         <?php else: ?>
             <div class="ph <?= htmlspecialchars($p['image_class'] ?? 'a') ?>"></div>
         <?php endif; ?>

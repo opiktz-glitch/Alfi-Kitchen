@@ -84,8 +84,8 @@ class SeoAndRoutingTest extends TestCase
     {
         $homeView = file_get_contents(__DIR__ . '/../../views/home.view.php');
         $this->assertStringContainsString('srcset=', $homeView);
-        $this->assertStringContainsString('480w', $homeView);
-        $this->assertStringContainsString('600w', $homeView);
+        $this->assertStringContainsString('420w', $homeView);
+        $this->assertStringContainsString('640w', $homeView);
         $this->assertStringContainsString('800w', $homeView);
     }
 
@@ -94,7 +94,8 @@ class SeoAndRoutingTest extends TestCase
         $thumbContent = file_get_contents(__DIR__ . '/../../thumb.php');
         $this->assertStringContainsString("\$_GET['amp;w']", $thumbContent);
         $this->assertStringContainsString("\$qParam", $thumbContent);
-        $this->assertStringContainsString("imagewebp(\$dst, null, \$q)", $thumbContent);
+        $this->assertStringContainsString("\$cachePath", $thumbContent);
+        $this->assertStringContainsString("imagewebp(\$dst, \$cachePath, \$q)", $thumbContent);
     }
 }
 
