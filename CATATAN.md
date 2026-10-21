@@ -105,9 +105,9 @@ Berikut status rekomendasi teknis untuk pengembangan aplikasi:
    - Fungsi `format_whatsapp_number()` dan `whatsapp_url()` di `includes/seo_helpers.php` mengonversi format lokal (seperti `0812...` atau `+62...`) menjadi format internasional murni `62812...` untuk tautan `wa.me/` di footer dan halaman 404 tanpa resiko link rusak.
 4. **[SELESAI ✅] CI/CD Quality Gate Otomatis**:
    - Workflow `.github/workflows/deploy.yml` kini mengeksekusi PHP unit test suite secara otomatis sebelum proses rilis/FTP dijalankan.
-5. **[SELESAI ✅] Optimasi Google PageSpeed Insights (Cache Lifetimes & Image Delivery)**:
-   - **Self-Host Swiper JS & CSS**: Berkas pustaka slider dipindahkan dari CDN jsDelivr ke folder lokal `assets/vendor/swiper/` sehingga disajikan langsung dengan cache 30 hari (`max-age=2592000, public`), mengeliminasi peringatan *"Use efficient cache lifetimes"*.
-   - **Responsive Image Srcset & Quality Tuning**: Slider hero di `views/home.view.php` dan preloader di `header.php` kini menyajikan atribut `srcset` dengan varian `480w` untuk mobile dan `800w` untuk desktop, serta rasio kompresi WebP disesuaikan ke kualitas `75` di `thumb.php`, menghemat ~16 KiB data pada perangkat mobile sesuai rekomendasi Google Lighthouse.
+5. **[SELESAI ✅] Optimasi Google PageSpeed Insights Lanjutan (Zero Unused JS & Maximum Image Compression)**:
+   - **Native Touch Slider (Zero Unused JS)**: Menggantikan pustaka Swiper eksternal (143 KiB) dengan slider sentuh native vanilla CSS/JS (~1.2 KiB) berkinerja tinggi yang mendukung swipe di mobile dan drag di desktop, mengeliminasi peringatan *"Reduce unused JavaScript (Est savings 23 KiB)"*.
+   - **Tuning Kompresi Gambar & Responsive Thumbnail**: Mengatur parameter kualitas default WebP ke `68` di `thumb.php`, thumbnail kategori produk ditransformasi ke ukuran hemat `w=100&q=68` (menghemat ~5 KiB per gambar), serta preload gambar mobile memprioritaskan varian 480w/600w untuk menyelesaikan peringatan *"Improve image delivery"*.
 
 ### D. Usulan Pengembangan Baru (Dikerjakan Bertahap Satu per Satu)
 1. **[SELESAI ✅] Usulan 1: Progressive Web App (PWA)**:

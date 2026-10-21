@@ -1,22 +1,79 @@
 <?php include 'header.php'; ?>
 
-<!-- Swiper CSS (Lokal dengan Cache 30 Hari) -->
-<link rel="preload" href="assets/vendor/swiper/swiper-bundle.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="assets/vendor/swiper/swiper-bundle.min.css"></noscript>
+<style>
+/* Hero Touch Slider (Native, Ultra-Lightweight & Zero Unused JS) */
+.hero.swiper {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  max-height: 520px;
+  background: #f7e6d2;
+  touch-action: pan-y pinch-zoom;
+  user-select: none;
+  cursor: grab;
+}
+.hero.swiper:active {
+  cursor: grabbing;
+}
+.hero .swiper-wrapper {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+  will-change: transform;
+}
+.hero .swiper-slide {
+  flex: 0 0 100%;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+.hero .swiper-pagination {
+  position: absolute;
+  bottom: 14px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  z-index: 10;
+  pointer-events: auto;
+}
+.hero .swiper-pagination-bullet {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0;
+  margin: 0;
+}
+.hero .swiper-pagination-bullet-active {
+  background: #ffffff;
+  width: 24px;
+  border-radius: 12px;
+}
+</style>
 
-  <div class="hero swiper mySwiper">
-  <div class="swiper-wrapper">
+<div class="hero swiper mySwiper" id="heroSlider" aria-roledescription="carousel" aria-label="Slider Promo">
+  <div class="swiper-wrapper" id="heroWrapper">
       <?php if (!empty($hero_images)): ?>
           <?php foreach ($hero_images as $index => $img): ?>
               <?php
               $heroFile = urlencode($img['image']);
-              $heroSrc480 = 'thumb.php?file=' . $heroFile . '&w=480';
-              $heroSrc800 = 'thumb.php?file=' . $heroFile . '&w=800';
+              $heroSrc480 = 'thumb.php?file=' . $heroFile . '&w=480&q=68';
+              $heroSrc600 = 'thumb.php?file=' . $heroFile . '&w=600&q=68';
+              $heroSrc800 = 'thumb.php?file=' . $heroFile . '&w=800&q=68';
               ?>
               <div class="swiper-slide">
-                  <img src="<?= $heroSrc800 ?>"
-                       srcset="<?= $heroSrc480 ?> 480w, <?= $heroSrc800 ?> 800w"
-                       sizes="(max-width: 640px) 100vw, 800px"
+                  <img src="<?= $heroSrc600 ?>"
+                       srcset="<?= $heroSrc480 ?> 480w, <?= $heroSrc600 ?> 600w, <?= $heroSrc800 ?> 800w"
+                       sizes="(max-width: 480px) 480px, (max-width: 768px) 600px, 800px"
                        alt="Promo produk Alfi Kitchen: puding, dessert, dan salad buah rumahan"
                        width="800" height="450"
                        <?= $index === 0 ? 'fetchpriority="high"' : 'loading="lazy"' ?>
@@ -26,9 +83,9 @@
           <?php endforeach; ?>
       <?php else: ?>
           <div class="swiper-slide">
-              <img src="thumb.php?file=hero.jpg&w=800"
-                   srcset="thumb.php?file=hero.jpg&w=480 480w, thumb.php?file=hero.jpg&w=800 800w"
-                   sizes="(max-width: 640px) 100vw, 800px"
+              <img src="thumb.php?file=hero.jpg&w=600&q=68"
+                   srcset="thumb.php?file=hero.jpg&w=480&q=68 480w, thumb.php?file=hero.jpg&w=600&q=68 600w, thumb.php?file=hero.jpg&w=800&q=68 800w"
+                   sizes="(max-width: 480px) 480px, (max-width: 768px) 600px, 800px"
                    alt="Puding, dessert, dan salad buah rumahan Alfi Kitchen"
                    width="800" height="450"
                    fetchpriority="high"
@@ -50,8 +107,8 @@
       <img src="<?= $logo_src ?>" width="75" height="75" alt="Alfi Kitchen Logo">
   </a>
 
-  <!-- Jika ingin menambahkan tombol navigasi kecil (opsional, biarkan Swiper yang menangani) -->
-  <div class="swiper-pagination"></div>
+  <!-- Navigasi pagination bullet -->
+  <div class="swiper-pagination" id="heroPagination"></div>
 </div>
 
 <main class="welcome-split">
@@ -65,7 +122,7 @@
       <?php foreach($products as $p): ?>
       <a href="produk/<?= htmlspecialchars(ensure_product_slug($pdo, $p), ENT_QUOTES, 'UTF-8') ?>" class="pl-item" style="text-decoration:none; color:inherit;">
         <?php if(!empty($p['image'])): ?>
-            <img class="ph" src="thumb.php?file=<?= urlencode($p['image']) ?>&w=140" width="70" height="70" alt="<?= htmlspecialchars($p['name']) ?>" loading="lazy" decoding="async" style="object-fit:cover;">
+            <img class="ph" src="thumb.php?file=<?= urlencode($p['image']) ?>&w=100&q=68" width="70" height="70" alt="<?= htmlspecialchars($p['name']) ?>" loading="lazy" decoding="async" style="object-fit:cover;">
         <?php else: ?>
             <div class="ph <?= htmlspecialchars($p['image_class'] ?? 'a') ?>"></div>
         <?php endif; ?>
@@ -78,23 +135,124 @@
   </div>
 </main>
 
-<!-- Swiper JS (Lokal dengan Cache 30 Hari) -->
-<script src="assets/vendor/swiper/swiper-bundle.min.js" defer></script>
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    var swiper = new Swiper(".mySwiper", {
-        loop: true,
-        grabCursor: true, // Ubah kursor jadi tangan saat di-hover
-        autoplay: {
-            delay: 5000,
-            disableOnInteraction: false,
-        },
-        pagination: {
-            el: ".swiper-pagination",
-            clickable: true,
-        },
-        speed: 800 // Kecepatan transisi slide
+    var slider = document.getElementById("heroSlider");
+    var wrapper = document.getElementById("heroWrapper");
+    var pagination = document.getElementById("heroPagination");
+    if (!slider || !wrapper) return;
+
+    var slides = wrapper.querySelectorAll(".swiper-slide");
+    var total = slides.length;
+    if (total <= 1) return;
+
+    var currentIndex = 0;
+    var startX = 0, currentX = 0, isDragging = false;
+    var timer = null;
+
+    if (pagination) {
+        pagination.innerHTML = "";
+        for (var i = 0; i < total; i++) {
+            var dot = document.createElement("button");
+            dot.className = "swiper-pagination-bullet" + (i === 0 ? " swiper-pagination-bullet-active" : "");
+            dot.setAttribute("aria-label", "Slide " + (i + 1));
+            dot.setAttribute("type", "button");
+            (function(idx) {
+                dot.addEventListener("click", function() {
+                    goToSlide(idx);
+                    resetTimer();
+                });
+            })(i);
+            pagination.appendChild(dot);
+        }
+    }
+
+    function updatePagination() {
+        if (!pagination) return;
+        var dots = pagination.querySelectorAll(".swiper-pagination-bullet");
+        dots.forEach(function(dot, idx) {
+            dot.classList.toggle("swiper-pagination-bullet-active", idx === currentIndex);
+        });
+    }
+
+    function goToSlide(index) {
+        currentIndex = (index + total) % total;
+        wrapper.style.transition = "transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)";
+        wrapper.style.transform = "translateX(-" + (currentIndex * 100) + "%)";
+        updatePagination();
+    }
+
+    function startTimer() {
+        stopTimer();
+        timer = setInterval(function() {
+            goToSlide(currentIndex + 1);
+        }, 5000);
+    }
+
+    function stopTimer() {
+        if (timer) clearInterval(timer);
+    }
+
+    function resetTimer() {
+        stopTimer();
+        startTimer();
+    }
+
+    // Touch events
+    slider.addEventListener("touchstart", function(e) {
+        if (e.touches.length !== 1) return;
+        isDragging = true;
+        startX = e.touches[0].clientX;
+        currentX = startX;
+        stopTimer();
+    }, { passive: true });
+
+    slider.addEventListener("touchmove", function(e) {
+        if (!isDragging || e.touches.length !== 1) return;
+        currentX = e.touches[0].clientX;
+    }, { passive: true });
+
+    slider.addEventListener("touchend", function() {
+        if (!isDragging) return;
+        isDragging = false;
+        var diff = currentX - startX;
+        if (diff > 40) {
+            goToSlide(currentIndex - 1);
+        } else if (diff < -40) {
+            goToSlide(currentIndex + 1);
+        }
+        startTimer();
     });
+
+    // Mouse drag
+    slider.addEventListener("mousedown", function(e) {
+        isDragging = true;
+        startX = e.clientX;
+        currentX = startX;
+        stopTimer();
+    });
+
+    window.addEventListener("mousemove", function(e) {
+        if (!isDragging) return;
+        currentX = e.clientX;
+    });
+
+    window.addEventListener("mouseup", function() {
+        if (!isDragging) return;
+        isDragging = false;
+        var diff = currentX - startX;
+        if (diff > 40) {
+            goToSlide(currentIndex - 1);
+        } else if (diff < -40) {
+            goToSlide(currentIndex + 1);
+        }
+        startTimer();
+    });
+
+    slider.addEventListener("mouseenter", stopTimer);
+    slider.addEventListener("mouseleave", startTimer);
+
+    startTimer();
 });
 </script>
 

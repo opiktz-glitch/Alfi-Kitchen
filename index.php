@@ -12,13 +12,13 @@ $stmt2 = $pdo->query("SELECT * FROM hero_images ORDER BY id DESC");
 $hero_images = $stmt2->fetchAll();
 if (!empty($hero_images)) {
     $firstHero = urlencode($hero_images[0]['image']);
-    $preloadImage = 'thumb.php?file=' . $firstHero . '&w=800';
-    $preloadImageSrcset = 'thumb.php?file=' . $firstHero . '&w=480 480w, thumb.php?file=' . $firstHero . '&w=800 800w';
-    $preloadImageSizes = '(max-width: 640px) 100vw, 800px';
+    $preloadImage = 'thumb.php?file=' . $firstHero . '&w=600&q=68';
+    $preloadImageSrcset = 'thumb.php?file=' . $firstHero . '&w=480&q=68 480w, thumb.php?file=' . $firstHero . '&w=600&q=68 600w, thumb.php?file=' . $firstHero . '&w=800&q=68 800w';
+    $preloadImageSizes = '(max-width: 480px) 480px, (max-width: 768px) 600px, 800px';
 } else {
-    $preloadImage = 'thumb.php?file=hero.jpg&w=800';
-    $preloadImageSrcset = 'thumb.php?file=hero.jpg&w=480 480w, thumb.php?file=hero.jpg&w=800 800w';
-    $preloadImageSizes = '(max-width: 640px) 100vw, 800px';
+    $preloadImage = 'thumb.php?file=hero.jpg&w=600&q=68';
+    $preloadImageSrcset = 'thumb.php?file=hero.jpg&w=480&q=68 480w, thumb.php?file=hero.jpg&w=600&q=68 600w, thumb.php?file=hero.jpg&w=800&q=68 800w';
+    $preloadImageSizes = '(max-width: 480px) 480px, (max-width: 768px) 600px, 800px';
 }
 
 $homeSettings = $pdo->query(

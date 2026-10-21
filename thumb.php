@@ -14,6 +14,8 @@ require_once __DIR__ . '/admin/helpers/db_helper.php';
 
 $file = $_GET['file'] ?? '';
 $w = (int)($_GET['w'] ?? $_GET['amp;w'] ?? 150);
+$qParam = isset($_GET['q']) ? (int)$_GET['q'] : (isset($_GET['amp;q']) ? (int)$_GET['amp;q'] : 68);
+$q = ($qParam >= 30 && $qParam <= 90) ? $qParam : 68;
 
 $filePath = resolve_thumbnail_path(is_string($file) ? $file : '');
 
@@ -89,16 +91,16 @@ $acceptsWebp = !isset($_SERVER['HTTP_ACCEPT']) || strpos($_SERVER['HTTP_ACCEPT']
 
 if ($acceptsWebp && function_exists('imagewebp')) {
     header('Content-Type: image/webp');
-    imagewebp($dst, null, 75);
+    imagewebp($dst, null, $q);
 } elseif ($mime === 'image/png' && function_exists('imagepng')) {
     header('Content-Type: image/png');
     imagepng($dst, null, 8);
 } elseif ($mime === 'image/jpeg' && function_exists('imagejpeg')) {
     header('Content-Type: image/jpeg');
-    imagejpeg($dst, null, 78);
+    imagejpeg($dst, null, min(75, $q + 4));
 } else {
     header('Content-Type: image/webp');
-    imagewebp($dst, null, 75);
+    imagewebp($dst, null, $q);
 }
 
 imagedestroy($im);
