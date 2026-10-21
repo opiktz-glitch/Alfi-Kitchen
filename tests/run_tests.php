@@ -24,6 +24,7 @@ require_once __DIR__ . '/Unit/DatabaseMigratorTest.php';
 require_once __DIR__ . '/Unit/FallbackLogoTest.php';
 require_once __DIR__ . '/Unit/EnvLoaderTest.php';
 require_once __DIR__ . '/Unit/BackupAndLogTest.php';
+require_once __DIR__ . '/Unit/SeoAndRoutingTest.php';
 
 $runner = new \AlfiKitchen\Test\SimpleRunner();
 
@@ -36,6 +37,7 @@ $testClasses = [
     \FallbackLogoTest::class,
     \EnvLoaderTest::class,
     \BackupAndLogTest::class,
+    \SeoAndRoutingTest::class,
 ];
 
 $success = $runner->runSuite($testClasses);

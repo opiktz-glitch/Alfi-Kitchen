@@ -96,11 +96,23 @@ Berikut status rekomendasi teknis untuk pengembangan aplikasi:
 2. **[SELESAI ✅] Kompatibilitas File WebP di Browser Lama**:
    - Telah diselesaikan di level server pada `thumb.php`: server otomatis mengecek header peramban (`HTTP_ACCEPT`) dan menyajikan format JPEG/PNG asli secara dinamis jika browser pengunjung adalah peramban legacy yang belum mendukung WebP.
 
-### C. Alur Pengujian Mandiri (Testing)
-Setiap kali melakukan perubahan kode di area admin, helper, konfigurasi, atau thumbnail, jalankan test suite otomatis melalui terminal:
+### C. Prioritas Keamanan Web & CI/CD
+1. **[SELESAI ✅] HTTP Security Headers**:
+   - Diterapkan via `.htaccess` dengan header `X-Content-Type-Options: nosniff`, `X-Frame-Options: SAMEORIGIN`, dan `Referrer-Policy: strict-origin-when-cross-origin` untuk mencegah MIME-sniffing dan clickjacking.
+2. **[SELESAI ✅] Hardened Session Cookies**:
+   - Pengaturan sesi di `admin/auth.php` dan `login.php` diperketat dengan parameter `lifetime: 1800`, `path: /`, `httponly: true`, `samesite: Lax`, serta `secure: true` otomatis ketika diakses via HTTPS.
+3. **[SELESAI ✅] Normalisasi Nomor WhatsApp Otomatis**:
+   - Fungsi `format_whatsapp_number()` dan `whatsapp_url()` di `includes/seo_helpers.php` mengonversi format lokal (seperti `0812...` atau `+62...`) menjadi format internasional murni `62812...` untuk tautan `wa.me/` di footer dan halaman 404 tanpa resiko link rusak.
+4. **[SELESAI ✅] CI/CD Quality Gate Otomatis**:
+   - Workflow `.github/workflows/deploy.yml` kini mengeksekusi PHP unit test suite secara otomatis sebelum proses rilis/FTP dijalankan.
+
+### D. Alur Pengujian Mandiri & Verifikasi Runtime
+Setiap kali melakukan perubahan kode di area admin, helper, konfigurasi, atau tampilan, jalankan test suite dan verifikasi runtime:
 ```bash
 # Melalui PowerShell / CMD di folder project:
 C:\xampp\php\php.exe tests\run_tests.php
 ```
-*Status saat ini:* **88 unit test esensial lulus 100%, 0 gagal.**
+*Status saat ini:* **91 unit test esensial lulus 100%, 0 gagal.**
+*Verifikasi Runtime Live:* Seluruh halaman (`index.php`, `about.php`, `privacy.php`, `terms.php`, `404.php`, `login.php`, `thumb.php`, `sitemap.php`, `robots.php`) telah diverifikasi langsung via Apache & PHP runtime menghasilkan status 200/404 normal dengan header keamanan aktif.
+
 

@@ -104,7 +104,7 @@ include 'header.php';
         </p>
         <div class="error-actions">
             <a href="<?= site_url('') ?>" class="btn-home">🏠 Kembali ke Beranda</a>
-            <a href="https://wa.me/<?= preg_replace('/\D+/', '', $whatsapp_number ?? '628123456789') ?>" target="_blank" rel="noopener" class="btn-wa">💬 Tanya via WhatsApp</a>
+            <a href="<?= htmlspecialchars(whatsapp_url($whatsapp_number ?? null, 'Halo Alfi Kitchen, saya ingin menanyakan menu...')) ?>" target="_blank" rel="noopener noreferrer" class="btn-wa">💬 Tanya via WhatsApp</a>
         </div>
     </div>
 </main>

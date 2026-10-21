@@ -13,6 +13,15 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      - name: Setup PHP Environment
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: pdo, pdo_sqlite, gd
+
+      - name: Run Unit Tests (Quality Gate)
+        run: php tests/run_tests.php
+
       - name: Sync files via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
@@ -30,9 +39,6 @@ jobs:
             .env.example
             README.md
             CATATAN.md
-            .clineignore
-            phpunit.xml
             tests/**
             **/node_modules/**
             config.php
-

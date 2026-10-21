@@ -50,6 +50,46 @@ if (!function_exists('site_url')) {
     }
 }
 
+if (!function_exists('format_whatsapp_number')) {
+    /**
+     * Normalisasi nomor telepon ke format internasional WhatsApp (628...).
+     */
+    function format_whatsapp_number(?string $rawNumber): string
+    {
+        if ($rawNumber === null || trim($rawNumber) === '') {
+            return '';
+        }
+        $digits = preg_replace('/\D+/', '', $rawNumber);
+        if ($digits === '') {
+            return '';
+        }
+        if (str_starts_with($digits, '0')) {
+            $digits = '62' . substr($digits, 1);
+        } elseif (str_starts_with($digits, '8')) {
+            $digits = '62' . $digits;
+        }
+        return $digits;
+    }
+}
+
+if (!function_exists('whatsapp_url')) {
+    /**
+     * Buat URL obrolan WhatsApp resmi dengan pesan opsional.
+     */
+    function whatsapp_url(?string $rawNumber, string $text = ''): string
+    {
+        $clean = format_whatsapp_number($rawNumber);
+        if ($clean === '') {
+            return '#';
+        }
+        $url = 'https://wa.me/' . $clean;
+        if ($text !== '') {
+            $url .= '?text=' . rawurlencode($text);
+        }
+        return $url;
+    }
+}
+
 /**
  * Bangun meta description unik per halaman produk (maks ~160 karakter).
  * Prioritas: deskripsi item termurah/mewakili + rentang harga + ajakan WA.

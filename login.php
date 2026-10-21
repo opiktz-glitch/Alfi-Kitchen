@@ -1,9 +1,13 @@
 <?php
 date_default_timezone_set('Asia/Jakarta');
+$isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+    || (($_SERVER['SERVER_PORT'] ?? 0) == 443)
+    || (strtolower($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https');
+
 session_set_cookie_params([
     'lifetime' => 1800,
     'path' => '/',
-    'secure' => (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443,
+    'secure' => $isHttps,
     'httponly' => true,
     'samesite' => 'Lax'
 ]);
@@ -25,7 +29,7 @@ if (empty($_SESSION['csrf_token'])) {
 
 $error = '';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
     $now = time();
 
     if (!hash_equals($_SESSION['csrf_token'] ?? '', is_string($_POST['csrf_token'] ?? null) ? $_POST['csrf_token'] : '')) {
