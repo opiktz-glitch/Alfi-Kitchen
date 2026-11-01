@@ -1,6 +1,6 @@
 <?php
 require 'auth_check.php';
-require '../config.php';
+require_once __DIR__ . '/../includes/bootstrap.php';
 
 
 // Proteksi rate-limit cooldown: cegah server overload di InfinityFree (jeda minimal 60 detik)

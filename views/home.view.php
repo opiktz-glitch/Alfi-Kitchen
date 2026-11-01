@@ -119,18 +119,22 @@
   <div class="col-product" id="menu">
     <h2 class="col-product-title">Produk Kami</h2>
     <div class="product-list">
-      <?php foreach($products as $p): ?>
-      <a href="produk/<?= htmlspecialchars(ensure_product_slug($pdo, $p), ENT_QUOTES, 'UTF-8') ?>" class="pl-item" style="text-decoration:none; color:inherit;">
-        <?php if(!empty($p['image'])): ?>
-            <img class="ph" src="thumb.php?file=<?= urlencode($p['image']) ?>&w=80&q=65" width="70" height="70" alt="<?= htmlspecialchars($p['name']) ?>" loading="lazy" decoding="async" style="object-fit:cover;">
-        <?php else: ?>
-            <div class="ph <?= htmlspecialchars($p['image_class'] ?? 'a') ?>"></div>
-        <?php endif; ?>
-        <div class="pl-info" style="font-weight:600; font-size:1.05rem;">
-          <span><?= htmlspecialchars($p['name']) ?></span>
-        </div>
-      </a>
-      <?php endforeach; ?>
+      <?php if (empty($products)): ?>
+        <p class="product-list-empty">Produk sedang disiapkan. Silakan kembali lagi nanti.</p>
+      <?php else: ?>
+        <?php foreach($products as $p): ?>
+        <a href="produk/<?= htmlspecialchars(ensure_product_slug($pdo, $p), ENT_QUOTES, 'UTF-8') ?>" class="pl-item" style="text-decoration:none; color:inherit;">
+          <?php if(!empty($p['image'])): ?>
+              <img class="ph" src="thumb.php?file=<?= urlencode($p['image']) ?>&w=80&q=65" width="70" height="70" alt="<?= htmlspecialchars($p['name']) ?>" loading="lazy" decoding="async" style="object-fit:cover;">
+          <?php else: ?>
+              <div class="ph <?= htmlspecialchars($p['image_class'] ?? 'a') ?>"></div>
+          <?php endif; ?>
+          <div class="pl-info" style="font-weight:600; font-size:1.05rem;">
+            <span><?= htmlspecialchars($p['name']) ?></span>
+          </div>
+        </a>
+        <?php endforeach; ?>
+      <?php endif; ?>
     </div>
   </div>
 </main>

@@ -37,8 +37,8 @@ jobs:
             **/.git*/**
             .env
             .env.example
-            README.md
-            CATATAN.md
+            **/*.md
             tests/**
             **/node_modules/**
             config.php
+            config.example.php

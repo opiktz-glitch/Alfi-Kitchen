@@ -12,7 +12,7 @@ if (php_sapi_name() !== 'cli') {
     die("Akses ditolak: Skrip ini hanya dapat dijalankan melalui terminal (CLI).\n");
 }
 
-require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/../includes/bootstrap.php';
 require_once __DIR__ . '/../includes/DatabaseMigrator.php';
 
 $migrator = new DatabaseMigrator($pdo, __DIR__ . '/migrations');

@@ -1,58 +1,80 @@
-# 🍮 Alfi Kitchen
+# Alfi Kitchen
 
-Website toko online **Alfi Kitchen** — puding, dessert, dan salad buah homemade berkualitas.
+Katalog online puding, dessert, dan salad buah rumahan. Pengunjung dapat melihat
+produk dan menghubungi toko untuk memesan melalui WhatsApp. Aplikasi belum
+menyediakan keranjang belanja, pembayaran, atau pelacakan pesanan.
 
-## 🛠️ Teknologi
-- PHP (Native)
-- MySQL / PDO
-- Swiper.js (Slider)
-- CSS Vanilla
+## Teknologi dan prasyarat
 
-## 🚀 Deploy Otomatis
-Project ini menggunakan **GitHub Actions** untuk auto-deploy ke InfinityFree setiap kali ada push ke branch `main`.
+- PHP 8.0 atau lebih baru; CI proyek menggunakan PHP 8.2.
+- MySQL/MariaDB dengan ekstensi PDO MySQL.
+- Apache dengan `mod_rewrite` dan dukungan `.htaccess` untuk URL produk.
+- Ekstensi PHP `fileinfo` untuk validasi upload. GD digunakan untuk pemrosesan
+  gambar/WebP dan ZIP untuk backup gambar; fitur terkait memerlukan ekstensi
+  masing-masing.
 
-### Setup Secrets di GitHub
-Sebelum deploy, tambahkan 3 secrets di **Settings → Secrets → Actions**:
+## Setup lokal
 
-| Secret | Keterangan |
-|---|---|
-| `FTP_HOST` | FTP Host dari cPanel InfinityFree |
-| `FTP_USER` | FTP Username dari cPanel |
-| `FTP_PASS` | FTP Password dari cPanel |
+1. Buat database MySQL untuk aplikasi.
+2. Salin `.env.example` menjadi `.env`, lalu isi kredensial database dan URL
+   situs yang sesuai.
+3. Entry point aplikasi menggunakan `includes/bootstrap.php`: jika `config.php`
+   khusus sudah tersedia di root, konfigurasi tersebut tetap digunakan;
+   jika tidak, aplikasi memakai `includes/config.php` yang membaca `.env`.
+   Karena itu, checkout lokal baru cukup menggunakan `.env.example` sebagai
+   dasar konfigurasi.
+4. Jalankan migrasi dari terminal di root proyek:
 
-## ⚙️ Konfigurasi Lingkungan (.env)
-1. Salin file template `.env.example` menjadi `.env`:
-   ```bash
-   cp .env.example .env
+   ```text
+   C:\xampp\php\php.exe database\migrate.php
    ```
-2. Sesuaikan kredensial database & URL situs di file `.env` (host, dbname, user, password, SITE_URL).
-3. Atau gunakan `config.example.php` disalin ke `config.php` jika server tidak memakai format `.env`.
-4. Jalankan migrasi database otomatis:
-   ```bash
-   php database/migrate.php
+
+   Untuk melihat status migrasi:
+
+   ```text
+   C:\xampp\php\php.exe database\migrate.php status
    ```
-5. Akses via browser → `http://localhost/Alfi_Kitchen`
 
-## 🔐 Keamanan
-- File `.env` dan `config.php` **tidak** di-commit ke Git (sudah masuk `.gitignore`) dan tidak ikut ditimpa oleh deploy FTP.
-- Akses HTTP langsung ke file `.env`, `.sql`, `.log`, `.git*` diblokir oleh aturan ketat di root `.htaccess`.
-- Folder `uploads/` tidak meng-commit gambar; `.gitkeep` dan `.htaccess` ikut deploy untuk mempertahankan folder dan memblokir eksekusi skrip
-- Upload gambar dibatasi maksimal 5 MB dan divalidasi berdasarkan MIME serta struktur gambar di server; logo hanya menerima PNG
-- Password admin dapat diubah melalui panel **Admin → Pengaturan**
-- Terapkan [database/login_attempts.sql](database/login_attempts.sql) pada database lokal dan hosting sebelum memakai pembatasan percobaan login baru
-- Terapkan [database/settings_utf8mb4.sql](database/settings_utf8mb4.sql) sekali pada database lokal dan hosting sebelum menyimpan teks homepage dari CMS
-- Terapkan [database/product_slug_migration.sql](database/product_slug_migration.sql) sekali pada database lokal dan hosting untuk mengaktifkan URL produk ramah-SEO (`/produk/{slug}`) — aman di InfinityFree; bagian trigger tidak diperlukan karena regenerasi slug ditangani di PHP (`admin/edit_product.php`)
+5. Pastikan folder `uploads/` dapat ditulis oleh PHP, lalu buka
+   `http://localhost/Alfi_Kitchen`.
 
-## 💾 Backup
-- **Database** dapat diekspor via tombol **📥 Backup Database** di **Admin → Pengaturan**
-- **Gambar** dapat diekspor via tombol **🖼️ Backup Semua Gambar** di **Admin → Pengaturan**
+Jangan meng-commit `.env` atau `config.php`. `config.example.php` tetap tersedia
+sebagai template konfigurasi root opsional untuk instalasi yang memerlukannya.
+Pada hosting, konfigurasi root yang sudah ada tetap diprioritaskan; tanpa file
+tersebut, aplikasi membaca environment `.env` jika tersedia.
 
-## ⚡ Optimasi Performa & SEO
-- **WebP On-the-Fly**: Semua gambar produk, logo, dan slider dikompresi serta dikonversi ke format WebP secara otomatis oleh `thumb.php` berdasarkan resolusi layar.
-- **Auto-Compression Upload**: Pengunggahan gambar di panel admin otomatis dipangkas dimensinya (maks. 1600px untuk hero/produk) tanpa kehilangan kualitas visual, menghemat >70% penyimpanan.
-- **Preload LCP (Largest Contentful Paint)**: Gambar Hero utama di-preload secara dinamis untuk menjamin skor PageSpeed sempurna, bebas *render-blocking*.
-- **Aksesibilitas (A11Y)**: Kode HTML telah dioptimalkan (kontras warna rasio 4.5:1 standar WCAG AA, penambahan atribut `aria-label`, serta resolusi `width`/`height` eksplisit pada gambar) demi kemudahan Screen Reader.
+## Fitur
 
-## 📝 Catatan Pembaruan & Rekomendasi
-Dokumentasi lengkap mengenai evaluasi refaktor kode, perbaikan keamanan (anti-LFI & CSRF), audit tampilan admin, serta daftar rekomendasi teknis dapat dilihat pada [CATATAN.md](CATATAN.md).
+- Katalog kategori dan varian produk dengan URL produk berbasis slug.
+- Panel admin untuk mengelola produk, gambar hero, konten homepage, dan nomor
+  WhatsApp.
+- Upload gambar dengan batas 5 MB, validasi MIME/struktur, dan batas dimensi.
+- Thumbnail responsif dengan cache; konversi dan kompresi memerlukan dukungan
+  GD.
+- Ekspor backup database dan gambar dari panel pengaturan admin.
+- SEO dasar, sitemap, halaman 404, dan manifest PWA.
 
+## Tes
+
+Jalankan tes native dari root proyek:
+
+```text
+C:\xampp\php\php.exe tests\run_tests.php
+```
+
+GitHub Actions menjalankan tes sebelum deployment.
+
+## Deployment
+
+Workflow `.github/workflows/deploy.yml` berjalan saat ada push ke branch `main`.
+Panduan lengkap update dan pemulihan hosting tersedia di
+[DEPLOYMENT.md](docs/DEPLOYMENT.md). Workflow saat ini menggunakan FTP port 21;
+transport FTP biasa tidak mengenkripsi kredensial atau trafik.
+
+## Dokumentasi
+
+- [Arsitektur aplikasi](docs/ARCHITECTURE.md)
+- [Panduan deployment](docs/DEPLOYMENT.md)
+- [Roadmap pengembangan](docs/ROADMAP.md)
+- [Riwayat perubahan](CHANGELOG.md)
+- [Skema database](database/SCHEMA.md)

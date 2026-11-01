@@ -186,30 +186,20 @@ $seoType = $ogType ?? 'website';
   
   .col-product{
     background:var(--card); border:1px solid var(--line); border-radius:16px; padding:28px;
-    display:flex; flex-direction:column; justify-content:center;
+    display:flex; flex-direction:column; justify-content:flex-start; min-width:0;
     box-shadow: 0 10px 30px rgba(232, 147, 90, 0.05);
   }
   .col-product .col-product-title{margin:0 0 14px; font-size:1.2rem; font-weight:700; flex:0 0 auto;}
   .product-list{
-    display:flex; flex-direction:column; gap:16px; 
-    overflow-y:auto; flex:1; padding-right:10px;
-    max-height:250px;
+    display:flex; flex-direction:column; gap:12px;
+    width:100%; flex:0 0 auto; min-width:0;
   }
-  
-  /* Custom Scrollbar untuk Produk Kami */
-  .product-list::-webkit-scrollbar { width: 6px; }
-  .product-list::-webkit-scrollbar-track { background: transparent; }
-  .product-list::-webkit-scrollbar-thumb { background: transparent; border-radius: 10px; }
-  
-  /* Scrollbar muncul hanya ketika mouse melintas di kotak produk */
-  .col-product:hover .product-list::-webkit-scrollbar-thumb { background: rgba(240, 221, 192, 0.8); }
-  .product-list::-webkit-scrollbar-thumb:hover { background: var(--accent) !important; }
-  
-  /* Hover efek modern */
-  .pl-item{display:flex; align-items:center; gap:16px; padding: 10px; border-radius: 16px; cursor: pointer;}
-  .pl-item:hover {background: rgba(255,255,255,0.6); transform: translateX(5px);}
+  .product-list-empty{margin:0; color:var(--muted); line-height:1.6;}
+  .pl-item{display:flex; align-items:center; gap:16px; min-width:0; padding:10px; border-radius:16px; cursor:pointer;}
+  .pl-item:hover {background: rgba(255,255,255,0.6); transform: translateX(3px);}
+  .pl-item:focus-visible{outline:3px solid var(--accent); outline-offset:2px;}
   .pl-item .ph{width:70px; height:70px; flex:0 0 auto; box-shadow: 0 4px 12px rgba(0,0,0,0.08);}
-  .pl-info{display:flex; flex-direction:column; font-size:.95rem; font-weight: 600;}
+  .pl-info{display:flex; flex-direction:column; min-width:0; overflow-wrap:anywhere; font-size:.95rem; font-weight:600;}
   .pl-info .price{color:var(--accent); font-weight:800; font-size:.9rem; margin-top:4px;}
 
   @media (max-width:820px){

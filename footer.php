@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/includes/bootstrap.php';
 
 // Ambil nomor WhatsApp dari database
 $wa_footer_stmt = $pdo->prepare("SELECT setting_value FROM settings WHERE setting_key = 'whatsapp_number'");
@@ -71,4 +71,3 @@ $waUrl = whatsapp_url($wa_footer_number, 'Halo Alfi Kitchen, saya ingin memesan 
 
 </body>
 </html>
-

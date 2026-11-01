@@ -1,6 +1,6 @@
 <?php
 require 'auth_check.php';
-require '../config.php';
+require_once __DIR__ . '/../includes/bootstrap.php';
 require_once __DIR__ . '/upload_helper.php';
 require 'csrf_check.php';
 require_once __DIR__ . '/../includes/seo_helpers.php';

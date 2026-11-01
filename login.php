@@ -14,7 +14,7 @@ session_set_cookie_params([
 session_start();
 // SEO: halaman login tidak boleh diindeks mesin pencari
 header('X-Robots-Tag: noindex, nofollow, noarchive');
-require 'config.php';
+require_once __DIR__ . '/includes/bootstrap.php';
 require 'admin/login_rate_limit.php';
 require_once __DIR__ . '/admin/auth.php';
 

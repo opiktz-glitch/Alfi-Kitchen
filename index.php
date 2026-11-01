@@ -1,5 +1,5 @@
 <?php 
-require 'config.php';
+require_once __DIR__ . '/includes/bootstrap.php';
 $pageTitle = 'Puding, Dessert & Salad Buah Rumahan | Alfi Kitchen';
 $pageDescription = 'Pesan puding, dessert, dan salad buah rumahan dari Alfi Kitchen. Dibuat dari bahan pilihan dan dapat dipesan langsung melalui WhatsApp.';
 

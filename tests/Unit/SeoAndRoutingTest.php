@@ -89,6 +89,16 @@ class SeoAndRoutingTest extends TestCase
         $this->assertStringContainsString('800w', $homeView);
     }
 
+    public function testHomepageProductListDoesNotClipCategories(): void
+    {
+        $header = file_get_contents(__DIR__ . '/../../header.php');
+        $homeView = file_get_contents(__DIR__ . '/../../views/home.view.php');
+
+        $this->assertStringNotContainsString('max-height:250px', $header);
+        $this->assertStringNotContainsString('overflow-y:auto; flex:1', $header);
+        $this->assertStringContainsString('Produk sedang disiapkan.', $homeView);
+    }
+
     public function testThumbPhpSupportsAmpQueryParamAndOptimalQuality(): void
     {
         $thumbContent = file_get_contents(__DIR__ . '/../../thumb.php');
@@ -107,5 +117,4 @@ class SeoAndRoutingTest extends TestCase
         $this->assertStringContainsString('Sitemap:', $content);
     }
 }
-
 
