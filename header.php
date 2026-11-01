@@ -221,12 +221,47 @@ $seoType = $ogType ?? 'website';
   }
 
   footer{
-    padding:30px 6vw; padding-bottom:calc(30px + env(safe-area-inset-bottom,0px));
-    border-top:1px solid var(--line); color:var(--muted); font-size:.85rem;
-    display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px;
+    padding:34px 6vw 24px;
+    color:var(--muted); font-size:.85rem;
+    background:var(--bg);
+  }
+  footer .footer-inner{
+    max-width:1180px; margin:0 auto; padding:0 2px;
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:26px 34px;
+  }
+  footer .footer-col{ min-width:0; }
+  footer .footer-copy{ color:var(--fg); font-weight:700; margin-bottom:10px; display:block; }
+  footer .footer-brand-text{ color:var(--fg); font-weight:700; font-size:1.1rem; display:block; font-family:'Playfair Display', serif; font-style:italic; }
+footer .footer-logo{ width:52px; height:52px; border-radius:10px; object-fit:cover; display:block; border:none; }
+footer .footer-brand{ display:flex; align-items:center; justify-content:center; }
+  footer .footer-item{ display:flex; gap:8px; align-items:flex-start; margin-bottom:6px; font-size:.85rem; line-height:1.5; }
+  footer .footer-label{ color:var(--fg); font-weight:600; min-width:44px; flex-shrink:0; }
+  footer a{color:var(--fg); text-decoration:none; font-weight:600;}
+  footer a:hover {color: var(--accent);}
+  footer .footer-links{ display:flex; flex-direction:column; gap:6px; }
+  footer .footer-social{ display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+footer .footer-social-link{ width:34px; height:34px; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; }
+footer .footer-social-link.instagram{ background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); color:#fff; border:none; }
+footer .footer-social-link.instagram:hover{ filter:brightness(1.1); }
+footer .footer-social-link.facebook{ background:#1877f2; color:#fff; border:none; }
+footer .footer-social-link.facebook:hover{ filter:brightness(1.1); }
+footer .footer-social-link.tiktok{ background:#000; color:#fff; border:none; }
+footer .footer-social-link.tiktok:hover{ filter:brightness(1.1); }
+footer .footer-social-link svg{ width:16px; height:16px; flex-shrink:0; }
+footer .footer-social-link:hover{ background:var(--accent); color:#fff; }
+  footer .footer-bottom{
+    margin-top:22px; padding-top:14px;
+    text-align:center; color:var(--muted); font-size:.8rem; font-weight:600;
   }
   footer a{color:var(--fg); text-decoration:none; font-weight:600;}
   footer a:hover {color: var(--accent);}
+  @media (max-width:640px){
+    footer .footer-inner{ grid-template-columns:1fr; gap:18px; }
+    footer .footer-brand{ order:-1; text-align:center; }
+    footer .footer-contact{ order:2; }
+    footer .footer-links{ order:3; }
+    footer .footer-social{ order:4; justify-content:center; }
+  }
 </style>
 </head>
 <body>

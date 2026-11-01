@@ -52,15 +52,19 @@ $hero_images = $stmt->fetchAll();
     <link rel="stylesheet" href="assets/css/admin.css">
 </head>
 <body>
-    <header class="admin-header">
-        <h2>Alfi Kitchen Admin</h2>
-        <div class="admin-header-actions">
-            <a href="../" target="_blank" rel="noopener noreferrer" class="btn-site-preview">Lihat Website ↗</a>
-            <a href="index.php" class="btn btn-cancel">Dashboard</a>
-            <a href="logout.php" class="btn btn-danger">Logout</a>
-        </div>
-    </header>
-    <div class="admin-container">
+    <div class="admin-layout">
+        <?php include __DIR__ . '/sidebar.php'; ?>
+        <div class="admin-main">
+            <header class="admin-header">
+                <h2>Alfi Kitchen Admin</h2>
+                <div class="admin-header-actions">
+                    <a href="../" target="_blank" rel="noopener noreferrer" class="btn-site-preview">Lihat Website ↗</a>
+                    <a href="index.php" class="btn btn-cancel">Dashboard</a>
+                    <a href="logout.php" class="btn btn-danger">Logout</a>
+                </div>
+            </header>
+            <?php include __DIR__ . '/breadcrumb.php'; ?>
+            <div class="admin-container">
         
         <div class="header-action">
             <h2>Kelola Slider Animasi</h2>
@@ -120,6 +124,8 @@ $hero_images = $stmt->fetchAll();
                     <?php endforeach; ?>
                 </tbody>
             </table>
+        </div>
+    </div>
         </div>
     </div>
 </body>

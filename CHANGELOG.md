@@ -4,6 +4,28 @@ Perubahan penting pada Alfi Kitchen dicatat di sini, berdasarkan riwayat commit
 repository. Tanggal menunjukkan tanggal perubahan tercatat di Git; entri ini
 bukan penanda rilis atau versi aplikasi.
 
+## 2026-11-01
+
+### Added
+- Panduan agen `AGENTS.md` di root proyek.
+- Saran keamanan (CSP/HSTS/Permissions-Policy, session fixation, rate-limit login, display_errors off, validasi ekstensi upload, redirect HTTPS, integritas backup) dan SEO tambahan (meta/OG dinamis per produk, breadcrumb schema, Product schema Offer, alt text konsisten, internal linking, image sitemap, preconnect, optimasi font, minify CSS/JS, lazy loading, Core Web Vitals, feed RSS/Atom) dicatat di `docs/ROADMAP.md`.
+- Sidebar navigasi admin dengan status aktif, plus navigasi mobile (bottom nav).
+- Notifikasi toast non-blocking di pojok kanan atas untuk flash message admin.
+- Sticky header tabel, indikator scroll horizontal, dan sort kolom (klik header).
+- Drag & drop upload dengan preview thumbnail sebelum submit.
+- Breadcrumbs di semua halaman admin.
+- Ikon konsisten via Lucide SVG (CDN) menggantikan emoji campur.
+- Skala spacing/typography (4/8px), card-based dashboard, dan statistik di atas dashboard.
+- Info footer (Instagram, Facebook, TikTok, jam operasional, alamat, email, Google Maps) dapat diinput via panel admin.
+- Logo di kolom kiri footer dengan ukuran proporsional (52px) tanpa border.
+
+### Changed
+- Footer diubah menjadi layout grid 3-4 kolom responsif dengan ikon sosial berwarna brand (Instagram gradient, Facebook biru, TikTok hitam), garis pemisah di atas copyright dihapus.
+- Flash message diganti toast auto-dismiss 3,2 detik.
+
+### Fixed
+- Path logo footer diperbaiki (`uploads/logo.png`) agar gambar tampil.
+
 ## Riwayat tambahan (tanggal tidak dicatat)
 
 Ringkasan ini mencakup perubahan dari catatan evaluasi teknis sebelumnya.

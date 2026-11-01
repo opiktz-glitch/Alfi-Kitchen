@@ -45,15 +45,19 @@ $logs = array_reverse($logs);
     <link rel="stylesheet" href="assets/css/admin.css">
 </head>
 <body>
-    <header class="admin-header">
-        <h2>Log Aktivitas Admin</h2>
-        <div class="admin-header-actions">
-            <a href="../" target="_blank" rel="noopener noreferrer" class="btn-site-preview">Lihat Website ↗</a>
-            <a href="index.php" class="btn btn-cancel">Dashboard</a>
-            <a href="logout.php" class="btn btn-danger">Logout</a>
-        </div>
-    </header>
-    <div class="admin-container">
+    <div class="admin-layout">
+        <?php include __DIR__ . '/sidebar.php'; ?>
+        <div class="admin-main">
+            <header class="admin-header">
+                <h2>Log Aktivitas Admin</h2>
+                <div class="admin-header-actions">
+                    <a href="../" target="_blank" rel="noopener noreferrer" class="btn-site-preview">Lihat Website ↗</a>
+                    <a href="index.php" class="btn btn-cancel">Dashboard</a>
+                    <a href="logout.php" class="btn btn-danger">Logout</a>
+                </div>
+            </header>
+            <?php include __DIR__ . '/breadcrumb.php'; ?>
+            <div class="admin-container">
         <?php if ($message): ?>
             <div class="<?= $messageClass ?>" style="margin-bottom: 16px;"><?= htmlspecialchars($message) ?></div>
         <?php endif; ?>
@@ -89,6 +93,8 @@ $logs = array_reverse($logs);
                     <?php endif; ?>
                 </tbody>
             </table>
+        </div>
+    </div>
         </div>
     </div>
 </body>

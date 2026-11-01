@@ -65,6 +65,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['logo'])) {
     } else {
         $message = "Gagal menyimpan nomor WhatsApp.";
     }
+} elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_footer_info'])) {
+    $keys = ['footer_instagram','footer_facebook','footer_tiktok','footer_hours','footer_address','footer_email','footer_maps'];
+    $stmt = $pdo->prepare("INSERT INTO settings (setting_key, setting_value) VALUES (?, ?) ON DUPLICATE KEY UPDATE setting_value = ?");
+    foreach ($keys as $k) {
+        $v = trim((string)($_POST[$k] ?? ''));
+        $stmt->execute([$k, $v, $v]);
+    }
+    log_admin_action('SAVE_FOOTER_INFO', 'updated');
+    $message = "Info footer berhasil disimpan!";
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['run_migrations'])) {
     require_once __DIR__ . '/../includes/DatabaseMigrator.php';
     $migrator = new DatabaseMigrator($pdo);
@@ -91,7 +100,17 @@ $current_wa = $wa_row ? $wa_row['setting_value'] : '';
 $home_content_stmt = $pdo->query(
     "SELECT setting_key, setting_value FROM settings WHERE setting_key IN ('home_title', 'home_description')"
 );
-$home_content = $home_content_stmt->fetchAll(PDO::FETCH_KEY_PAIR);
+$footer_stmt = $pdo->query("SELECT setting_key, setting_value FROM settings WHERE setting_key IN ('footer_instagram','footer_facebook','footer_tiktok','footer_hours','footer_address','footer_email','footer_maps')");
+$footer_info = $footer_stmt->fetchAll(PDO::FETCH_KEY_PAIR);
+$current_footer = [
+    'instagram' => $footer_info['footer_instagram'] ?? '',
+    'facebook' => $footer_info['footer_facebook'] ?? '',
+    'tiktok' => $footer_info['footer_tiktok'] ?? '',
+    'hours' => $footer_info['footer_hours'] ?? '',
+    'address' => $footer_info['footer_address'] ?? '',
+    'email' => $footer_info['footer_email'] ?? '',
+    'maps' => $footer_info['footer_maps'] ?? '',
+];
 $current_home_title = $home_content['home_title'] ?? "Selamat Datang di\nAlfi Kitchen";
 $current_home_description = $home_content['home_description'] ?? 'Puding lembut berlapis buah, Dessert sehat dalam kemasan praktis, dan Salad buah bersaus creamy — semua dibuat rumahan dari bahan pilihan, siap menemani hari-harimu.';
 ?>
@@ -103,15 +122,19 @@ $current_home_description = $home_content['home_description'] ?? 'Puding lembut 
     <link rel="stylesheet" href="assets/css/admin.css">
 </head>
 <body>
-    <header class="admin-header">
-        <h2>Alfi Kitchen - Pengaturan</h2>
-        <div class="admin-header-actions">
-            <a href="../" target="_blank" rel="noopener noreferrer" class="btn-site-preview">Lihat Website ↗</a>
-            <a href="index.php" class="btn btn-cancel">Dashboard</a>
-            <a href="logout.php" class="btn btn-danger">Logout</a>
-        </div>
-    </header>
-    <div class="admin-container">
+    <div class="admin-layout">
+        <?php include __DIR__ . '/sidebar.php'; ?>
+        <div class="admin-main">
+            <header class="admin-header">
+                <h2>Alfi Kitchen - Pengaturan</h2>
+                <div class="admin-header-actions">
+                    <a href="../" target="_blank" rel="noopener noreferrer" class="btn-site-preview">Lihat Website ↗</a>
+                    <a href="index.php" class="btn btn-cancel">Dashboard</a>
+                    <a href="logout.php" class="btn btn-danger">Logout</a>
+                </div>
+            </header>
+            <?php include __DIR__ . '/breadcrumb.php'; ?>
+            <div class="admin-container">
         <div class="form-card settings-card">
             <?php if($message): ?>
                 <div class="<?= htmlspecialchars($messageClass) ?>"><?= htmlspecialchars($message) ?></div>
@@ -200,6 +223,21 @@ $current_home_description = $home_content['home_description'] ?? 'Puding lembut 
             <?php endif; ?>
             </section>
             <section class="settings-panel">
+            <h3>Info Footer</h3>
+            <p style="font-size: 14px; margin-bottom: 15px; color: var(--muted);">Informasi yang tampil di footer website.</p>
+            <form action="" method="post">
+                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
+                <div class="form-group"><label>Instagram URL</label><input type="text" name="footer_instagram" value="<?= htmlspecialchars($current_footer['instagram']) ?>" placeholder="https://instagram.com/..."></div>
+                <div class="form-group"><label>Facebook URL</label><input type="text" name="footer_facebook" value="<?= htmlspecialchars($current_footer['facebook']) ?>" placeholder="https://facebook.com/..."></div>
+                <div class="form-group"><label>TikTok URL</label><input type="text" name="footer_tiktok" value="<?= htmlspecialchars($current_footer['tiktok']) ?>" placeholder="https://tiktok.com/@..."></div>
+                <div class="form-group"><label>Jam Operasional</label><input type="text" name="footer_hours" value="<?= htmlspecialchars($current_footer['hours']) ?>" placeholder="Senin-Sabtu 09:00-17:00"></div>
+                <div class="form-group"><label>Alamat</label><textarea name="footer_address" rows="2"><?= htmlspecialchars($current_footer['address']) ?></textarea></div>
+                <div class="form-group"><label>Email</label><input type="email" name="footer_email" value="<?= htmlspecialchars($current_footer['email']) ?>" placeholder="info@alfikitchen.com"></div>
+                <div class="form-group"><label>Link Google Maps</label><input type="text" name="footer_maps" value="<?= htmlspecialchars($current_footer['maps']) ?>" placeholder="https://maps.google.com/..."></div>
+                <button type="submit" name="save_footer_info" class="btn btn-primary">Simpan Info Footer</button>
+            </form>
+            </section>
+            <section class="settings-panel">
             <h3>Nomor WhatsApp</h3>
             <p style="font-size: 14px; margin-bottom: 15px; color: var(--muted);">Nomor ini akan digunakan untuk tombol "Pesan via WhatsApp" yang muncul di semua halaman. Gunakan format internasional tanpa tanda + (contoh: 6281234567890).</p>
             <form action="" method="post">
@@ -223,6 +261,8 @@ $current_home_description = $home_content['home_description'] ?? 'Puding lembut 
             </form>
             </section>
             </div>
+        </div>
+    </div>
         </div>
     </div>
 </body>

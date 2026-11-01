@@ -56,19 +56,23 @@ $products = $stmt->fetchAll();
     <link rel="stylesheet" href="assets/css/admin.css">
 </head>
 <body>
-    <header class="admin-header">
-        <h2>Alfi Kitchen Admin</h2>
-        <nav class="admin-nav" aria-label="Navigasi admin">
-            <a href="manage_hero.php">Kelola Slider</a>
-            <a href="settings.php">Pengaturan</a>
-            <a href="activity_log.php">Log Aktivitas</a>
-        </nav>
-        <div class="admin-header-actions">
-            <a href="../" target="_blank" rel="noopener noreferrer" class="btn-site-preview">Lihat Website ↗</a>
-            <a href="logout.php" class="btn btn-danger">Logout</a>
-        </div>
-    </header>
-    <div class="admin-container">
+    <div class="admin-layout">
+        <?php include __DIR__ . '/sidebar.php'; ?>
+        <div class="admin-main">
+            <header class="admin-header">
+                <h2>Alfi Kitchen Admin</h2>
+                <nav class="admin-nav" aria-label="Navigasi admin">
+                    <a href="manage_hero.php">Kelola Slider</a>
+                    <a href="settings.php">Pengaturan</a>
+                    <a href="activity_log.php">Log Aktivitas</a>
+                </nav>
+                <div class="admin-header-actions">
+                    <a href="../" target="_blank" rel="noopener noreferrer" class="btn-site-preview">Lihat Website ↗</a>
+                    <a href="logout.php" class="btn btn-danger">Logout</a>
+                </div>
+            </header>
+            <?php include __DIR__ . '/breadcrumb.php'; ?>
+            <div class="admin-container">
         <div class="header-action">
             <h2>Daftar Kategori Produk</h2>
             <a href="add_product.php" class="btn btn-primary">+ Tambah Kategori</a>
@@ -159,6 +163,8 @@ $products = $stmt->fetchAll();
                     <?php endforeach; ?>
                 </tbody>
             </table>
+        </div>
+    </div>
         </div>
     </div>
 </body>

@@ -7,15 +7,56 @@ if (!isset($wa_footer_number)) {
     $wa_footer_row = $wa_footer_stmt->fetch();
     $wa_footer_number = $wa_footer_row ? $wa_footer_row['setting_value'] : '';
 }
-?>
 
-<footer>
-  <span>© <?php echo date("Y"); ?> Alfi Kitchen</span>
-  <span><a href="about.php">Tentang Kami</a> · <a href="privacy.php">Kebijakan Privasi</a> · <a href="terms.php">Syarat & Ketentuan</a></span>
+$fi_stmt = $pdo->query("SELECT setting_key, setting_value FROM settings WHERE setting_key IN ('footer_instagram','footer_facebook','footer_tiktok','footer_hours','footer_address','footer_email','footer_maps')");
+$fi = $fi_stmt->fetchAll(PDO::FETCH_KEY_PAIR);
+?>
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-col footer-brand">
+      <?php if(file_exists(__DIR__ . '/uploads/logo.png')): ?>
+        <img src="uploads/logo.png?v=<?= time() ?>" class="footer-logo" alt="Alfi Kitchen">
+      <?php else: ?>
+        <span class="footer-brand-text">Alfi Kitchen</span>
+      <?php endif; ?>
+    </div>
+    <div class="footer-col footer-links">
+      <a href="about.php">Tentang Kami</a>
+      <a href="privacy.php">Kebijakan Privasi</a>
+      <a href="terms.php">Syarat & Ketentuan</a>
+    </div>
+    <div class="footer-col footer-contact">
+      <?php if (!empty($fi['footer_hours'])): ?>
+        <div class="footer-item"><span class="footer-label">Jam:</span> <span><?= htmlspecialchars($fi['footer_hours']) ?></span></div>
+      <?php endif; ?>
+      <?php if (!empty($fi['footer_address'])): ?>
+        <div class="footer-item"><span class="footer-label">Alamat:</span> <span><?= htmlspecialchars($fi['footer_address']) ?></span></div>
+      <?php endif; ?>
+      <?php if (!empty($fi['footer_email'])): ?>
+        <div class="footer-item"><span class="footer-label">Email:</span> <a href="mailto:<?= htmlspecialchars($fi['footer_email']) ?>" class="footer-link"><?= htmlspecialchars($fi['footer_email']) ?></a></div>
+      <?php endif; ?>
+      <?php if (!empty($fi['footer_maps'])): ?>
+        <div class="footer-item"><span class="footer-label">Maps:</span> <a href="<?= htmlspecialchars($fi['footer_maps']) ?>" target="_blank" rel="noopener" class="footer-link">Lihat di Maps</a></div>
+      <?php endif; ?>
+    </div>
+    <div class="footer-col footer-social">
+      <?php if (!empty($fi['footer_instagram'])): ?>
+        <a href="<?= htmlspecialchars($fi['footer_instagram']) ?>" target="_blank" rel="noopener" class="footer-social-link instagram" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="17.5" x2="19.18" y2="19.18"/></svg></a>
+      <?php endif; ?>
+      <?php if (!empty($fi['footer_facebook'])): ?>
+        <a href="<?= htmlspecialchars($fi['footer_facebook']) ?>" target="_blank" rel="noopener" class="footer-social-link facebook" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+      <?php endif; ?>
+      <?php if (!empty($fi['footer_tiktok'])): ?>
+        <a href="<?= htmlspecialchars($fi['footer_tiktok']) ?>" target="_blank" rel="noopener" class="footer-social-link tiktok" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.19 11.2c.36-.2.59-.53.59-.95v-1c0-.8-.4-1.57-1.08-2.03-1.26-.84-3.32-.52-4.59 1.53C14.28 10.34 14 11.08 14 12c0 .94-.28 1.67-.69 2.18-1.34 1.68-1.94 3.67-1.04 4.89.83 1.14 3.06 1.62 4.33 1s1.5-.7 1.72-1c.61-.8.8-2.06.47-3.15-.4-1.33-1-2.3-1.87-3.02-.64-.53-.83-1.5-.56-2.26.4-1.03 1.67-1.76 2.68-1.4z"/></svg></a>
+      <?php endif; ?>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© <?= date("Y"); ?> Alfi Kitchen</span>
+  </div>
 </footer>
 
 <?php if ($wa_footer_number): ?>
-<!-- Floating WhatsApp Button -->
 <style>
   .wa-float {
     position: fixed;
@@ -24,7 +65,7 @@ if (!isset($wa_footer_number)) {
     z-index: 9999;
     width: 56px;
     height: 56px;
-    background: #075e54; /* Dark WhatsApp Green for contrast */
+    background: #075e54;
     color: #fff;
     border-radius: 50%;
     display: flex;
@@ -38,7 +79,7 @@ if (!isset($wa_footer_number)) {
     transition: all 0.3s ease;
   }
   .wa-float:hover {
-    background: #128c7e; /* Lighter WhatsApp teal on hover */
+    background: #128c7e;
     transform: translateY(-3px);
     box-shadow: 0 10px 28px rgba(7, 94, 84, 0.5);
   }
@@ -48,13 +89,8 @@ if (!isset($wa_footer_number)) {
     height: 30px;
   }
   @media (max-width: 480px) {
-    .wa-float {
-      width: 52px;
-      height: 52px;
-    }
-    footer {
-      padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px));
-    }
+    .wa-float { width: 52px; height: 52px; }
+    footer { padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
   }
 </style>
 <?php

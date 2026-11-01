@@ -15,6 +15,25 @@ kembali pada konfigurasi hosting sebelum perubahan produksi.
   deploy berhasil. Jika hosting tidak mendukung koneksi terenkripsi, dokumentasikan
   risiko dan rotasi/batasi kredensial FTP.
 
+## P2 — Pengerasan keamanan (tambahan)
+
+- [ ] **Tambahkan security headers lanjutan.** Terapkan CSP, HSTS, dan
+  Permissions-Policy di `.htaccess` (saat ini baru X-Frame-Options, nosniff,
+  dan Referrer-Policy) untuk mencegah XSS, memaksa HTTPS, dan mematikan
+  fitur browser yang tidak perlu.
+- [ ] **Cegah session fixation.** Panggil `session_regenerate_id(true)` saat
+  login sukses agar session ID lama tidak dapat disalahgunakan.
+- [ ] **Terapkan rate-limit login.** Tabel `login_attempts` sudah ada; pastikan
+  `login.php` memblokir sementara setelah N percobaan gagal per IP/username.
+- [ ] **Nonaktifkan display_errors di produksi.** Pastikan error tidak
+  ditampilkan ke browser (bocor path/kredensial); simpan ke log server.
+- [ ] **Validasi ekstensi file upload.** Selain cek MIME, verifikasi ekstensi
+  sesuai dan rename file ke nama acak untuk mencegah eksekusi skrip terselubung.
+- [ ] **Paksa redirect HTTP ke HTTPS.** Tambahkan redirect di `.htaccess` agar
+  cookie session tidak dikirim plaintext.
+- [ ] **Verifikasi integritas backup.** Cek checksum (SHA-256) file backup
+  setelah dibuat dan saat restore untuk deteksi korupsi/tampering.
+
 ## P2 — Kompatibilitas dan ketahanan runtime
 
 - [ ] **Tetapkan versi minimum PHP yang benar.** Kode memakai
@@ -51,6 +70,27 @@ kembali pada konfigurasi hosting sebelum perubahan produksi.
 - [ ] **Pantau pengindeksan dengan Google Search Console.** Verifikasi domain,
   kirim sitemap, dan tinjau status indeks, canonical pilihan Google, serta
   kegagalan crawling secara berkala.
+
+## P3 — SEO tambahan (usulan baru)
+
+- [ ] **Meta dan Open Graph dinamis per produk.** Sediakan title, description, dan
+  og:image unik per varian di `product.php`.
+- [ ] **BreadcrumbList structured data.** Tambahkan markup breadcrumb
+  kategori → produk.
+- [ ] **Product schema (Offer).** Sertakan price, availability, image, dan URL
+  terstruktur.
+- [ ] **Alt text konsisten.** Gunakan deskripsi akurat per gambar produk, bukan
+  nama file.
+- [ ] **Internal linking.** Tampilkan produk terkait / produk lain dalam kategori.
+- [ ] **Image sitemap.** Sertakan elemen `<image:image>` di sitemap untuk
+  indeks gambar.
+- [ ] **Preconnect/dns-prefetch.** Tambahkan untuk font, WhatsApp, dan CDN jika
+  digunakan.
+- [ ] **Optimasi font.** Gunakan `font-display: swap` dan subset font.
+- [ ] **Minify CSS/JS.** Kurangi payload transfer.
+- [ ] **Lazy loading.** Terapkan `loading="lazy"` pada gambar non-LCP.
+- [ ] **Pantau Core Web Vitals.** Monitor LCP, CLS, dan INP.
+- [ ] **Feed RSS/Atom.** Sediakan feed untuk crawler dan pembaca feed.
 
 ## P3 — Kualitas konten dan metadata SEO
 
