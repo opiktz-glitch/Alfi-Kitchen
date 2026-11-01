@@ -112,12 +112,14 @@ $current_home_description = $home_content['home_description'] ?? 'Puding lembut 
         </div>
     </header>
     <div class="admin-container">
-        <div class="form-card form-card-sm">
-            <h3 style="margin-top:0;">Pengaturan Logo</h3>
+        <div class="form-card settings-card">
             <?php if($message): ?>
                 <div class="<?= htmlspecialchars($messageClass) ?>"><?= htmlspecialchars($message) ?></div>
             <?php endif; ?>
-            
+
+            <div class="settings-grid">
+            <section class="settings-panel">
+            <h3>Pengaturan Logo</h3>
             <?php if(file_exists(uploads_directory() . '/logo.png')): ?>
                 <img src="../uploads/logo.png?v=<?= time() ?>" class="current-logo" alt="Logo Saat Ini">
             <?php endif; ?>
@@ -130,9 +132,8 @@ $current_home_description = $home_content['home_description'] ?? 'Puding lembut 
                 </div>
                 <button type="submit" class="btn btn-primary">Simpan Logo</button>
             </form>
-
-            <hr class="section-hr">
-
+            </section>
+            <section class="settings-panel">
             <h3>Konten Sambutan Homepage</h3>
             <p style="font-size: 14px; margin-bottom: 15px; color: var(--muted);">Ubah judul dan deskripsi yang tampil di halaman utama.</p>
             <form action="" method="post">
@@ -147,14 +148,13 @@ $current_home_description = $home_content['home_description'] ?? 'Puding lembut 
                 </div>
                 <button type="submit" name="save_home_content" class="btn btn-primary">Simpan Konten Homepage</button>
             </form>
-
-            <hr class="section-hr">
-
+            </section>
+            <section class="settings-panel">
             <h3>Backup Data & Gambar</h3>
             <p style="font-size: 14px; margin-bottom: 15px; color: var(--muted);">Anda bisa mengekspor database (.sql) dan seluruh gambar produk (.zip) ke laptop Anda.</p>
             <div style="display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap;">
-                <a href="export_db.php" class="btn" style="background: #28a745; color: white;">📥 Backup Database</a>
-                <a href="export_images.php" class="btn" style="background: #17a2b8; color: white;">🖼️ Backup Semua Gambar</a>
+                <a href="export_db.php" class="btn btn-backup-database">Backup Database</a>
+                <a href="export_images.php" class="btn btn-backup-images">Backup Semua Gambar</a>
             </div>
 
             <hr class="section-hr">
@@ -195,12 +195,11 @@ $current_home_description = $home_content['home_description'] ?? 'Puding lembut 
             <?php if (!empty($pendingMigrations)): ?>
             <form action="" method="post" style="margin-bottom: 15px;">
                 <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
-                <button type="submit" name="run_migrations" class="btn btn-primary" onclick="return confirm('Terapkan migrasi database sekarang?')">🚀 Jalankan Migrasi Database</button>
+                <button type="submit" name="run_migrations" class="btn btn-primary" onclick="return confirm('Terapkan migrasi database sekarang?')">Jalankan Migrasi</button>
             </form>
             <?php endif; ?>
-
-            <hr class="section-hr">
-
+            </section>
+            <section class="settings-panel">
             <h3>Nomor WhatsApp</h3>
             <p style="font-size: 14px; margin-bottom: 15px; color: var(--muted);">Nomor ini akan digunakan untuk tombol "Pesan via WhatsApp" yang muncul di semua halaman. Gunakan format internasional tanpa tanda + (contoh: 6281234567890).</p>
             <form action="" method="post">
@@ -209,11 +208,10 @@ $current_home_description = $home_content['home_description'] ?? 'Puding lembut 
                     <label>Nomor WhatsApp</label>
                     <input type="text" name="whatsapp_number" value="<?= htmlspecialchars($current_wa) ?>" placeholder="Contoh: 6281234567890" required>
                 </div>
-                <button type="submit" name="save_whatsapp" class="btn" style="background: #25d366; color: white;">💬 Simpan Nomor WhatsApp</button>
+                <button type="submit" name="save_whatsapp" class="btn btn-save-whatsapp">Simpan Nomor WhatsApp</button>
             </form>
-
-            <hr class="section-hr">
-
+            </section>
+            <section class="settings-panel">
             <h3>Ubah Password Admin</h3>
             <form action="" method="post">
                 <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
@@ -221,8 +219,10 @@ $current_home_description = $home_content['home_description'] ?? 'Puding lembut 
                     <label>Password Baru</label>
                     <input type="password" name="new_password" placeholder="Minimal 6 karakter" required minlength="6">
                 </div>
-                <button type="submit" name="change_password" class="btn btn-secondary">Update Password</button>
+                <button type="submit" name="change_password" class="btn btn-secondary">Perbarui Password</button>
             </form>
+            </section>
+            </div>
         </div>
     </div>
 </body>

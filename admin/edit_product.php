@@ -47,6 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
         log_admin_action('EDIT_PRODUCT', 'id=' . $id . ', name=' . $name . ', image=' . $imagePath);
 
+        set_admin_flash('Kategori "' . $name . '" berhasil diperbarui.');
         header('Location: index.php');
         exit;
     }
@@ -74,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <?php if (!empty($uploadError)): ?>
                 <p role="alert" style="color:#721c24;"><?= htmlspecialchars($uploadError, ENT_QUOTES, 'UTF-8') ?></p>
             <?php endif; ?>
-            <form method="POST" enctype="multipart/form-data">
+            <form method="POST" enctype="multipart/form-data" class="admin-form-grid">
                 <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
                 
                 <div class="form-group">

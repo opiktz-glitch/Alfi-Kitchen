@@ -32,6 +32,55 @@ function verify_csrf_token($token) {
     return hash_equals($_SESSION['csrf_token'] ?? '', $token ?? '');
 }
 
+function set_admin_flash(string $message, string $type = 'success'): void {
+    if (!in_array($type, ['success', 'error'], true)) {
+        throw new InvalidArgumentException('Jenis pesan admin tidak valid.');
+    }
+
+    $_SESSION['admin_flash'] = [
+        'message' => $message,
+        'type' => $type,
+    ];
+}
+
+/**
+ * @return array{message: string, type: string}|null
+ */
+function consume_admin_flash(): ?array {
+    if (!isset($_SESSION['admin_flash']) || !is_array($_SESSION['admin_flash'])) {
+        unset($_SESSION['admin_flash']);
+        return null;
+    }
+
+    $flash = $_SESSION['admin_flash'];
+    unset($_SESSION['admin_flash']);
+
+    if (
+        !isset($flash['message'], $flash['type'])
+        || !is_string($flash['message'])
+        || !is_string($flash['type'])
+        || !in_array($flash['type'], ['success', 'error'], true)
+    ) {
+        return null;
+    }
+
+    return $flash;
+}
+
+function admin_icon(string $name): string {
+    $paths = [
+        'manage' => '<path d="M4 6h16M4 12h16M4 18h16M8 4v4m8 2v4m-8 2v4"/>',
+        'edit' => '<path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"/>',
+        'delete' => '<path d="M4 7h16M10 11v6m4-6v6M5 7l1 14h12l1-14M9 7V4h6v3"/>',
+    ];
+
+    if (!isset($paths[$name])) {
+        throw new InvalidArgumentException('Ikon admin tidak dikenal.');
+    }
+
+    return '<svg class="admin-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">' . $paths[$name] . '</svg>';
+}
+
 /**
  * Catat aktivitas admin ke file log dengan rotasi otomatis jika > 2 MB.
  */

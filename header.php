@@ -53,6 +53,9 @@ unset($__seoBase, $__seoImg, $__seoRel, $__seoBasePath, $__seoFile, $__seoSize);
 $seoType = $ogType ?? 'website';
 ?>
 <base href="<?= htmlspecialchars(site_url(''), ENT_QUOTES, 'UTF-8') ?>">
+<?php if (!empty($pageStylesheet)): ?>
+<link rel="stylesheet" href="<?= htmlspecialchars($pageStylesheet, ENT_QUOTES, 'UTF-8') ?>">
+<?php endif; ?>
 <link rel="canonical" href="<?= htmlspecialchars($seoCanonical, ENT_QUOTES, 'UTF-8') ?>">
 <?php if (!empty($noindex)): ?>
 <meta name="robots" content="noindex, nofollow">

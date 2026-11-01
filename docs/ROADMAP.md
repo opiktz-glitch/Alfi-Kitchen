@@ -18,9 +18,9 @@ kembali pada konfigurasi hosting sebelum perubahan produksi.
 ## P2 — Kompatibilitas dan ketahanan runtime
 
 - [ ] **Tetapkan versi minimum PHP yang benar.** Kode memakai
-  `str_starts_with()`, yang memerlukan PHP 8.0+, sedangkan panduan proyek
-  menyebut PHP 7.4+. Putuskan versi minimum, sesuaikan kode atau dokumentasi,
-  dan jalankan tes pada versi yang didukung.
+  `str_starts_with()`, yang memerlukan PHP 8.0+, sementara CI menggunakan PHP
+  8.2. Konfirmasikan versi PHP di hosting, tetapkan versi minimum yang
+  didukung, dan jalankan tes pada versi tersebut.
 - [ ] **Batasi biaya pemrosesan gambar.** Tinjau batas 40 juta piksel pada upload
   dan parameter lebar publik di `thumb.php`. Tetapkan batas dimensi keluaran dan
   jumlah piksel yang aman untuk memori hosting; uji resize, fallback tanpa GD,
@@ -69,6 +69,64 @@ kembali pada konfigurasi hosting sebelum perubahan produksi.
 - [ ] **Tinjau metadata dan tautan internal.** Pastikan setiap halaman publik
   mempunyai judul, deskripsi, canonical, dan Open Graph yang unik serta sesuai
   konten. Pastikan kategori produk mudah ditemukan dari homepage.
+
+## P3 — UI dan pengalaman pengguna
+
+- [ ] **Perjelas penyajian pilihan ukuran dan harga.** Susun setiap ukuran
+  beserta harganya agar mudah dipindai, dan pastikan harga utama pada kartu
+  tidak bertentangan dengan rincian di deskripsi. Tetapkan sumber harga yang
+  konsisten sebelum mengubah struktur data produk.
+- [ ] **Hubungkan pesanan WhatsApp dengan pilihan yang tepat.** Jika satu produk
+  memiliki beberapa ukuran atau pilihan, pastikan pelanggan dapat memilihnya
+  dengan jelas dan pesan WhatsApp menyebut pilihan serta harga yang dimaksud.
+- [ ] **Tambahkan pencarian dan filter katalog.** Sediakan pencarian cepat dan,
+  bila jumlah produk sudah memerlukannya, filter kategori atau pengurutan harga
+  agar produk mudah ditemukan di ponsel maupun desktop.
+- [ ] **Pastikan tombol WhatsApp mengambang tidak menghalangi konten.**
+  Pertahankan label aksesibel untuk pembaca layar, target sentuh yang memadai,
+  dan jarak aman dari tombol maupun informasi di bagian bawah layar.
+- [ ] **Tampilkan informasi pemesanan yang terverifikasi.** Jelaskan cara
+  bertanya tentang ketersediaan serta informasi pengiriman atau pengambilan
+  hanya jika ketentuannya sudah dipastikan dan berlaku saat ini.
+- [ ] **Uji pengalaman pada perangkat nyata.** Periksa keterbacaan, target
+  sentuh, posisi tombol saat keyboard terbuka, dan penggunaan pada koneksi
+  lambat di beberapa ukuran ponsel.
+
+## P3 — UI panel admin
+
+- [x] **Ringkas navigasi dashboard.** Pisahkan tautan sekunder seperti slider,
+  pengaturan, dan log aktivitas dari aksi utama tambah kategori agar alur
+  mengelola katalog lebih mudah dipahami.
+- [x] **Perjelas alur pengelolaan kategori dan varian.** Utamakan aksi untuk
+  mengelola produk/varian, jadikan edit kategori sebagai aksi sekunder, dan
+  pisahkan tombol hapus untuk mengurangi salah tekan.
+- [x] **Tampilkan jumlah varian dan thumbnail yang konsisten** agar daftar
+  kategori lebih mudah dipindai.
+- [x] **Optimalkan daftar kategori admin untuk ponsel.** Pada layar sempit,
+  daftar ditampilkan sebagai kartu bertumpuk dengan tombol yang mudah disentuh.
+- [x] **Tambahkan pencarian kategori** dan pertahankan kata kunci saat
+  menghapus kategori dari hasil pencarian.
+- [x] **Sederhanakan hierarki visual.** Samakan ukuran, target sentuh, fokus,
+  dan gaya tombol berdasarkan prioritas aksi.
+- [x] **Berikan umpan balik tindakan yang jelas.** Tampilkan pesan setelah
+  perubahan kategori/varian dan sertakan nama entitas pada konfirmasi hapus.
+- [x] **Buat empty state yang membantu** untuk katalog kategori dan daftar
+  varian, dengan tautan langsung ke aksi berikutnya.
+
+## P3 — Konsistensi dan pemeliharaan kode
+
+- [ ] **Hindari transisi CSS global.** Aturan `transition: all` pada selector
+  global di `header.php` memengaruhi hampir semua elemen. Ganti secara bertahap
+  dengan transisi properti spesifik hanya pada komponen yang memiliki efek
+  interaksi, lalu verifikasi tampilan dan performa halaman.
+- [ ] **Kurangi CSS inline di halaman publik secara bertahap.** Pindahkan style
+  presentasi seperti kartu produk di `product.php` ke stylesheet yang sesuai
+  ketika halaman tersebut dikerjakan, agar aturan responsif dan tampilan lebih
+  mudah dipelihara. Pertahankan larangan `<style>` inline pada halaman admin.
+- [ ] **Terapkan konvensi format secara konsisten pada perubahan baru.**
+  Samakan indentasi, spasi, dan penamaan variabel mengikuti pola di file yang
+  sedang disentuh. Hindari formatting massal yang tidak terkait; rapikan kode
+  lama secara oportunistis saat mengubah bagian tersebut.
 
 ## Verifikasi dasar saat perubahan
 

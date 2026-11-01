@@ -41,6 +41,29 @@ class SeoAndRoutingTest extends TestCase
         $this->assertSame('#', $urlEmpty);
     }
 
+    public function testProductPageOffersWhatsappOrderingForEachVariant(): void
+    {
+        $productPage = file_get_contents(__DIR__ . '/../../product.php');
+        $productStyles = file_get_contents(__DIR__ . '/../../assets/css/product.css');
+
+        $this->assertStringContainsString('product-order-button', $productPage);
+        $this->assertStringContainsString('$rp[\'name\']', $productPage);
+        $this->assertStringContainsString('trim((string) $rp[\'name\'])', $productPage);
+        $this->assertStringContainsString('whatsapp_url($wa_footer_number, $waMessage)', $productPage);
+        $this->assertStringContainsString('grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 380px))', $productStyles);
+        $this->assertStringContainsString('overflow-wrap: anywhere', $productStyles);
+    }
+
+    public function testFloatingWhatsappButtonIsIconOnlyAndAccessible(): void
+    {
+        $footer = file_get_contents(__DIR__ . '/../../footer.php');
+
+        $this->assertStringContainsString('width: 56px', $footer);
+        $this->assertStringContainsString('aria-label="Pesan via WhatsApp"', $footer);
+        $this->assertStringContainsString('safe-area-inset-bottom', $footer);
+        $this->assertStringNotContainsString('<span>Pesan via WhatsApp</span>', $footer);
+    }
+
     public function testSlugifyText(): void
     {
         $this->assertSame('puding-cokelat-spesial', slugify_text('Puding Cokelat Spesial!'));
@@ -117,4 +140,3 @@ class SeoAndRoutingTest extends TestCase
         $this->assertStringContainsString('Sitemap:', $content);
     }
 }
-

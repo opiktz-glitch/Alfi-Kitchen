@@ -1,11 +1,12 @@
 <?php
 require_once __DIR__ . '/includes/bootstrap.php';
 
-// Ambil nomor WhatsApp dari database
-$wa_footer_stmt = $pdo->prepare("SELECT setting_value FROM settings WHERE setting_key = 'whatsapp_number'");
-$wa_footer_stmt->execute();
-$wa_footer_row = $wa_footer_stmt->fetch();
-$wa_footer_number = $wa_footer_row ? $wa_footer_row['setting_value'] : '';
+if (!isset($wa_footer_number)) {
+    $wa_footer_stmt = $pdo->prepare("SELECT setting_value FROM settings WHERE setting_key = 'whatsapp_number'");
+    $wa_footer_stmt->execute();
+    $wa_footer_row = $wa_footer_stmt->fetch();
+    $wa_footer_number = $wa_footer_row ? $wa_footer_row['setting_value'] : '';
+}
 ?>
 
 <footer>
@@ -18,42 +19,42 @@ $wa_footer_number = $wa_footer_row ? $wa_footer_row['setting_value'] : '';
 <style>
   .wa-float {
     position: fixed;
-    bottom: 90px;
-    right: 24px;
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    right: 16px;
     z-index: 9999;
+    width: 56px;
+    height: 56px;
     background: #075e54; /* Dark WhatsApp Green for contrast */
     color: #fff;
-    border-radius: 50px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 14px 20px;
+    justify-content: center;
+    padding: 0;
     text-decoration: none;
     font-family: 'Inter', sans-serif;
     font-weight: 600;
-    font-size: 0.95rem;
     box-shadow: 0 6px 20px rgba(7, 94, 84, 0.4);
     transition: all 0.3s ease;
-    max-width: 220px;
-    overflow: hidden;
   }
   .wa-float:hover {
     background: #128c7e; /* Lighter WhatsApp teal on hover */
     transform: translateY(-3px);
     box-shadow: 0 10px 28px rgba(7, 94, 84, 0.5);
-    max-width: 220px;
   }
   .wa-float svg {
     flex-shrink: 0;
-    width: 26px;
-    height: 26px;
-  }
-  .wa-float span {
-    white-space: nowrap;
+    width: 30px;
+    height: 30px;
   }
   @media (max-width: 480px) {
-    .wa-float span { display: none; }
-    .wa-float { padding: 14px; border-radius: 50%; }
+    .wa-float {
+      width: 52px;
+      height: 52px;
+    }
+    footer {
+      padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px));
+    }
   }
 </style>
 <?php
@@ -65,7 +66,6 @@ $waUrl = whatsapp_url($wa_footer_number, 'Halo Alfi Kitchen, saya ingin memesan 
     <path d="M16 3C9.37 3 4 8.37 4 15c0 2.65.87 5.1 2.36 7.09L4 29l7.18-2.31A12.93 12.93 0 0 0 16 27c6.63 0 12-5.37 12-12S22.63 3 16 3z" fill="#fff"/>
     <path d="M22.07 19.57c-.28-.14-1.65-.81-1.9-.9-.26-.09-.45-.14-.64.14-.19.28-.73.9-.9 1.09-.16.18-.33.2-.61.07-.28-.14-1.18-.43-2.24-1.38-.83-.74-1.39-1.65-1.55-1.93-.16-.28-.02-.43.12-.57.13-.12.28-.33.42-.49.14-.16.19-.28.28-.46.09-.18.05-.34-.02-.48-.07-.14-.64-1.54-.88-2.1-.23-.55-.47-.47-.64-.48H13.1c-.18 0-.47.07-.72.34-.25.27-.95.93-.95 2.27s.97 2.63 1.1 2.81c.14.18 1.91 2.91 4.62 4.08.65.28 1.15.45 1.54.57.65.2 1.24.17 1.7.1.52-.08 1.65-.67 1.88-1.32.23-.65.23-1.2.16-1.32-.07-.12-.25-.19-.53-.33z" fill="#25d366"/>
   </svg>
-  <span>Pesan via WhatsApp</span>
 </a>
 <?php endif; ?>
 

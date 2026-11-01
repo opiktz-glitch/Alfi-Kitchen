@@ -77,6 +77,12 @@ $stmt3 = $pdo->prepare("SELECT * FROM product_items WHERE product_id = ? ORDER B
 $stmt3->execute([$id]);
 $related_products = $stmt3->fetchAll();
 
+$wa_footer_stmt = $pdo->prepare("SELECT setting_value FROM settings WHERE setting_key = 'whatsapp_number'");
+$wa_footer_stmt->execute();
+$wa_footer_row = $wa_footer_stmt->fetch();
+$wa_footer_number = $wa_footer_row ? $wa_footer_row['setting_value'] : '';
+
+$pageStylesheet = 'assets/css/product.css';
 $pageDescription = build_product_description($main_product['name'], $related_products);
 
 // SEO: canonical, gambar share, dan structured data
@@ -133,53 +139,67 @@ include 'header.php';
     <img src="<?= $logo_src ?>" alt="Alfi Kitchen Logo">
 </a>
 
-<main style="padding: 10px 6vw 40px; min-height: 70vh; max-width: 1200px; margin: 0 auto;">
+<main class="product-page">
   
   <!-- Judul dari halaman utama -->
-  <h1 style="text-align:center; font-size: clamp(2rem, 4vw, 3rem); margin: 0 0 30px; color: var(--fg); font-weight: 800;">
+  <h1 class="product-page-title">
       <?= htmlspecialchars($main_product['name']) ?>
   </h1>
   
   <!-- Baris Produk (Responsive, center, maksimal 3 per baris) -->
-  <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; margin-bottom: 60px;">
+  <div class="product-variants">
     
     <?php if(empty($related_products)): ?>
-        <p style="color: var(--muted); text-align: center; width: 100%;">Belum ada jenis produk yang ditambahkan.</p>
+        <p class="product-empty">Belum ada jenis produk yang ditambahkan.</p>
     <?php endif; ?>
 
     <?php foreach($related_products as $rp): ?>
-    <div style="width: calc(33.333% - 20px); min-width: 280px; max-width: 350px; background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 24px; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.03); transition: transform 0.2s;">
+    <article class="product-variant">
         
         <!-- Gambar Produk -->
         <?php if(!empty($rp['image'])): ?>
-            <img src="<?= htmlspecialchars($rp['image']) ?>" alt="<?= htmlspecialchars($rp['name']) ?>" width="350" height="220" loading="lazy" decoding="async" style="width: 100%; height: 220px; object-fit: contain; border-radius: 12px; margin-bottom: 20px;">
+            <img class="product-variant-image" src="<?= htmlspecialchars($rp['image']) ?>" alt="<?= htmlspecialchars($rp['name']) ?>" width="350" height="220" loading="lazy" decoding="async">
         <?php else: ?>
-            <div style="width: 100%; height: 220px; border-radius: 12px; background: var(--accent); margin-bottom: 20px;"></div>
+            <div class="product-variant-image product-variant-image-placeholder" aria-hidden="true"></div>
         <?php endif; ?>
         
         <!-- Judul Kolom (Nama Produk) -->
-        <h2 style="margin: 0 0 12px; font-size: 1.3rem; font-weight: 700; color: var(--fg); text-align: center;">
+        <h2 class="product-variant-title">
             <?= htmlspecialchars($rp['name']) ?>
         </h2>
         
         <!-- Deskripsi -->
-        <p style="color: var(--muted); font-size: 0.95rem; line-height: 1.6; flex-grow: 1; margin: 0 0 20px; text-align: center;">
+        <p class="product-variant-description">
             <?= nl2br(htmlspecialchars($rp['description'] ?? 'Puding lezat dan lembut yang dirancang secara khusus untuk memberikan kepuasan maksimal di setiap gigitan.')) ?>
         </p>
         
         <!-- Harga di Bawah -->
-        <div style="font-weight: 800; font-size: 1.25rem; color: var(--accent); margin-top: auto; border-top: 1px solid var(--line); padding-top: 16px; text-align: center;">
+        <p class="product-variant-price">
             Rp <?= number_format($rp['price'], 0, ',', '.') ?>
-        </div>
+        </p>
+
+        <?php if ($wa_footer_number): ?>
+            <?php
+            $waMessage = sprintf(
+                'Halo Alfi Kitchen, saya ingin memesan %s dari kategori %s.',
+                trim((string) $rp['name']),
+                trim((string) $main_product['name'])
+            );
+            $waProductUrl = whatsapp_url($wa_footer_number, $waMessage);
+            ?>
+            <a class="product-order-button" href="<?= htmlspecialchars($waProductUrl, ENT_QUOTES, 'UTF-8') ?>" target="_blank" rel="noopener noreferrer">
+                Pesan varian ini via WhatsApp
+            </a>
+        <?php endif; ?>
         
-    </div>
+    </article>
     <?php endforeach; ?>
     
   </div>
 
   <!-- Tombol kembali di paling bawah di luar kolom -->
-  <div style="text-align: center;">
-      <a href="index.php" style="display: inline-block; background: var(--accent); color: #fff; padding: 14px 36px; border-radius: 30px; text-decoration: none; font-weight: 600; font-size: 1.1rem; box-shadow: 0 4px 12px rgba(232, 147, 90, 0.3); transition: transform 0.2s;">
+  <div class="product-back-link-wrap">
+      <a href="index.php" class="product-back-link">
           Kembali ke Beranda
       </a>
   </div>

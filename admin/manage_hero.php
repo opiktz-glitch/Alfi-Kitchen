@@ -64,7 +64,7 @@ $hero_images = $stmt->fetchAll();
         
         <div class="header-action">
             <h2>Kelola Slider Animasi</h2>
-            <a href="index.php" class="btn btn-cancel">Kembali</a>
+            <a href="index.php" class="btn btn-cancel">← Kembali ke Dashboard</a>
         </div>
         
         <?php if($error): ?>
@@ -86,7 +86,7 @@ $hero_images = $stmt->fetchAll();
                         2. <strong>Penyesuaian Otomatis (Fill)</strong> - Agar gambar selalu masuk 100% utuh tanpa menyisakan ruang kosong dan tanpa terpotong, gambar akan <strong>dipaksa ditarik/ditekan</strong> (di-<em>stretch</em>) menyesuaikan bingkai layar HP maupun Laptop. Pastikan gambar Anda memang berbentuk memanjang agar objeknya tidak terlihat terlalu gepeng/lonjong.
                     </small>
                 </div>
-                <button type="submit" class="btn btn-primary">Unggah Gambar</button>
+                <button type="submit" class="btn btn-primary">Unggah Gambar Slider</button>
             </form>
         </div>
 
@@ -113,7 +113,7 @@ $hero_images = $stmt->fetchAll();
                             <form method="POST" action="manage_hero.php" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus gambar animasi ini?')">
                                 <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
                                 <input type="hidden" name="delete" value="<?= (int) $h['id'] ?>">
-                                <button type="submit" class="btn btn-danger">Hapus</button>
+                                <button type="submit" class="btn btn-danger btn-icon-only" aria-label="Hapus gambar slider" title="Hapus gambar slider"><?= admin_icon('delete') ?></button>
                             </form>
                         </td>
                     </tr>

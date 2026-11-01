@@ -37,6 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_item'])) {
             delete_uploaded_image($item['image']);
         }
 
+        set_admin_flash('Varian "' . $name . '" berhasil diperbarui.');
         header("Location: manage_items.php?product_id=$product_id");
         exit;
     }
@@ -64,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_item'])) {
             <?php if (!empty($uploadError)): ?>
                 <p role="alert" style="color:#721c24;"><?= htmlspecialchars($uploadError, ENT_QUOTES, 'UTF-8') ?></p>
             <?php endif; ?>
-            <form action="edit_item.php?id=<?= $id ?>&product_id=<?= $product_id ?>" method="POST" enctype="multipart/form-data">
+            <form action="edit_item.php?id=<?= $id ?>&product_id=<?= $product_id ?>" method="POST" enctype="multipart/form-data" class="admin-form-grid">
                 <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
                 
                 <div class="form-group">
@@ -77,12 +78,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_item'])) {
                     <input type="number" name="price" value="<?= htmlspecialchars($item['price']) ?>" required>
                 </div>
                 
-                <div class="form-group">
+                <div class="form-group form-span-full">
                     <label>Deskripsi (Opsional)</label>
                     <textarea name="description" rows="4"><?= htmlspecialchars($item['description'] ?? '') ?></textarea>
                 </div>
                 
-                <div class="form-group">
+                <div class="form-group form-span-full">
                     <label>Gambar <span style="font-weight:normal; color:#888; font-size:0.85rem;">(Opsional)</span></label>
                     <?php if($item['image']): ?>
                         <img src="../<?= htmlspecialchars($item['image']) ?>" class="thumb-preview" alt="Preview">

@@ -64,7 +64,7 @@ $logs = array_reverse($logs);
                 <form method="POST" onsubmit="return confirm('Apakah Anda yakin ingin mengosongkan seluruh riwayat log aktivitas?');" style="margin: 0;">
                     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token'] ?? '') ?>">
                     <input type="hidden" name="clear_log" value="1">
-                    <button type="submit" class="btn btn-danger" style="padding: 6px 14px; font-size: 13px;">🗑️ Bersihkan Log</button>
+                    <button type="submit" class="btn btn-danger">Bersihkan Log</button>
                 </form>
             <?php endif; ?>
         </div>
