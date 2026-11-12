@@ -11,6 +11,26 @@ class SeoAndRoutingTest extends TestCase
         require_once __DIR__ . '/../../includes/seo_helpers.php';
     }
 
+    public function testProductionHostUsesCanonicalDomainWhenConfiguredUrlIsStale(): void
+    {
+        if (!defined('SITE_URL')) {
+            define('SITE_URL', 'https://old-domain.example');
+        }
+
+        $previousHost = $_SERVER['HTTP_HOST'] ?? null;
+        $_SERVER['HTTP_HOST'] = 'alfikitchen.web.id';
+
+        try {
+            $this->assertSame('https://alfikitchen.web.id', site_base_url());
+        } finally {
+            if ($previousHost === null) {
+                unset($_SERVER['HTTP_HOST']);
+            } else {
+                $_SERVER['HTTP_HOST'] = $previousHost;
+            }
+        }
+    }
+
     public function testFormatWhatsappNumberConvertsLocalPrefix(): void
     {
         // Format lokal 08... harus diubah ke 628...

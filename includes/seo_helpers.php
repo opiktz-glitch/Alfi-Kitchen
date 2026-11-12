@@ -14,20 +14,19 @@
 if (!function_exists('site_base_url')) {
     function site_base_url(): string
     {
-        // 1. Domain resmi dari config.php (tidak ikut deploy, beda lokal vs hosting).
-        if (defined('SITE_URL') && is_string(SITE_URL) && SITE_URL !== '') {
-            return rtrim(SITE_URL, '/');
-        }
-
-        // 2. Fallback: host lokal (dev) boleh dinamis, host lain kunci ke domain resmi.
+        // Host lokal tetap memakai URL konfigurasi; host publik selalu memakai domain kanonis.
         $host = $_SERVER['HTTP_HOST'] ?? ($_SERVER['SERVER_NAME'] ?? 'localhost');
         // Cegah Host header injection: hanya izinkan karakter host yang valid.
         if (!preg_match('/^[A-Za-z0-9.\-]+(:\d{1,5})?$/', $host)) {
             $host = $_SERVER['SERVER_NAME'] ?? 'localhost';
         }
         $hostLower = strtolower(preg_replace('/:\d+$/', '', $host));
-        if ($hostLower !== 'localhost' && $hostLower !== '127.0.0.1' && $hostLower !== '::1') {
+        if (!in_array($hostLower, ['localhost', '127.0.0.1', '::1'], true)) {
             return 'https://alfikitchen.web.id';
+        }
+
+        if (defined('SITE_URL') && is_string(SITE_URL) && SITE_URL !== '') {
+            return rtrim(SITE_URL, '/');
         }
 
         $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')

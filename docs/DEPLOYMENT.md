@@ -15,6 +15,10 @@ agar data dan konfigurasi situs produksi tidak tertimpa.
   pemrosesan gambar dan backup gambar.
 - Pastikan domain memakai direktori situs yang dituju workflow (`/htdocs/`).
   Jangan mengubah direktori server sebelum memeriksa pemetaan domain di panel.
+- Saat domain memakai webroot baru, salin isi `uploads/` dari webroot lama ke
+  webroot domain baru dengan FTP/File Manager. Gambar upload tidak disimpan di
+  Git dan tidak ikut deployment GitHub Actions; database hanya menyimpan path
+  relatif gambar.
 
 ## Gambaran deployment saat ini
 
@@ -46,8 +50,10 @@ tidak disimpan di Git.
    Jika konfigurasi memakai environment `.env`, pastikan nilainya tersedia
    secara aman pada runtime hosting. Jangan gunakan `.env.example` sebagai
    konfigurasi aktif.
-4. Pastikan folder `uploads/` dan `uploads/cache/` beserta gambar produksi tidak
-   akan terhapus atau tertimpa. Upload baru disimpan di server, bukan Git.
+4. Pastikan folder `uploads/` dan `uploads/cache/` beserta gambar produksi
+   tersedia di webroot domain aktif. Jika domain baru menggunakan direktori
+   berbeda, salin file gambar dari direktori lama dan pertahankan nama/path-nya.
+   Upload baru disimpan di server, bukan Git.
 5. Untuk perubahan skema, periksa migrasi yang akan dijalankan dan pastikan
    backup database tersedia. Jangan jalankan migrasi SQL secara manual jika
    migrasi yang sama sudah tercatat.
