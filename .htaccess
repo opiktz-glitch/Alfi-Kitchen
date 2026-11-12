@@ -1,16 +1,18 @@
 # Alfi Kitchen — .htaccess production
-# Domain baku: https://kitchen.pojokberkah.online (tanpa www)
+# Domain baku: https://alfikitchen.web.id (tanpa www)
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
-    # 1. Paksa HTTPS (aman: cek X-Forwarded-Proto utk proxy/CDN InfinityFree)
+    # 1. Paksa domain kanonis untuk semua host publik, kecuali development lokal.
+    RewriteCond %{HTTP_HOST} !^(localhost|127\.0\.0\.1)(:\d+)?$ [NC]
+    RewriteCond %{HTTP_HOST} !^alfikitchen\.web\.id$ [NC]
+    RewriteRule ^ https://alfikitchen.web.id%{REQUEST_URI} [R=301,L]
+
+    # 2. Paksa HTTPS (periksa X-Forwarded-Proto bila hosting memakai proxy).
+    RewriteCond %{HTTP_HOST} !^(localhost|127\.0\.0\.1)(:\d+)?$ [NC]
     RewriteCond %{HTTPS} off
     RewriteCond %{HTTP:X-Forwarded-Proto} !https
-    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
-
-    # 2. Buang www (samakan ke non-www sesuai domain baku)
-    RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
-    RewriteRule ^ https://%1%{REQUEST_URI} [R=301,L]
+    RewriteRule ^ https://alfikitchen.web.id%{REQUEST_URI} [R=301,L]
 
     # 3. index.php -> / (hindari duplikat homepage)
     RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /index\.php[?\s] [NC]
@@ -110,4 +112,3 @@ ErrorDocument 404 404.php
         Header set Cache-Control "max-age=2592000, public"
     </FilesMatch>
 </IfModule>
-

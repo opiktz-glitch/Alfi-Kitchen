@@ -66,6 +66,7 @@ GitHub Actions menjalankan tes sebelum deployment.
 
 ## Deployment
 
+Domain produksi: [https://alfikitchen.web.id](https://alfikitchen.web.id).
 Workflow `.github/workflows/deploy.yml` berjalan saat ada push ke branch `main`.
 Panduan lengkap update dan pemulihan hosting tersedia di
 [DEPLOYMENT.md](docs/DEPLOYMENT.md). Workflow saat ini menggunakan FTP port 21;

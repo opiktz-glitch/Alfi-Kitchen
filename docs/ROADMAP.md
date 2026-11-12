@@ -58,7 +58,7 @@ kembali pada konfigurasi hosting sebelum perubahan produksi.
 ## P2 — SEO dan pengindeksan
 
 - [ ] **Pastikan crawler dapat mengambil sitemap produksi.** Verifikasi
-  `https://kitchen.pojokberkah.online/sitemap.xml` di Google Search Console.
+  `https://alfikitchen.web.id/sitemap.xml` di Google Search Console.
   Jika hosting menyajikan challenge HTML atau gagal untuk crawler, minta
   dukungan hosting memeriksa akses crawler ke sitemap; jangan menganggap
   respons browser biasa membuktikan Googlebot dapat mengaksesnya.

@@ -1,8 +1,20 @@
 # Panduan Deployment Alfi Kitchen
 
-Panduan ini menjelaskan pembaruan aplikasi yang sudah berjalan di InfinityFree
-pada **https://kitchen.pojokberkah.online**. Langkah pertama kali setup dijelaskan
-terpisah agar data dan konfigurasi situs produksi tidak tertimpa.
+Panduan ini menjelaskan pembaruan aplikasi di InfinityFree pada
+**https://alfikitchen.web.id**. Langkah pertama kali setup dijelaskan terpisah
+agar data dan konfigurasi situs produksi tidak tertimpa.
+
+## Prasyarat domain dan hosting
+
+- Tambahkan `alfikitchen.web.id` sebagai domain situs pada akun InfinityFree dan
+  arahkan DNS sesuai instruksi panel hosting. Tunggu hingga domain aktif.
+- Aktifkan HTTPS/SSL untuk domain dan pastikan sertifikat aktif sebelum
+  mengandalkan redirect HTTPS pada `.htaccess`.
+- Pilih PHP 8.0 atau lebih baru (CI menggunakan PHP 8.2) dan pastikan PDO
+  MySQL serta `fileinfo` tersedia. GD dan ZIP diperlukan untuk fitur
+  pemrosesan gambar dan backup gambar.
+- Pastikan domain memakai direktori situs yang dituju workflow (`/htdocs/`).
+  Jangan mengubah direktori server sebelum memeriksa pemetaan domain di panel.
 
 ## Gambaran deployment saat ini
 
@@ -30,9 +42,10 @@ tidak disimpan di Git.
    Simpan salinannya di tempat aman di luar webroot.
 3. Jika konfigurasi produksi berada di `config.php` root, pastikan file itu
    tetap ada dan berisi kredensial database serta `SITE_URL` bernilai
-   `https://kitchen.pojokberkah.online`. File ini tidak dikirim oleh workflow.
+   `https://alfikitchen.web.id`. File ini tidak dikirim oleh workflow.
    Jika konfigurasi memakai environment `.env`, pastikan nilainya tersedia
-   secara aman pada runtime hosting.
+   secara aman pada runtime hosting. Jangan gunakan `.env.example` sebagai
+   konfigurasi aktif.
 4. Pastikan folder `uploads/` dan `uploads/cache/` beserta gambar produksi tidak
    akan terhapus atau tertimpa. Upload baru disimpan di server, bukan Git.
 5. Untuk perubahan skema, periksa migrasi yang akan dijalankan dan pastikan
@@ -71,10 +84,11 @@ Workflow saat ini menggunakan port 21, protokol FTP, dan server directory
    buka **Admin → Pengaturan → Versi & Migrasi Database**, periksa daftar
    migrasi pending, lalu jalankan migrasi. Ambil backup sebelum langkah ini.
 6. Lakukan pemeriksaan pascadeploy di browser:
-   - `https://kitchen.pojokberkah.online`
-   - `https://kitchen.pojokberkah.online/produk/SLUG-PRODUK`
+   - `https://alfikitchen.web.id`
+   - `https://alfikitchen.web.id/produk/SLUG-PRODUK`
    - halaman login admin dan panel pengaturan
    - gambar hero, gambar produk, tombol WhatsApp, dan sitemap
+   - redirect domain alias/`www` dan HTTP menuju domain kanonis HTTPS
 7. Pastikan log Actions dan respons situs tidak menunjukkan kegagalan. Hapus
    cache thumbnail melalui mekanisme terkelola hanya bila perlu; jangan hapus
    gambar sumber.
@@ -91,7 +105,7 @@ Jangan gunakan untuk pembaruan rutin situs produksi.
    konfigurasi root jika tersedia dan memakai `includes/config.php` jika tidak.
    Jangan commit atau mengirim kredensial lewat workflow.
 3. Pastikan `SITE_URL` menggunakan
-   `https://kitchen.pojokberkah.online`, ekstensi PDO MySQL aktif, serta folder
+   `https://alfikitchen.web.id`, ekstensi PDO MySQL aktif, serta folder
    upload dapat ditulis oleh PHP.
 4. Deploy berkas aplikasi. Jalankan migrasi dari CLI jika tersedia; jika tidak,
    gunakan bagian migrasi di panel admin setelah akun admin dapat masuk.

@@ -27,7 +27,7 @@ if (!function_exists('site_base_url')) {
         }
         $hostLower = strtolower(preg_replace('/:\d+$/', '', $host));
         if ($hostLower !== 'localhost' && $hostLower !== '127.0.0.1' && $hostLower !== '::1') {
-            return 'https://kitchen.pojokberkah.online';
+            return 'https://alfikitchen.web.id';
         }
 
         $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
