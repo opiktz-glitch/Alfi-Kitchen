@@ -43,7 +43,9 @@ tidak disimpan di Git.
 
 1. Pastikan situs masih dapat diakses dan Anda dapat masuk ke panel admin.
 2. Dari **Admin → Pengaturan**, unduh backup database dan backup gambar.
-   Simpan salinannya di tempat aman di luar webroot.
+   Backup database menyertakan riwayat migrasi serta tabel master/resep HPP
+   (termasuk baris bahan dan biaya). Simpan salinannya di tempat aman di luar
+   webroot.
 3. Jika konfigurasi produksi berada di `config.php` root, pastikan file itu
    tetap ada dan berisi kredensial database serta `SITE_URL` bernilai
    `https://alfikitchen.web.id`. File ini tidak dikirim oleh workflow.

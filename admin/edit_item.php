@@ -55,21 +55,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_item'])) {
         <?php include __DIR__ . '/sidebar.php'; ?>
         <div class="admin-main">
             <header class="admin-header">
-                <h2>Alfi Kitchen Admin</h2>
+                <h2>Edit Varian Produk</h2>
                 <div class="admin-header-actions">
-                    <a href="../" target="_blank" rel="noopener noreferrer" class="btn-site-preview">Lihat Website ↗</a>
-                    <a href="index.php" class="btn btn-cancel">Dashboard</a>
-                    <a href="logout.php" class="btn btn-danger">Logout</a>
+                    <a href="../" target="_blank" rel="noopener noreferrer" class="btn-site-preview"><?= admin_icon('external') ?>Lihat Website</a>
+                    <a href="logout.php" class="btn btn-danger btn-with-icon"><?= admin_icon('logout') ?>Logout</a>
                 </div>
             </header>
-            <?php include __DIR__ . '/breadcrumb.php'; ?>
             <div class="admin-container">
         <div class="form-card form-card-sm">
-            <h3>Edit Jenis Produk</h3>
+            <h3>Informasi Varian</h3>
             <?php if (!empty($uploadError)): ?>
-                <p role="alert" style="color:#721c24;"><?= htmlspecialchars($uploadError, ENT_QUOTES, 'UTF-8') ?></p>
+                <p role="alert" class="text-error"><?= htmlspecialchars($uploadError, ENT_QUOTES, 'UTF-8') ?></p>
             <?php endif; ?>
-            <form action="edit_item.php?id=<?= $id ?>&product_id=<?= $product_id ?>" method="POST" enctype="multipart/form-data" class="admin-form-grid">
+            <form action="edit_item.php?id=<?= $id ?>&product_id=<?= $product_id ?>" method="POST" enctype="multipart/form-data" class="admin-form-grid" data-submit-lock>
                 <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
                 
                 <div class="form-group">
@@ -88,17 +86,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_item'])) {
                 </div>
                 
                 <div class="form-group form-span-full">
-                    <label>Gambar <span style="font-weight:normal; color:#888; font-size:0.85rem;">(Opsional)</span></label>
+                    <label>Gambar <span class="text-muted">(Opsional)</span></label>
                     <?php if($item['image']): ?>
                         <img src="../<?= htmlspecialchars($item['image']) ?>" class="thumb-preview" alt="Preview">
                     <?php endif; ?>
                     <input type="file" name="image" accept="image/jpeg,image/png,image/gif,image/webp">
-                    <small style="color: #888; display: block; margin-top: 5px;">Biarkan kosong jika tidak ingin mengubah gambar.</small>
+                    <small class="form-hint">Biarkan kosong jika tidak ingin mengubah gambar.</small>
                 </div>
                 
                 <div class="btn-group">
-                    <a href="manage_items.php?product_id=<?= $product_id ?>" class="btn btn-cancel">Batal</a>
-                    <button type="submit" name="edit_item" class="btn btn-primary">Simpan Perubahan</button>
+                    <a href="manage_items.php?product_id=<?= $product_id ?>" class="btn btn-cancel btn-with-icon"><?= admin_icon('back') ?>Batal</a>
+                    <button type="submit" name="edit_item" class="btn btn-primary btn-with-icon"><?= admin_icon('save') ?>Simpan Perubahan</button>
                 </div>
                 
             </form>

@@ -19,6 +19,7 @@ class DatabaseMigratorTest extends TestCase
             'v02_create_login_attempts.sql',
             'v03_settings_utf8mb4.sql',
             'v04_add_product_slug.sql',
+            'v05_hpp.sql',
         ];
 
         foreach ($expectedFiles as $file) {
@@ -36,11 +37,30 @@ class DatabaseMigratorTest extends TestCase
 
         $available = $migrator->getAvailableMigrations();
 
-        $this->assertGreaterThanOrEqual(4, count($available));
+        $this->assertGreaterThanOrEqual(5, count($available));
         $this->assertSame('v01_initial_schema.sql', $available[0]);
         $this->assertSame('v02_create_login_attempts.sql', $available[1]);
         $this->assertSame('v03_settings_utf8mb4.sql', $available[2]);
         $this->assertSame('v04_add_product_slug.sql', $available[3]);
+        $this->assertSame('v05_hpp.sql', $available[4]);
+    }
+
+    public function testHppMigrationDefinesExpectedTablesAndProductPriceRelation(): void
+    {
+        $migration = file_get_contents(self::MIGRATIONS_DIR . '/v05_hpp.sql');
+
+        foreach (['hpp_ingredients', 'hpp_recipes', 'hpp_recipe_lines', 'hpp_recipe_costs'] as $table) {
+            $this->assertStringContainsString("CREATE TABLE IF NOT EXISTS `$table`", $migration);
+        }
+
+        $this->assertStringContainsString('`product_item_id` INT NULL', $migration);
+        $this->assertStringContainsString('FOREIGN KEY (`product_item_id`) REFERENCES `product_items` (`id`) ON DELETE SET NULL', preg_replace('/\s+/', ' ', $migration));
+        $this->assertStringContainsString('UNIQUE KEY `uq_hpp_recipe_item` (`product_item_id`)', $migration);
+        $this->assertStringContainsString('ON DELETE RESTRICT', $migration);
+        $this->assertStringContainsString('ON DELETE CASCADE', $migration);
+        $this->assertStringContainsString("'hpp_default_costs'", $migration);
+        $this->assertStringContainsString("'hpp_margins'", $migration);
+        $this->assertStringContainsString("'hpp_round_step'", $migration);
     }
 
     public function testEnsureTrackingTableAndStatus(): void
@@ -55,7 +75,7 @@ class DatabaseMigratorTest extends TestCase
         $this->assertEmpty($applied);
 
         $pending = $migrator->getPendingMigrations();
-        $this->assertGreaterThanOrEqual(4, count($pending));
+        $this->assertGreaterThanOrEqual(5, count($pending));
 
         $statusList = $migrator->getStatus();
         $this->assertNotEmpty($statusList);

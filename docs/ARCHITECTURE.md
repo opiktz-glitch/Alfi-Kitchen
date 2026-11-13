@@ -12,7 +12,7 @@ pembayaran, atau pelacakan pesanan.
 - **Web server:** Apache dengan aturan rewrite dan perlindungan `.htaccess`.
 - **Deployment:** GitHub Actions menjalankan tes lalu mengunggah berkas melalui
   FTP ke hosting.
-- **Tes:** runner PHP native tersedia di `tests/run_tests.php`.
+- **Tes:** runner PHP native tersedia di `tests/run_tests.php`; mendukung semua suite (default), subset melalui `--suite=NamaSuite[,NamaSuite]`, dan daftar suite melalui `--list-suites`.
 
 ## Struktur komponen
 

@@ -1,30 +1,49 @@
 <?php
 $adminNavItems = [
-    ['href' => 'index.php', 'label' => 'Dashboard', 'icon' => 'dashboard'],
+    ['href' => 'dashboard.php', 'label' => 'Dashboard', 'icon' => 'dashboard'],
+    ['href' => 'products.php', 'label' => 'Produk', 'icon' => 'manage'],
     ['href' => 'manage_hero.php', 'label' => 'Kelola Slider', 'icon' => 'slider'],
+    ['href' => 'hpp_recipes.php', 'label' => 'Kalkulator HPP', 'icon' => 'calculator'],
+    ['href' => 'hpp_ingredients.php', 'label' => 'Master Bahan', 'icon' => 'manage'],
     ['href' => 'settings.php', 'label' => 'Pengaturan', 'icon' => 'settings'],
     ['href' => 'activity_log.php', 'label' => 'Log Aktivitas', 'icon' => 'log'],
 ];
 $currentFile = basename($_SERVER['PHP_SELF'] ?? '');
+$activePage = [
+    'add_product.php' => 'products.php',
+    'edit_product.php' => 'products.php',
+    'manage_items.php' => 'products.php',
+    'edit_item.php' => 'products.php',
+    'hpp_edit.php' => 'hpp_recipes.php',
+][$currentFile] ?? $currentFile;
 ?>
 <aside class="admin-sidebar" aria-label="Navigasi admin">
     <div class="admin-sidebar-brand">Alfi Kitchen</div>
     <nav class="admin-sidebar-nav">
         <?php foreach ($adminNavItems as $item): ?>
-            <a href="<?= htmlspecialchars($item['href'], ENT_QUOTES, 'UTF-8') ?>" class="admin-sidebar-link<?= $currentFile === $item['href'] ? ' is-active' : '' ?>">
+            <a href="<?= htmlspecialchars($item['href'], ENT_QUOTES, 'UTF-8') ?>" class="admin-sidebar-link<?= $activePage === $item['href'] ? ' is-active' : '' ?>"<?= $activePage === $item['href'] ? ' aria-current="page"' : '' ?>>
+                <?= admin_icon($item['icon']) ?>
                 <?= htmlspecialchars($item['label'], ENT_QUOTES, 'UTF-8') ?>
             </a>
         <?php endforeach; ?>
     </nav>
 </aside>
 <nav class="admin-bottom-nav" aria-label="Navigasi mobile">
-    <a href="index.php">Dashboard</a>
-    <a href="manage_hero.php">Slider</a>
-    <a href="settings.php">Pengaturan</a>
-    <a href="activity_log.php">Log</a>
+    <?php foreach ($adminNavItems as $item): ?>
+        <a href="<?= htmlspecialchars($item['href'], ENT_QUOTES, 'UTF-8') ?>" class="<?= $activePage === $item['href'] ? 'is-active' : '' ?>"<?= $activePage === $item['href'] ? ' aria-current="page"' : '' ?>>
+            <?= admin_icon($item['icon']) ?>
+            <span><?= htmlspecialchars([
+                'Dashboard' => 'Beranda',
+                'Produk' => 'Produk',
+                'Kelola Slider' => 'Slider',
+                'Kalkulator HPP' => 'HPP',
+                'Master Bahan' => 'Bahan',
+                'Pengaturan' => 'Setelan',
+                'Log Aktivitas' => 'Log',
+            ][$item['label']], ENT_QUOTES, 'UTF-8') ?></span>
+        </a>
+    <?php endforeach; ?>
 </nav>
-<script src="https://unpkg.com/lucide@latest" defer></script>
-<script>document.addEventListener('DOMContentLoaded', function(){ if(window.lucide) lucide.createIcons(); });</script>
 <script>
 (function () {
   // scroll hint
@@ -53,6 +72,7 @@ $currentFile = basename($_SERVER['PHP_SELF'] ?? '');
         });
         rows.forEach(function (r) { tbody.appendChild(r); });
       });
+    });
     });
   // drag & drop upload enhancement
   document.querySelectorAll('input[type="file"]').forEach(function (input) {
@@ -84,4 +104,55 @@ $currentFile = basename($_SERVER['PHP_SELF'] ?? '');
     });
     zone.addEventListener('click', function (e) { if (e.target !== input) input.click(); });
   });
+  document.addEventListener('submit', function (event) {
+    var form = event.target;
+    if (!form || form.tagName !== 'FORM' || !form.hasAttribute('data-submit-lock')) return;
+    if (event.defaultPrevented) return;
+    if (form.dataset.submitting === 'true') {
+      event.preventDefault();
+      return;
+    }
+
+    form.dataset.submitting = 'true';
+    form.setAttribute('aria-busy', 'true');
+    var button = event.submitter;
+    if (button && button.form === form && button.tagName === 'BUTTON') {
+      button.dataset.originalHtml = button.innerHTML;
+      button.textContent = button.dataset.loadingLabel || 'Memproses...';
+      button.classList.add('is-loading');
+      button.setAttribute('aria-disabled', 'true');
+    }
+  });
+  document.querySelectorAll('[data-download-status]').forEach(function (link) {
+    link.addEventListener('click', function (event) {
+      if (link.getAttribute('aria-disabled') === 'true') {
+        event.preventDefault();
+        return;
+      }
+
+      link.dataset.originalHtml = link.innerHTML;
+      link.textContent = link.dataset.loadingLabel || 'Menyiapkan unduhan...';
+      link.classList.add('is-loading');
+      link.setAttribute('aria-disabled', 'true');
+      window.setTimeout(function () {
+        link.innerHTML = link.dataset.originalHtml || link.innerHTML;
+        delete link.dataset.originalHtml;
+        link.classList.remove('is-loading');
+        link.removeAttribute('aria-disabled');
+      }, 2500);
+    });
+  });
+  window.addEventListener('pageshow', function () {
+    document.querySelectorAll('form[data-submit-lock]').forEach(function (form) {
+      form.dataset.submitting = 'false';
+      form.removeAttribute('aria-busy');
+      var button = form.querySelector('button.is-loading');
+      if (!button) return;
+      button.innerHTML = button.dataset.originalHtml || button.innerHTML;
+      delete button.dataset.originalHtml;
+      button.classList.remove('is-loading');
+      button.removeAttribute('aria-disabled');
+    });
+  });
+})();
 </script>

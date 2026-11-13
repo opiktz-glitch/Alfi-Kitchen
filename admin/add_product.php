@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         log_admin_action('ADD_PRODUCT', 'name=' . $name . ', image=' . $imagePath);
 
         set_admin_flash('Kategori "' . $name . '" berhasil ditambahkan.');
-        header('Location: index.php');
+        header('Location: products.php');
         exit;
     }
 }
@@ -44,21 +44,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <?php include __DIR__ . '/sidebar.php'; ?>
         <div class="admin-main">
             <header class="admin-header">
-                <h2>Alfi Kitchen Admin</h2>
+                <h2>Tambah Kategori</h2>
                 <div class="admin-header-actions">
-                    <a href="../" target="_blank" rel="noopener noreferrer" class="btn-site-preview">Lihat Website ↗</a>
-                    <a href="index.php" class="btn btn-cancel">Dashboard</a>
-                    <a href="logout.php" class="btn btn-danger">Logout</a>
+                    <a href="../" target="_blank" rel="noopener noreferrer" class="btn-site-preview"><?= admin_icon('external') ?>Lihat Website</a>
+                    <a href="logout.php" class="btn btn-danger btn-with-icon"><?= admin_icon('logout') ?>Logout</a>
                 </div>
             </header>
-            <?php include __DIR__ . '/breadcrumb.php'; ?>
             <div class="admin-container">
         <div class="form-card form-card-sm">
-            <h3>Tambah Kategori Baru</h3>
+            <h3>Informasi Kategori</h3>
             <?php if (!empty($uploadError)): ?>
-                <p role="alert" style="color:#721c24;"><?= htmlspecialchars($uploadError, ENT_QUOTES, 'UTF-8') ?></p>
+                <p role="alert" class="text-error"><?= htmlspecialchars($uploadError, ENT_QUOTES, 'UTF-8') ?></p>
             <?php endif; ?>
-            <form method="POST" enctype="multipart/form-data" class="admin-form-grid">
+            <form method="POST" enctype="multipart/form-data" class="admin-form-grid" data-submit-lock>
                 <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
                 
                 <div class="form-group">
@@ -67,13 +65,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </div>
                 
                 <div class="form-group">
-                    <label>Gambar Kategori <span style="font-weight:normal; color:#888; font-size:0.85rem;">(Wajib)</span></label>
+                    <label>Gambar Kategori <span class="text-muted">(Wajib)</span></label>
                     <input type="file" name="image" accept="image/jpeg,image/png,image/gif,image/webp" required>
                 </div>
                 
                 <div class="btn-group">
-                    <a href="index.php" class="btn btn-cancel">Batal</a>
-                    <button type="submit" class="btn btn-primary">Simpan Kategori</button>
+                    <a href="products.php" class="btn btn-cancel btn-with-icon"><?= admin_icon('back') ?>Batal</a>
+                    <button type="submit" class="btn btn-primary btn-with-icon"><?= admin_icon('save') ?>Simpan Kategori</button>
                 </div>
                 
             </form>

@@ -126,14 +126,12 @@ $current_home_description = $home_content['home_description'] ?? 'Puding lembut 
         <?php include __DIR__ . '/sidebar.php'; ?>
         <div class="admin-main">
             <header class="admin-header">
-                <h2>Alfi Kitchen - Pengaturan</h2>
+                <h2>Pengaturan</h2>
                 <div class="admin-header-actions">
-                    <a href="../" target="_blank" rel="noopener noreferrer" class="btn-site-preview">Lihat Website ↗</a>
-                    <a href="index.php" class="btn btn-cancel">Dashboard</a>
-                    <a href="logout.php" class="btn btn-danger">Logout</a>
+                    <a href="../" target="_blank" rel="noopener noreferrer" class="btn-site-preview"><?= admin_icon('external') ?>Lihat Website</a>
+                    <a href="logout.php" class="btn btn-danger btn-with-icon"><?= admin_icon('logout') ?>Logout</a>
                 </div>
             </header>
-            <?php include __DIR__ . '/breadcrumb.php'; ?>
             <div class="admin-container">
         <div class="form-card settings-card">
             <?php if($message): ?>
@@ -147,19 +145,19 @@ $current_home_description = $home_content['home_description'] ?? 'Puding lembut 
                 <img src="../uploads/logo.png?v=<?= time() ?>" class="current-logo" alt="Logo Saat Ini">
             <?php endif; ?>
 
-            <form action="" method="post" enctype="multipart/form-data">
+            <form action="" method="post" enctype="multipart/form-data" data-submit-lock>
                 <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
                 <div class="form-group">
                     <label>Upload Logo Baru (Rasio 1:1, PNG/JPG/GIF/WEBP)</label>
                     <input type="file" name="logo" accept="image/png,image/jpeg,image/jpg,image/gif,image/webp" required>
                 </div>
-                <button type="submit" class="btn btn-primary">Simpan Logo</button>
+                <button type="submit" class="btn btn-primary btn-with-icon"><?= admin_icon('save') ?>Simpan Logo</button>
             </form>
             </section>
             <section class="settings-panel">
             <h3>Konten Sambutan Homepage</h3>
-            <p style="font-size: 14px; margin-bottom: 15px; color: var(--muted);">Ubah judul dan deskripsi yang tampil di halaman utama.</p>
-            <form action="" method="post">
+            <p class="settings-copy">Ubah judul dan deskripsi yang tampil di halaman utama.</p>
+            <form action="" method="post" data-submit-lock>
                 <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token(), ENT_QUOTES, 'UTF-8') ?>">
                 <div class="form-group">
                     <label for="home-title">Judul</label>
@@ -169,15 +167,15 @@ $current_home_description = $home_content['home_description'] ?? 'Puding lembut 
                     <label for="home-description">Deskripsi</label>
                     <textarea id="home-description" name="home_description" rows="5" maxlength="1200" required><?= htmlspecialchars($current_home_description, ENT_QUOTES, 'UTF-8') ?></textarea>
                 </div>
-                <button type="submit" name="save_home_content" class="btn btn-primary">Simpan Konten Homepage</button>
+                <button type="submit" name="save_home_content" class="btn btn-primary btn-with-icon"><?= admin_icon('save') ?>Simpan Konten Homepage</button>
             </form>
             </section>
             <section class="settings-panel">
             <h3>Backup Data & Gambar</h3>
-            <p style="font-size: 14px; margin-bottom: 15px; color: var(--muted);">Anda bisa mengekspor database (.sql) dan seluruh gambar produk (.zip) ke laptop Anda.</p>
-            <div style="display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap;">
-                <a href="export_db.php" class="btn btn-backup-database">Backup Database</a>
-                <a href="export_images.php" class="btn btn-backup-images">Backup Semua Gambar</a>
+            <p class="settings-copy">Anda bisa mengekspor database (.sql) dan seluruh gambar produk (.zip) ke laptop Anda.</p>
+            <div class="settings-actions">
+                <a href="export_db.php" class="btn btn-backup-database btn-with-icon" data-download-status data-loading-label="Menyiapkan backup database..."><?= admin_icon('database') ?>Backup Database</a>
+                <a href="export_images.php" class="btn btn-backup-images btn-with-icon" data-download-status data-loading-label="Menyiapkan backup gambar..."><?= admin_icon('image') ?>Backup Semua Gambar</a>
             </div>
 
             <hr class="section-hr">
@@ -195,19 +193,19 @@ $current_home_description = $home_content['home_description'] ?? 'Puding lembut 
             }
             ?>
             <h3>Versi & Migrasi Database</h3>
-            <p style="font-size: 14px; margin-bottom: 15px; color: var(--muted);">
+            <p class="settings-copy">
                 Sistem migrasi skema database otomatis. Anda dapat menerapkan pembaruan struktur tabel langsung dari panel admin ini tanpa harus membuka phpMyAdmin cPanel.
             </p>
-            <div style="background: #fff8ef; border: 1px solid var(--line); border-radius: 8px; padding: 15px; margin-bottom: 15px;">
-                <div style="margin-bottom: 8px;">
+            <div class="migration-status">
+                <div class="migration-status-version">
                     <strong>Versi Skema Terakhir:</strong> <code><?= htmlspecialchars($lastApplied ?? 'Belum ada migrasi tercatat') ?></code>
                 </div>
                 <div>
                     <?php if (empty($pendingMigrations)): ?>
-                        <span style="color: #155724; font-weight: bold;">✓ Database up-to-date (Semua versi migrasi sudah aktif)</span>
+                        <span class="migration-status-ok"><?= admin_icon('check') ?>Database up-to-date (Semua versi migrasi sudah aktif)</span>
                     <?php else: ?>
-                        <span style="color: #856404; font-weight: bold;">⚠️ Ada <?= count($pendingMigrations) ?> migrasi yang belum diterapkan:</span>
-                        <ul style="margin: 8px 0 0 20px; font-size: 13px; color: #856404;">
+                        <span class="migration-status-pending">Ada <?= count($pendingMigrations) ?> migrasi yang belum diterapkan:</span>
+                        <ul class="migration-status-list">
                             <?php foreach ($pendingMigrations as $p): ?>
                                 <li><code><?= htmlspecialchars($p) ?></code></li>
                             <?php endforeach; ?>
@@ -216,16 +214,16 @@ $current_home_description = $home_content['home_description'] ?? 'Puding lembut 
                 </div>
             </div>
             <?php if (!empty($pendingMigrations)): ?>
-            <form action="" method="post" style="margin-bottom: 15px;">
+            <form action="" method="post" class="form-spaced" data-submit-lock>
                 <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
-                <button type="submit" name="run_migrations" class="btn btn-primary" onclick="return confirm('Terapkan migrasi database sekarang?')">Jalankan Migrasi</button>
+                <button type="submit" name="run_migrations" class="btn btn-primary btn-with-icon" onclick="return confirm('Terapkan migrasi database sekarang?')"><?= admin_icon('check') ?>Jalankan Migrasi</button>
             </form>
             <?php endif; ?>
             </section>
             <section class="settings-panel">
             <h3>Info Footer</h3>
-            <p style="font-size: 14px; margin-bottom: 15px; color: var(--muted);">Informasi yang tampil di footer website.</p>
-            <form action="" method="post">
+            <p class="settings-copy">Informasi yang tampil di footer website.</p>
+            <form action="" method="post" data-submit-lock>
                 <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
                 <div class="form-group"><label>Instagram URL</label><input type="text" name="footer_instagram" value="<?= htmlspecialchars($current_footer['instagram']) ?>" placeholder="https://instagram.com/..."></div>
                 <div class="form-group"><label>Facebook URL</label><input type="text" name="footer_facebook" value="<?= htmlspecialchars($current_footer['facebook']) ?>" placeholder="https://facebook.com/..."></div>
@@ -234,30 +232,30 @@ $current_home_description = $home_content['home_description'] ?? 'Puding lembut 
                 <div class="form-group"><label>Alamat</label><textarea name="footer_address" rows="2"><?= htmlspecialchars($current_footer['address']) ?></textarea></div>
                 <div class="form-group"><label>Email</label><input type="email" name="footer_email" value="<?= htmlspecialchars($current_footer['email']) ?>" placeholder="info@alfikitchen.com"></div>
                 <div class="form-group"><label>Link Google Maps</label><input type="text" name="footer_maps" value="<?= htmlspecialchars($current_footer['maps']) ?>" placeholder="https://maps.google.com/..."></div>
-                <button type="submit" name="save_footer_info" class="btn btn-primary">Simpan Info Footer</button>
+                <button type="submit" name="save_footer_info" class="btn btn-primary btn-with-icon"><?= admin_icon('save') ?>Simpan Info Footer</button>
             </form>
             </section>
             <section class="settings-panel">
             <h3>Nomor WhatsApp</h3>
-            <p style="font-size: 14px; margin-bottom: 15px; color: var(--muted);">Nomor ini akan digunakan untuk tombol "Pesan via WhatsApp" yang muncul di semua halaman. Gunakan format internasional tanpa tanda + (contoh: 6281234567890).</p>
-            <form action="" method="post">
+            <p class="settings-copy">Nomor ini akan digunakan untuk tombol "Pesan via WhatsApp" yang muncul di semua halaman. Gunakan format internasional tanpa tanda + (contoh: 6281234567890).</p>
+            <form action="" method="post" data-submit-lock>
                 <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
                 <div class="form-group">
                     <label>Nomor WhatsApp</label>
                     <input type="text" name="whatsapp_number" value="<?= htmlspecialchars($current_wa) ?>" placeholder="Contoh: 6281234567890" required>
                 </div>
-                <button type="submit" name="save_whatsapp" class="btn btn-save-whatsapp">Simpan Nomor WhatsApp</button>
+                <button type="submit" name="save_whatsapp" class="btn btn-save-whatsapp btn-with-icon"><?= admin_icon('save') ?>Simpan Nomor WhatsApp</button>
             </form>
             </section>
             <section class="settings-panel">
             <h3>Ubah Password Admin</h3>
-            <form action="" method="post">
+            <form action="" method="post" data-submit-lock>
                 <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
                 <div class="form-group">
                     <label>Password Baru</label>
                     <input type="password" name="new_password" placeholder="Minimal 6 karakter" required minlength="6">
                 </div>
-                <button type="submit" name="change_password" class="btn btn-secondary">Perbarui Password</button>
+                <button type="submit" name="change_password" class="btn btn-secondary btn-with-icon"><?= admin_icon('key') ?>Perbarui Password</button>
             </form>
             </section>
             </div>

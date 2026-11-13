@@ -42,6 +42,24 @@ class BackupAndLogTest extends TestCase
         $this->assertStringContainsString('backup_cooldown', $imgContent);
     }
 
+    public function testDatabaseBackupIncludesHppAndMigrationTables(): void
+    {
+        $dbContent = file_get_contents(self::EXPORT_DB_FILE);
+        foreach ([
+            'schema_migrations',
+            'hpp_ingredients',
+            'hpp_recipes',
+            'hpp_recipe_lines',
+            'hpp_recipe_costs',
+        ] as $table) {
+            $this->assertStringContainsString(
+                "'" . $table . "'",
+                $dbContent,
+                'Backup database harus mencakup tabel ' . $table
+            );
+        }
+    }
+
     public function testActivityLogHasClearActionAndCsrf(): void
     {
         $content = file_get_contents(self::ACTIVITY_LOG_FILE);

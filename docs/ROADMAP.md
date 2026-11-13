@@ -134,6 +134,9 @@ kembali pada konfigurasi hosting sebelum perubahan produksi.
 
 ## P3 — UI panel admin
 
+- [x] **Pisahkan dashboard dari pengelolaan produk.** Dashboard kini
+  menampilkan ringkasan kategori, varian, resep HPP, master bahan, dan aktivitas
+  terbaru; pengelolaan kategori tersedia pada menu Produk.
 - [x] **Ringkas navigasi dashboard.** Pisahkan tautan sekunder seperti slider,
   pengaturan, dan log aktivitas dari aksi utama tambah kategori agar alur
   mengelola katalog lebih mudah dipahami.

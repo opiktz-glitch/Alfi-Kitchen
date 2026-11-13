@@ -8,9 +8,9 @@
 
 ## Teknologi dan konvensi
 - Kode saat ini memerlukan PHP 8.0+ (`str_starts_with()`); CI menggunakan PHP 8.2. Jangan menyatakan aplikasi kompatibel dengan PHP 7.4 kecuali kompatibilitas telah dipulihkan dan diuji.
-- Tes tidak memerlukan Composer; jalankan `C:\xampp\php\php.exe tests\run_tests.php`.
+- Tes tidak memerlukan Composer; jalankan `C:\xampp\php\php.exe tests\run_tests.php`. Untuk daftar suite gunakan `--list-suites`; untuk memilih suite gunakan `--suite=NamaSuiteLain,NamaSuiteBerikutnya`.
 - Entry point aplikasi memuat `includes/bootstrap.php`: gunakan `config.php` root bila tersedia demi kompatibilitas konfigurasi lama, atau fallback ke `includes/config.php` yang membaca `.env`. Jangan pernah meng-commit kredensial, `.env`, atau `config.php` yang berisi rahasia. `config.example.php` adalah template opsional.
-- Database memakai PDO. Migrasi berada di `database/migrations/` (v01–v04), dan dijalankan melalui `php database/migrate.php` atau panel admin.
+- Database memakai PDO. Migrasi berada di `database/migrations/` (v01–v05), dan dijalankan melalui `php database/migrate.php` atau panel admin.
 - Helper berada di `includes/` (konfigurasi, `env_loader`, `seo_helpers`, `fallback_logo`, `DatabaseMigrator`) dan `admin/helpers/db_helper.php`.
 - Semua halaman admin harus memuat `auth_check.php` dan memeriksa CSRF pada request POST. Catat aksi melalui `log_admin_action()`.
 
@@ -24,12 +24,15 @@
 - Deployment saat ini menggunakan FTP tanpa enkripsi pada port 21. Utamakan transport terenkripsi jika didukung; jangan pernah mengekspos atau meng-commit kredensial deployment.
 
 ## Pengujian
-- Pilih verifikasi terkecil yang benar-benar mencakup perubahan; jangan menjalankan seluruh suite atau mengulang pemeriksaan yang tidak terkait tanpa alasan.
-- Untuk perubahan PHP pada helper bersama, autentikasi/CSRF, upload/path, konfigurasi, database/migrasi, atau alur yang berdampak luas, jalankan `C:\xampp\php\php.exe tests\run_tests.php` karena runner lokal menjalankan seluruh suite sekaligus.
-- Untuk perubahan tampilan yang terisolasi, verifikasi halaman terkait di browser pada ukuran layar yang terdampak; jalankan tes otomatis hanya jika ada tes terfokus yang mencakup perilaku tersebut.
-- Perubahan dokumentasi saja tidak memerlukan tes. Periksa tautan atau fakta dokumentasi bila relevan.
-- Jika tes dijalankan, laporkan hasil aktual dan alasan cakupan tes yang dipilih; jangan mengandalkan jumlah tetap.
-- Cakupan suite: `SyntaxTest`, `AdminRefactorTest`, `ThumbSecurityTest`, `UploadHelperRefactorTest`, `DatabaseMigratorTest`, `FallbackLogoTest`, `EnvLoaderTest`, `BackupAndLogTest`, dan `SeoAndRoutingTest`.
+- Pilih level verifikasi terkecil yang sesuai dampak perubahan; jangan menjalankan pemeriksaan tak terkait atau mengulang suite tanpa alasan.
+- **Perubahan terisolasi** (CSS, markup, atau JavaScript lokal): lint file yang diubah (`php -l` untuk PHP; `node --check` untuk JavaScript jika Node tersedia) dan verifikasi halaman/alur terkait di browser pada ukuran layar terdampak. Jalankan tes otomatis terkait bila tersedia.
+- **Perubahan helper atau fitur**: jalankan tes yang mencakup perilaku yang diubah, lint file terkait, dan verifikasi integrasi pada halaman/alur yang terdampak. Sertakan tes regresi untuk perilaku penting yang harus tetap sama.
+- **Perubahan berdampak luas atau berisiko tinggi** (autentikasi/CSRF, upload/path, konfigurasi, database/migrasi, helper bersama, atau lintas alur): jalankan seluruh suite dengan `C:\xampp\php\php.exe tests\run_tests.php`; tambahkan uji integrasi terisolasi bila dibutuhkan. Jangan gunakan database aplikasi/produksi untuk uji destruktif.
+- **Sebelum rilis/deploy**: jalankan seluruh suite, uji alur utama yang berubah, dan periksa dampak migrasi/backup bila relevan.
+- Runner `tests\run_tests.php` tanpa opsi menjalankan semua suite untuk menjaga kompatibilitas CI. Gunakan `--list-suites` untuk melihat suite yang tersedia dan `--suite=NamaSuite[,NamaSuite]` untuk subset; nama harus cocok persis. Untuk perubahan berisiko rendah, pilih suite terkait; tetap jalankan seluruh suite sebelum rilis.
+- Perubahan dokumentasi saja tidak memerlukan tes kecuali dokumentasi mengubah instruksi operasional; periksa fakta dan tautan terkait.
+- Laporkan perintah, hasil aktual (termasuk jumlah yang dijalankan bila tersedia), alasan pemilihan level, serta batas verifikasi yang belum dilakukan. Jangan mengandalkan jumlah tes tetap.
+- Cakupan suite saat ini: `SyntaxTest`, `AdminRefactorTest`, `ThumbSecurityTest`, `UploadHelperRefactorTest`, `DatabaseMigratorTest`, `FallbackLogoTest`, `EnvLoaderTest`, `BackupAndLogTest`, `SeoAndRoutingTest`, `HppCalcTest`, `HppIngredientTest`, `HppIngredientPageTest`, `HppRecipeRepositoryTest`, dan `HppRecipeEditorPageTest`.
 - CI menjalankan tes sebelum deployment (`.github/workflows/deploy.yml`).
 - GD bersifat opsional pada PHP CLI lokal. Jalur fallback tanpa GD lebih mudah diuji daripada perilaku resize/WebP yang memerlukan ekstensi GD aktif.
 

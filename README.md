@@ -59,7 +59,12 @@ tersebut, aplikasi membaca environment `.env` jika tersedia.
 Jalankan tes native dari root proyek:
 
 ```text
+# Jalankan semua suite
 C:\xampp\php\php.exe tests\run_tests.php
+
+# Jalankan suite yang dipilih (nama suite bisa dilihat dengan --list-suites)
+C:\xampp\php\php.exe tests\run_tests.php --suite=HppCalcTest,HppRecipeRepositoryTest
+C:\xampp\php\php.exe tests\run_tests.php --list-suites
 ```
 
 GitHub Actions menjalankan tes sebelum deployment.

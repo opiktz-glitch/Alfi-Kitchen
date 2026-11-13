@@ -48,15 +48,29 @@ class AdminRefactorTest extends TestCase
         $this->assertStringContainsString('.preview-img', $css);
     }
 
+    public function testAdminPrimaryButtonsUseNeutralStyling(): void
+    {
+        $css = file_get_contents(self::CSS_FILE);
+
+        $this->assertMatchesRegularExpression(
+            '/\.btn-primary\s*\{\s*border:\s*1px solid #e8e2db;\s*background:\s*#f5f3f0;\s*color:\s*#51483f;\s*\}/',
+            $css
+        );
+        $this->assertMatchesRegularExpression(
+            '/\.category-action-primary,\s*\.category-action-secondary\s*\{\s*background:\s*#f5f3f0;\s*border-color:\s*#e8e2db;\s*color:\s*#62574c;\s*\}/',
+            $css
+        );
+    }
+
     public function testAdminVisualStyleUsesCompactTypographyAndControls(): void
     {
         $css = file_get_contents(self::CSS_FILE);
 
         $this->assertStringContainsString('font-size: 14px;', $css);
         $this->assertStringContainsString('font-size: 1.45rem;', $css);
-        $this->assertStringContainsString('min-height: 34px;', $css);
-        $this->assertStringContainsString('padding: 6px 11px;', $css);
         $this->assertStringContainsString('min-height: 38px;', $css);
+        $this->assertStringContainsString('padding: 8px 13px;', $css);
+        $this->assertStringContainsString('border-radius: var(--radius-sm);', $css);
         $this->assertStringContainsString('background: var(--card);', $css);
     }
 
@@ -80,36 +94,107 @@ class AdminRefactorTest extends TestCase
 
     public function testDashboardSeparatesSecondaryNavigationFromPrimaryAction(): void
     {
-        $dashboard = file_get_contents(self::ADMIN_DIR . '/index.php');
+        $dashboard = file_get_contents(self::ADMIN_DIR . '/dashboard.php');
+        $sidebar = file_get_contents(self::ADMIN_DIR . '/sidebar.php');
         $css = file_get_contents(self::CSS_FILE);
+        $index = file_get_contents(self::ADMIN_DIR . '/index.php');
 
-        $this->assertStringContainsString('<nav class="admin-nav"', $dashboard);
-        $this->assertStringContainsString('Kelola Slider</a>', $dashboard);
-        $this->assertStringContainsString('Pengaturan</a>', $dashboard);
-        $this->assertStringContainsString('Log Aktivitas</a>', $dashboard);
-        $this->assertStringContainsString('class="btn btn-primary">+ Tambah Kategori</a>', $dashboard);
-        $this->assertStringContainsString('.admin-nav', $css);
+        $this->assertStringNotContainsString('<nav class="admin-nav"', $dashboard);
+        $this->assertStringContainsString('Ringkasan katalog', $dashboard);
+        $this->assertStringContainsString('Aktivitas terbaru', $dashboard);
+        $this->assertStringContainsString('href="products.php"', $dashboard);
+        $this->assertStringContainsString('class="dashboard-shortcuts"', $dashboard);
+        $this->assertSame(4, substr_count($dashboard, 'class="dashboard-shortcut-card"'));
+        $this->assertStringContainsString('<strong>Kelola Kategori &amp; Varian</strong>', $dashboard);
+        $this->assertStringContainsString('Atur kategori produk beserta variannya.', $dashboard);
+        $this->assertStringContainsString('Tambahkan kelompok produk baru.', $dashboard);
+        $this->assertStringContainsString('Periksa biaya dan kalkulasi resep.', $dashboard);
+        $this->assertStringContainsString('Perbarui bahan dan harga satuannya.', $dashboard);
+        $this->assertStringContainsString('admin-sidebar-nav', $sidebar);
+        $this->assertStringContainsString('admin-bottom-nav', $sidebar);
+        $this->assertStringContainsString("['href' => 'dashboard.php', 'label' => 'Dashboard'", $sidebar);
+        $this->assertStringContainsString('class="dashboard-shortcut-card"', $dashboard);
+        $this->assertStringContainsString("header('Location: dashboard.php')", $index);
+        $this->assertStringContainsString('display: none;', $css);
+        $this->assertStringContainsString('.admin-bottom-nav', $css);
+        $this->assertStringContainsString('.dashboard-shortcut-card:focus-visible', $css);
+        $this->assertStringContainsString('aria-current="page"', $sidebar);
+        $this->assertStringContainsString("['href' => 'products.php', 'label' => 'Produk'", $sidebar);
     }
 
-    public function testDashboardPrioritizesVariantManagementAndSeparatesDelete(): void
+    public function testAdminPagesDoNotIncludeBreadcrumbs(): void
     {
-        $dashboard = file_get_contents(self::ADMIN_DIR . '/index.php');
+        $pages = [
+            'index.php',
+            'dashboard.php',
+            'products.php',
+            'add_product.php',
+            'edit_product.php',
+            'manage_items.php',
+            'edit_item.php',
+            'manage_hero.php',
+            'settings.php',
+            'activity_log.php',
+            'hpp_recipes.php',
+            'hpp_edit.php',
+            'hpp_ingredients.php',
+        ];
+
+        foreach ($pages as $page) {
+            $this->assertStringNotContainsString(
+                'breadcrumb.php',
+                file_get_contents(self::ADMIN_DIR . '/' . $page),
+                $page . ' tidak boleh menyertakan breadcrumb'
+            );
+        }
+
+        $this->assertFileDoesNotExist(self::ADMIN_DIR . '/breadcrumb.php');
+    }
+
+    public function testAdminPagesUseSharedNavigationAndNoInlineStyles(): void
+    {
+        foreach (self::provideAdminFilesWithSitePreview() as [$file]) {
+            $content = file_get_contents(self::ADMIN_DIR . '/' . $file);
+            $this->assertStringNotContainsString('style="', $content, $file . ' harus memakai kelas CSS bersama');
+            $this->assertStringContainsString('class="admin-header"', $content, $file . ' harus memakai header admin bersama');
+        }
+
+        $css = file_get_contents(self::CSS_FILE);
+        $this->assertStringContainsString('.btn-with-icon', $css);
+        $this->assertStringContainsString('.btn:focus-visible', $css);
+        $this->assertStringContainsString('.admin-bottom-nav', $css);
+    }
+
+    public function testProductPagePrioritizesVariantManagementAndSeparatesDelete(): void
+    {
+        $dashboard = file_get_contents(self::ADMIN_DIR . '/products.php');
         $css = file_get_contents(self::CSS_FILE);
 
         $this->assertStringContainsString('aria-label="Kelola varian dan harga untuk', $dashboard);
         $this->assertStringContainsString('aria-label="Edit kategori', $dashboard);
         $this->assertStringContainsString('class="category-actions-delete"', $dashboard);
         $this->assertStringContainsString('aria-label="Hapus kategori', $dashboard);
-        $this->assertStringContainsString('class="btn btn-primary category-icon-button"', $dashboard);
+        $this->assertStringContainsString('class="category-icon-button category-action-primary"', $dashboard);
+        $this->assertStringContainsString('class="category-icon-button category-action-secondary"', $dashboard);
+        $this->assertStringContainsString('class="category-icon-button category-action-delete"', $dashboard);
+        $this->assertStringContainsString('<span class="action-button-label">Kelola</span>', $dashboard);
+        $this->assertStringContainsString('<span class="action-button-label">Edit</span>', $dashboard);
+        $this->assertStringContainsString('<span class="action-button-label">Hapus</span>', $dashboard);
         $this->assertStringContainsString("admin_icon('manage')", $dashboard);
         $this->assertStringContainsString('.category-icon-button', $css);
         $this->assertStringContainsString('.category-actions-delete', $css);
-        $this->assertStringContainsString('background: transparent', $css);
+        $this->assertStringContainsString('box-sizing: border-box;', $css);
+        $this->assertStringContainsString('border-radius: 10px;', $css);
+        $this->assertStringContainsString('category-icon-button:focus-visible', $css);
+        $this->assertStringContainsString('.category-action-primary', $css);
+        $this->assertStringContainsString('.category-action-secondary', $css);
+        $this->assertStringContainsString('.category-action-delete', $css);
+        $this->assertStringContainsString('.category-icon-button .action-button-label', $css);
     }
 
-    public function testDashboardShowsConsistentCategoryThumbnailsAndVariantCounts(): void
+    public function testProductPageShowsConsistentCategoryThumbnailsAndVariantCounts(): void
     {
-        $dashboard = file_get_contents(self::ADMIN_DIR . '/index.php');
+        $dashboard = file_get_contents(self::ADMIN_DIR . '/products.php');
         $css = file_get_contents(self::CSS_FILE);
 
         $this->assertStringContainsString('AS item_count', $dashboard);
@@ -120,9 +205,9 @@ class AdminRefactorTest extends TestCase
         $this->assertStringContainsString('.category-count', $css);
     }
 
-    public function testDashboardUsesStackedCategoryCardsOnMobile(): void
+    public function testProductPageUsesStackedCategoryCardsOnMobile(): void
     {
-        $dashboard = file_get_contents(self::ADMIN_DIR . '/index.php');
+        $dashboard = file_get_contents(self::ADMIN_DIR . '/products.php');
         $css = file_get_contents(self::CSS_FILE);
 
         $this->assertStringContainsString('data-label="Kategori"', $dashboard);
@@ -135,15 +220,15 @@ class AdminRefactorTest extends TestCase
         $this->assertStringContainsString('display: flex;', $css);
     }
 
-    public function testDashboardSupportsSearchEmptyStatesAndNamedDeleteConfirmation(): void
+    public function testProductPageSupportsSearchEmptyStatesAndNamedDeleteConfirmation(): void
     {
-        $dashboard = file_get_contents(self::ADMIN_DIR . '/index.php');
+        $dashboard = file_get_contents(self::ADMIN_DIR . '/products.php');
         $css = file_get_contents(self::CSS_FILE);
 
         $this->assertStringContainsString('name="search"', $dashboard);
         $this->assertStringContainsString('LIKE ? ESCAPE', $dashboard);
         $this->assertStringContainsString('JSON_HEX_APOS | JSON_HEX_QUOT', $dashboard);
-        $this->assertStringContainsString('beserta seluruh variannya?', $dashboard);
+        $this->assertStringContainsString('beserta seluruh varian dan harga jualnya dari website?', $dashboard);
         $this->assertStringContainsString('Belum ada kategori produk', $dashboard);
         $this->assertStringContainsString('category-empty', $css);
     }
@@ -152,7 +237,7 @@ class AdminRefactorTest extends TestCase
     {
         $auth = file_get_contents(self::ADMIN_DIR . '/auth.php');
         $flashTemplate = file_get_contents(self::ADMIN_DIR . '/flash_message.php');
-        $dashboard = file_get_contents(self::ADMIN_DIR . '/index.php');
+        $dashboard = file_get_contents(self::ADMIN_DIR . '/products.php');
         $this->assertStringContainsString('function set_admin_flash', $auth);
         $this->assertStringContainsString('function consume_admin_flash', $auth);
         $this->assertStringContainsString('unset($_SESSION[\'admin_flash\'])', $auth);
@@ -225,8 +310,13 @@ class AdminRefactorTest extends TestCase
             ['activity_log.php'],
             ['edit_item.php'],
             ['index.php'],
+            ['dashboard.php'],
+            ['products.php'],
             ['export_db.php'],
             ['export_images.php'],
+            ['hpp_recipes.php'],
+            ['hpp_edit.php'],
+            ['hpp_ingredients.php'],
         ];
     }
 
@@ -240,7 +330,12 @@ class AdminRefactorTest extends TestCase
             ['settings.php'],
             ['edit_item.php'],
             ['index.php'],
+            ['dashboard.php'],
+            ['products.php'],
             ['activity_log.php'],
+            ['hpp_recipes.php'],
+            ['hpp_edit.php'],
+            ['hpp_ingredients.php'],
         ];
     }
 
@@ -252,7 +347,7 @@ class AdminRefactorTest extends TestCase
         $path = self::ADMIN_DIR . '/' . $file;
         $this->assertFileExists($path, "File $file harus ada");
         $content = file_get_contents($path);
-        $this->assertStringContainsString('Lihat Website ↗', $content, "File $file harus memiliki tautan teks Lihat Website");
+        $this->assertStringContainsString('Lihat Website', $content, "File $file harus memiliki tautan teks Lihat Website");
         $this->assertStringContainsString('btn-site-preview', $content, "File $file harus menggunakan kelas btn-site-preview");
     }
 
@@ -266,10 +361,6 @@ class AdminRefactorTest extends TestCase
                     $insideTable = true;
                 }
 
-                if (str_contains($line, 'admin_icon(')) {
-                    $this->assertTrue($insideTable, "Ikon aksi di $file hanya boleh digunakan dalam tabel");
-                }
-
                 if (!str_contains($line, 'btn-icon-only') && !str_contains($line, 'category-icon-button')) {
                     if (str_contains($line, '</table>')) {
                         $insideTable = false;
@@ -277,6 +368,7 @@ class AdminRefactorTest extends TestCase
                     continue;
                 }
 
+                $this->assertTrue($insideTable, "Kontrol ikon di $file harus berada di dalam tabel");
                 $this->assertStringContainsString('aria-label=', $line, "Kontrol ikon di $file harus memiliki aria-label");
                 $this->assertStringContainsString('title=', $line, "Kontrol ikon di $file harus memiliki title");
 
@@ -294,15 +386,43 @@ class AdminRefactorTest extends TestCase
         $this->assertStringContainsString('class="admin-icon" viewBox="0 0 24 24" aria-hidden="true"', $auth);
         $this->assertStringContainsString('throw new InvalidArgumentException(\'Ikon admin tidak dikenal.\')', $auth);
         $this->assertStringContainsString('.btn-icon-only', file_get_contents(self::CSS_FILE));
-        $this->assertStringContainsString("admin_icon('manage')", file_get_contents(self::ADMIN_DIR . '/index.php'));
+        $this->assertStringContainsString("admin_icon('manage')", file_get_contents(self::ADMIN_DIR . '/products.php'));
         $this->assertStringContainsString("admin_icon('edit')", file_get_contents(self::ADMIN_DIR . '/manage_items.php'));
         $this->assertStringContainsString("admin_icon('delete')", file_get_contents(self::ADMIN_DIR . '/manage_hero.php'));
+        $hero = file_get_contents(self::ADMIN_DIR . '/manage_hero.php');
+        $this->assertStringContainsString('class="category-icon-button category-action-delete"', $hero);
+        $this->assertStringContainsString('<span class="action-button-label">Hapus</span>', $hero);
+    }
+
+    public function testAdminActionsShowMobileLabelsAndSubmissionStatus(): void
+    {
+        $css = file_get_contents(self::CSS_FILE);
+        $sidebar = file_get_contents(self::ADMIN_DIR . '/sidebar.php');
+        $auth = file_get_contents(self::ADMIN_DIR . '/auth.php');
+        $settings = file_get_contents(self::ADMIN_DIR . '/settings.php');
+        $ingredients = file_get_contents(self::ADMIN_DIR . '/hpp_ingredients.php');
+        $hero = file_get_contents(self::ADMIN_DIR . '/manage_hero.php');
+
+        $this->assertStringContainsString('.action-button-label', $css);
+        $this->assertStringContainsString('.hpp-recipe-list-table tbody tr', $css);
+        $this->assertStringContainsString('.btn.is-loading', $css);
+        $this->assertStringContainsString("form.dataset.submitting === 'true'", $sidebar);
+        $this->assertStringContainsString("'pageshow'", $sidebar);
+        $this->assertStringContainsString('data-download-status', $settings);
+        $this->assertStringContainsString('data-submit-lock', $ingredients);
+        $this->assertStringContainsString('data-submit-lock', $hero);
+        $this->assertStringContainsString("'key' =>", $auth);
+        $this->assertStringContainsString("admin_icon('key')", $settings);
+        $this->assertStringContainsString('id="add-ingredient-form"', $ingredients);
+        $this->assertStringContainsString('id="hero-upload-form"', $hero);
+        $this->assertStringContainsString('category-icon-button .action-button-label', $css);
     }
 
     public static function provideAdminFilesWithSitePreview(): array
     {
         return [
-            ['index.php'],
+            ['dashboard.php'],
+            ['products.php'],
             ['manage_hero.php'],
             ['settings.php'],
             ['activity_log.php'],
@@ -310,6 +430,9 @@ class AdminRefactorTest extends TestCase
             ['add_product.php'],
             ['edit_product.php'],
             ['edit_item.php'],
+            ['hpp_recipes.php'],
+            ['hpp_edit.php'],
+            ['hpp_ingredients.php'],
         ];
     }
 }

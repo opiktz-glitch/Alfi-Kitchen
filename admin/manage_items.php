@@ -78,28 +78,26 @@ $items = $stmt->fetchAll();
         <?php include __DIR__ . '/sidebar.php'; ?>
         <div class="admin-main">
             <header class="admin-header">
-                <h2>Alfi Kitchen Admin</h2>
+                <h2>Kelola Varian Produk</h2>
                 <div class="admin-header-actions">
-                    <a href="../" target="_blank" rel="noopener noreferrer" class="btn-site-preview">Lihat Website ↗</a>
-                    <a href="index.php" class="btn btn-cancel">Dashboard</a>
-                    <a href="logout.php" class="btn btn-danger">Logout</a>
+                    <a href="../" target="_blank" rel="noopener noreferrer" class="btn-site-preview"><?= admin_icon('external') ?>Lihat Website</a>
+                    <a href="logout.php" class="btn btn-danger btn-with-icon"><?= admin_icon('logout') ?>Logout</a>
                 </div>
             </header>
-            <?php include __DIR__ . '/breadcrumb.php'; ?>
             <div class="admin-container">
         
         <div class="header-action">
             <h2>Kelola Jenis Produk: <?= htmlspecialchars($main_product['name']) ?></h2>
-            <a href="index.php" class="btn btn-cancel">← Kembali ke Kategori</a>
+            <a href="products.php" class="btn btn-cancel btn-with-icon"><?= admin_icon('back') ?>Kembali ke Kategori</a>
         </div>
         <?php include __DIR__ . '/flash_message.php'; ?>
 
         <div class="form-card">
-            <h3>Tambah Jenis Produk Baru</h3>
+            <h3>Tambah Varian</h3>
             <?php if ($uploadError): ?>
-                <p role="alert" style="color:#721c24;"><?= htmlspecialchars($uploadError, ENT_QUOTES, 'UTF-8') ?></p>
+                <p role="alert" class="text-error"><?= htmlspecialchars($uploadError, ENT_QUOTES, 'UTF-8') ?></p>
             <?php endif; ?>
-            <form id="add-item-form" action="manage_items.php?product_id=<?= $product_id ?>" method="POST" enctype="multipart/form-data" class="admin-form-grid">
+            <form id="add-item-form" action="manage_items.php?product_id=<?= $product_id ?>" method="POST" enctype="multipart/form-data" class="admin-form-grid" data-submit-lock>
                 <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
                 <div class="form-group">
                     <label>Nama Varian/Jenis</label>
@@ -114,14 +112,14 @@ $items = $stmt->fetchAll();
                     <textarea name="description" rows="3" placeholder="Tuliskan deskripsi singkat varian ini..."></textarea>
                 </div>
                 <div class="form-group form-span-full">
-                    <label>Gambar <span style="font-weight:normal; color:#888; font-size:0.85rem;">(Opsional) - Rekomendasi rasio gambar 1:1 (Persegi)</span></label>
+                    <label>Gambar <span class="text-muted">(Opsional) - Rekomendasi rasio gambar 1:1 (Persegi)</span></label>
                     <input type="file" name="image" accept="image/jpeg,image/png,image/gif,image/webp">
                 </div>
-                <button type="submit" name="add_item" class="btn btn-primary">Simpan Varian</button>
+                    <button type="submit" name="add_item" class="btn btn-primary btn-with-icon"><?= admin_icon('add') ?>Tambah Varian</button>
             </form>
         </div>
 
-        <h3 style="margin-top: 40px; margin-bottom: 10px;">Daftar Jenis Produk</h3>
+            <h3 class="section-title">Daftar Jenis Produk</h3>
         <div class="table-responsive">
             <table>
                 <thead>
@@ -139,7 +137,7 @@ $items = $stmt->fetchAll();
                                 <div class="category-empty">
                                     <h3>Belum ada varian produk</h3>
                                     <p>Gunakan formulir di atas untuk menambahkan varian pertama.</p>
-                                    <a href="#add-item-form" class="btn btn-primary">+ Tambah Varian</a>
+                                    <a href="#add-item-form" class="btn btn-primary btn-with-icon"><?= admin_icon('add') ?>Tambah Varian</a>
                                 </div>
                             </td>
                         </tr>
@@ -150,17 +148,17 @@ $items = $stmt->fetchAll();
                             <?php if($item['image']): ?>
                                 <img src="../<?= htmlspecialchars($item['image']) ?>" class="thumb">
                             <?php else: ?>
-                                <span style="color:#aaa;">-</span>
+                                <span class="text-muted">—</span>
                             <?php endif; ?>
                         </td>
-                        <td style="font-weight:600; font-size:1.05rem;"><?= htmlspecialchars($item['name']) ?></td>
-                        <td style="color:var(--accent); font-weight:bold;">Rp<?= number_format($item['price'], 0, ',', '.') ?></td>
+                        <td class="table-cell-emphasis"><?= htmlspecialchars($item['name']) ?></td>
+                        <td class="table-cell-price">Rp<?= number_format($item['price'], 0, ',', '.') ?></td>
                         <td>
-                            <a href="edit_item.php?id=<?= $item['id'] ?>&product_id=<?= $product_id ?>" class="btn btn-cancel btn-icon-only" aria-label="Edit varian <?= htmlspecialchars($item['name'], ENT_QUOTES, 'UTF-8') ?>" title="Edit varian"><?= admin_icon('edit') ?></a>
-                            <form method="POST" action="manage_items.php?product_id=<?= $product_id ?>" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus jenis ini?')">
+                            <a href="edit_item.php?id=<?= $item['id'] ?>&product_id=<?= $product_id ?>" class="btn btn-cancel btn-icon-only" aria-label="Edit varian <?= htmlspecialchars($item['name'], ENT_QUOTES, 'UTF-8') ?>" title="Edit varian"><?= admin_icon('edit') ?><span class="action-button-label">Edit</span></a>
+                            <form method="POST" action="manage_items.php?product_id=<?= $product_id ?>" class="inline-action-form" data-submit-lock onsubmit="return confirm(<?= htmlspecialchars(json_encode('Hapus varian "' . $item['name'] . '"? Varian dan harga jualnya akan dihapus dari website. Tindakan ini tidak dapat dibatalkan.', JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_TAG | JSON_HEX_AMP), ENT_QUOTES, 'UTF-8') ?>)">
                                 <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
                                 <input type="hidden" name="delete" value="<?= (int) $item['id'] ?>">
-                                <button type="submit" class="btn btn-danger btn-icon-only" aria-label="Hapus varian <?= htmlspecialchars($item['name'], ENT_QUOTES, 'UTF-8') ?>" title="Hapus varian"><?= admin_icon('delete') ?></button>
+                                <button type="submit" class="btn btn-danger btn-icon-only" aria-label="Hapus varian <?= htmlspecialchars($item['name'], ENT_QUOTES, 'UTF-8') ?>" title="Hapus varian"><?= admin_icon('delete') ?><span class="action-button-label">Hapus</span></button>
                             </form>
                         </td>
                     </tr>

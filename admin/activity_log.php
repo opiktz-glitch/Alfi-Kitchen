@@ -51,24 +51,22 @@ $logs = array_reverse($logs);
             <header class="admin-header">
                 <h2>Log Aktivitas Admin</h2>
                 <div class="admin-header-actions">
-                    <a href="../" target="_blank" rel="noopener noreferrer" class="btn-site-preview">Lihat Website ↗</a>
-                    <a href="index.php" class="btn btn-cancel">Dashboard</a>
-                    <a href="logout.php" class="btn btn-danger">Logout</a>
+                    <a href="../" target="_blank" rel="noopener noreferrer" class="btn-site-preview"><?= admin_icon('external') ?>Lihat Website</a>
+                    <a href="logout.php" class="btn btn-danger btn-with-icon"><?= admin_icon('logout') ?>Logout</a>
                 </div>
             </header>
-            <?php include __DIR__ . '/breadcrumb.php'; ?>
             <div class="admin-container">
         <?php if ($message): ?>
-            <div class="<?= $messageClass ?>" style="margin-bottom: 16px;"><?= htmlspecialchars($message) ?></div>
+            <div class="<?= $messageClass ?> admin-flash"><?= htmlspecialchars($message) ?></div>
         <?php endif; ?>
 
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
-            <p class="summary" style="margin: 0;">Menampilkan <?= count($logs) ?> aktivitas terbaru (maksimal <?= $maxEntries ?> entri).</p>
+        <div class="activity-toolbar">
+            <p class="activity-summary">Menampilkan <?= count($logs) ?> aktivitas terbaru (maksimal <?= $maxEntries ?> entri).</p>
             <?php if (!empty($logs)): ?>
-                <form method="POST" onsubmit="return confirm('Apakah Anda yakin ingin mengosongkan seluruh riwayat log aktivitas?');" style="margin: 0;">
+                <form method="POST" class="activity-clear-form" data-submit-lock onsubmit="return confirm('Hapus seluruh riwayat log aktivitas? Tindakan ini tidak dapat dibatalkan.');">
                     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token'] ?? '') ?>">
                     <input type="hidden" name="clear_log" value="1">
-                    <button type="submit" class="btn btn-danger">Bersihkan Log</button>
+                    <button type="submit" class="btn btn-danger btn-with-icon"><?= admin_icon('delete') ?>Bersihkan Log</button>
                 </form>
             <?php endif; ?>
         </div>
