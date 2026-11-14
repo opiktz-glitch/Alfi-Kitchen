@@ -134,6 +134,9 @@ kembali pada konfigurasi hosting sebelum perubahan produksi.
 
 ## P3 — UI panel admin
 
+- [x] **Modernisasi dan peremajaan UI panel admin (Fase 1 – 4).**
+  Implementasikan perbaikan antarmuka yang minimalis, ramah pengguna, hemat halaman (*context-preserving*),
+  dan ergonomis di mobile. Detail lengkap rencana kerja dicatat di [ADMIN_UI_REDESIGN.md](file:///c:/xampp/htdocs/Alfi_Kitchen/docs/ADMIN_UI_REDESIGN.md).
 - [x] **Pisahkan dashboard dari pengelolaan produk.** Dashboard kini
   menampilkan ringkasan kategori, varian, resep HPP, master bahan, dan aktivitas
   terbaru; pengelolaan kategori tersedia pada menu Produk.

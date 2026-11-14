@@ -34,5 +34,53 @@ class HppIngredientPageTest extends TestCase
         $this->assertStringContainsString('HPP_ADD_INGREDIENT', $page);
         $this->assertStringContainsString('HPP_DELETE_INGREDIENT', $page);
         $this->assertStringContainsString("'href' => 'hpp_ingredients.php'", $sidebar);
+        $this->assertStringContainsString('$hasExplicitId = $rawId !== null && $rawId !== \'\' && $rawId !== \'0\'', $page);
+    }
+
+    public function testIngredientIdResolutionAllowsZeroForNewItemsAndRejectsInvalidId(): void
+    {
+        $resolveId = function (?string $rawId): array {
+            $hasExplicitId = $rawId !== null && $rawId !== '' && $rawId !== '0';
+            $postedId = !$hasExplicitId
+                ? 0
+                : (is_scalar($rawId) ? filter_var($rawId, FILTER_VALIDATE_INT) : false);
+            if ($hasExplicitId && ($postedId === false || $postedId < 1)) {
+                throw new InvalidArgumentException('ID bahan tidak valid.');
+            }
+            return [
+                'editingId' => (int) $postedId,
+                'isNew' => $postedId === 0,
+            ];
+        };
+
+        $resultZero = $resolveId('0');
+        $this->assertSame(0, $resultZero['editingId']);
+        $this->assertTrue($resultZero['isNew']);
+
+        $resultNull = $resolveId(null);
+        $this->assertSame(0, $resultNull['editingId']);
+        $this->assertTrue($resultNull['isNew']);
+
+        $resultEmpty = $resolveId('');
+        $this->assertSame(0, $resultEmpty['editingId']);
+        $this->assertTrue($resultEmpty['isNew']);
+
+        $resultValid = $resolveId('5');
+        $this->assertSame(5, $resultValid['editingId']);
+        $this->assertFalse($resultValid['isNew']);
+
+        try {
+            $resolveId('abc');
+            $this->fail('ID bahan non-numerik harus ditolak.');
+        } catch (InvalidArgumentException $e) {
+            $this->assertSame('ID bahan tidak valid.', $e->getMessage());
+        }
+
+        try {
+            $resolveId('-1');
+            $this->fail('ID bahan negatif harus ditolak.');
+        } catch (InvalidArgumentException $e) {
+            $this->assertSame('ID bahan tidak valid.', $e->getMessage());
+        }
     }
 }

@@ -49,7 +49,7 @@ $hero_images = $stmt->fetchAll();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>Kelola Slider Animasi - Alfi Kitchen</title>
-    <link rel="stylesheet" href="assets/css/admin.css">
+    <link rel="stylesheet" href="assets/css/admin.css?v=<?= (int) filemtime(__DIR__ . '/assets/css/admin.css') . '-' . (int) filesize(__DIR__ . '/assets/css/admin.css') ?>">
 </head>
 <body>
     <div class="admin-layout">
@@ -59,14 +59,21 @@ $hero_images = $stmt->fetchAll();
                 <h2>Kelola Slider</h2>
                 <div class="admin-header-actions">
                     <a href="../" target="_blank" rel="noopener noreferrer" class="btn-site-preview"><?= admin_icon('external') ?>Lihat Website</a>
-                    <a href="logout.php" class="btn btn-danger btn-with-icon"><?= admin_icon('logout') ?>Logout</a>
+                    <a href="logout.php" class="btn btn-danger btn-with-icon admin-header-logout"><?= admin_icon('logout') ?>Logout</a>
                 </div>
             </header>
             <div class="admin-container">
+                <nav class="admin-subnav" aria-label="Navigasi Pengaturan Tampilan">
+                    <a href="settings.php" class="admin-subnav-link"><?= admin_icon('settings') ?> Pengaturan Umum</a>
+                    <a href="manage_hero.php" class="admin-subnav-link is-active"><?= admin_icon('slider') ?> Kelola Slider Beranda</a>
+                </nav>
         
         <div class="header-action">
             <h2>Gambar Homepage</h2>
-            <a href="dashboard.php" class="btn btn-cancel btn-with-icon"><?= admin_icon('back') ?>Kembali ke Dashboard</a>
+            <div class="header-action-buttons">
+                <button type="button" class="btn btn-primary btn-with-icon admin-drawer-toggle" data-target="drawer-hero-upload" aria-expanded="<?= !empty($error) ? 'true' : 'false' ?>"><?= admin_icon('upload') ?><span>Unggah Gambar Baru</span></button>
+                <a href="settings.php" class="btn btn-cancel btn-with-icon"><?= admin_icon('back') ?>Kembali ke Pengaturan</a>
+            </div>
         </div>
         
         <?php if($error): ?>
@@ -76,7 +83,11 @@ $hero_images = $stmt->fetchAll();
             <div class="alert alert-success"><?= htmlspecialchars($success) ?></div>
         <?php endif; ?>
 
-        <div class="form-card">
+        <div id="drawer-hero-upload" class="admin-drawer-card form-card" <?= empty($error) ? 'hidden' : '' ?>>
+            <div class="admin-drawer-header">
+                <h3>Unggah Gambar Slider</h3>
+                <button type="button" class="btn-drawer-close" data-target="drawer-hero-upload" aria-label="Tutup formulir">✕</button>
+            </div>
             <form id="hero-upload-form" action="" method="POST" enctype="multipart/form-data" data-submit-lock>
                 <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
                 <div class="form-group">
@@ -108,18 +119,18 @@ $hero_images = $stmt->fetchAll();
                                 <div class="category-empty">
                                     <h3>Belum ada gambar slider</h3>
                                     <p>Sistem menggunakan gambar bawaan sampai Anda menambahkan gambar sendiri.</p>
-                                    <a href="#hero-upload-form" class="btn btn-primary btn-with-icon"><?= admin_icon('upload') ?>Unggah Gambar Slider</a>
+                                    <button type="button" class="btn btn-primary btn-with-icon admin-drawer-toggle" data-target="drawer-hero-upload"><?= admin_icon('upload') ?>Unggah Gambar Slider</button>
                                 </div>
                             </td>
                         </tr>
                     <?php endif; ?>
                     <?php foreach ($hero_images as $h): ?>
                     <tr>
-                        <td>
+                        <td class="table-cell-center">
                             <img src="../<?= htmlspecialchars($h['image']) ?>" class="thumb thumb-hero" alt="Hero Slide">
                         </td>
                         <td class="text-muted"><?= htmlspecialchars($h['image']) ?></td>
-                        <td>
+                        <td class="table-cell-actions">
                             <form method="POST" action="manage_hero.php" class="inline-action-form" data-submit-lock onsubmit="return confirm(<?= htmlspecialchars(json_encode('Hapus gambar slider "' . basename((string) $h['image']) . '"? Gambar ini akan dihapus dari homepage dan penyimpanan.', JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_TAG | JSON_HEX_AMP), ENT_QUOTES, 'UTF-8') ?>)">
                                 <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
                                 <input type="hidden" name="delete" value="<?= (int) $h['id'] ?>">

@@ -42,7 +42,7 @@ $logs = array_reverse($logs);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Log Aktivitas Admin - Alfi Kitchen</title>
-    <link rel="stylesheet" href="assets/css/admin.css">
+    <link rel="stylesheet" href="assets/css/admin.css?v=<?= (int) filemtime(__DIR__ . '/assets/css/admin.css') . '-' . (int) filesize(__DIR__ . '/assets/css/admin.css') ?>">
 </head>
 <body>
     <div class="admin-layout">
@@ -52,10 +52,14 @@ $logs = array_reverse($logs);
                 <h2>Log Aktivitas Admin</h2>
                 <div class="admin-header-actions">
                     <a href="../" target="_blank" rel="noopener noreferrer" class="btn-site-preview"><?= admin_icon('external') ?>Lihat Website</a>
-                    <a href="logout.php" class="btn btn-danger btn-with-icon"><?= admin_icon('logout') ?>Logout</a>
+                    <a href="logout.php" class="btn btn-danger btn-with-icon admin-header-logout"><?= admin_icon('logout') ?>Logout</a>
                 </div>
             </header>
             <div class="admin-container">
+                <nav class="admin-subnav" aria-label="Navigasi Pengaturan dan Sistem">
+                    <a href="settings.php" class="admin-subnav-link"><?= admin_icon('settings') ?> Pengaturan Toko</a>
+                    <a href="activity_log.php" class="admin-subnav-link is-active"><?= admin_icon('log') ?> Log Aktivitas</a>
+                </nav>
         <?php if ($message): ?>
             <div class="<?= $messageClass ?> admin-flash"><?= htmlspecialchars($message) ?></div>
         <?php endif; ?>
@@ -83,8 +87,8 @@ $logs = array_reverse($logs);
                         <?php foreach ($logs as $line): ?>
                             <?php $parts = explode(' | ', $line, 3); ?>
                             <tr>
-                                <td><?= htmlspecialchars($parts[0] ?? '', ENT_QUOTES, 'UTF-8') ?></td>
-                                <td><?= htmlspecialchars($parts[1] ?? 'LOG', ENT_QUOTES, 'UTF-8') ?></td>
+                                <td class="table-cell-center"><?= htmlspecialchars($parts[0] ?? '', ENT_QUOTES, 'UTF-8') ?></td>
+                                <td class="table-cell-center"><?= htmlspecialchars($parts[1] ?? 'LOG', ENT_QUOTES, 'UTF-8') ?></td>
                                 <td><?= htmlspecialchars($parts[2] ?? $line, ENT_QUOTES, 'UTF-8') ?></td>
                             </tr>
                         <?php endforeach; ?>

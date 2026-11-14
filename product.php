@@ -175,7 +175,7 @@ include 'header.php';
         
         <!-- Harga di Bawah -->
         <p class="product-variant-price">
-            Rp <?= number_format($rp['price'], 0, ',', '.') ?>
+            Rp <?= format_decimal(ceil((float) $rp['price']), 0) ?>
         </p>
 
         <?php if ($wa_footer_number): ?>

@@ -57,18 +57,17 @@ $recipes = $schemaReady ? hpp_get_recipe_list($pdo) : [];
     <meta name="robots" content="noindex, nofollow">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Daftar Resep HPP - Alfi Kitchen</title>
-    <link rel="stylesheet" href="assets/css/admin.css">
+    <link rel="stylesheet" href="assets/css/admin.css?v=<?= (int) filemtime(__DIR__ . '/assets/css/admin.css') . '-' . (int) filesize(__DIR__ . '/assets/css/admin.css') ?>">
 </head>
 <body>
     <div class="admin-layout">
         <?php include __DIR__ . '/sidebar.php'; ?>
         <div class="admin-main">
             <header class="admin-header">
-                <h2>Daftar Resep HPP</h2>
+                <h2>Kalkulator HPP</h2>
                 <div class="admin-header-actions">
                     <a href="../" target="_blank" rel="noopener noreferrer" class="btn-site-preview"><?= admin_icon('external') ?>Lihat Website</a>
-                    <a href="hpp_edit.php" class="btn btn-primary btn-with-icon"><?= admin_icon('add') ?>Buat Resep</a>
-                    <a href="logout.php" class="btn btn-danger btn-with-icon"><?= admin_icon('logout') ?>Logout</a>
+                    <a href="logout.php" class="btn btn-danger btn-with-icon admin-header-logout"><?= admin_icon('logout') ?>Logout</a>
                 </div>
             </header>
             <main class="admin-container hpp-list-page">
@@ -81,7 +80,16 @@ $recipes = $schemaReady ? hpp_get_recipe_list($pdo) : [];
                         </div>
                     </div>
                 <?php else: ?>
-                    <p class="hpp-help-text">Harga publik hanya ditampilkan sebagai referensi. Buka resep untuk mengubah kalkulasi; perubahan HPP tidak mengubah harga jual produk.</p>
+                    <div class="master-toolbar">
+                        <div class="master-search">
+                            <input type="search" id="recipe-search" placeholder="Cari resep atau varian..." class="form-control form-control-sm" autocomplete="off">
+                        </div>
+                        <div class="master-toolbar-actions">
+                            <a href="hpp_edit.php" class="btn btn-primary btn-sm btn-with-icon">
+                                <?= admin_icon('add') ?><span>Buat Resep HPP</span>
+                            </a>
+                        </div>
+                    </div>
                     <div class="table-responsive hpp-recipe-list-wrap">
                         <table class="hpp-recipe-list-table">
                             <thead>
@@ -110,7 +118,7 @@ $recipes = $schemaReady ? hpp_get_recipe_list($pdo) : [];
                                     $recipeId = (int) $recipe['id'];
                                     $recipeLabel = trim((string) $recipe['name'] . ((string) $recipe['variant'] !== '' ? ' — ' . (string) $recipe['variant'] : ''));
                                     ?>
-                                    <tr>
+                                    <tr class="recipe-data-row" data-recipe-id="<?= $recipeId ?>">
                                         <td data-label="Nama resep / varian">
                                             <strong><?= $escape($recipe['name']) ?></strong>
                                             <?php if ((string) $recipe['variant'] !== ''): ?>
@@ -123,24 +131,24 @@ $recipes = $schemaReady ? hpp_get_recipe_list($pdo) : [];
                                                 </small>
                                             <?php endif; ?>
                                         </td>
-                                        <td data-label="HPP per jar">Rp<?= number_format((int) $recipe['hpp_per_jar'], 0, ',', '.') ?></td>
-                                        <td data-label="Harga jual saat ini">
+                                        <td data-label="HPP per jar" class="table-cell-center">Rp <?= format_decimal(ceil((float) $recipe['hpp_per_jar']), 0) ?></td>
+                                        <td data-label="Harga jual saat ini" class="table-cell-center">
                                             <?php if ($recipe['public_price'] !== null): ?>
-                                                Rp<?= number_format((float) $recipe['public_price'], 0, ',', '.') ?>
+                                                Rp <?= format_decimal(ceil((float) $recipe['public_price']), 0) ?>
                                             <?php else: ?>
                                                 <span class="hpp-muted-value">—</span>
                                             <?php endif; ?>
                                         </td>
-                                        <td data-label="Status bahan">
+                                        <td data-label="Status bahan" class="table-cell-center">
                                             <?php if ($recipe['ingredient_prices_changed']): ?>
                                                 <span class="hpp-status-badge is-changed">Harga bahan berubah</span>
                                             <?php else: ?>
                                                 <span class="hpp-status-badge is-current">Sesuai snapshot</span>
                                             <?php endif; ?>
                                         </td>
-                                        <td data-label="Aksi">
+                                        <td data-label="Aksi" class="table-cell-actions">
                                             <div class="hpp-recipe-actions">
-                                                <a href="hpp_edit.php?id=<?= $recipeId ?>" class="category-icon-button category-action-primary" aria-label="Buka resep" title="Buka resep"><?= admin_icon('edit') ?>Buka</a>
+                                                <a href="hpp_edit.php?id=<?= $recipeId ?>" class="category-icon-button category-action-primary" aria-label="Edit resep" title="Edit resep"><?= admin_icon('edit') ?>Edit</a>
                                                 <form method="post" action="hpp_recipes.php" class="hpp-inline-form" data-submit-lock>
                                                     <input type="hidden" name="csrf_token" value="<?= $escape(generate_csrf_token()) ?>">
                                                     <input type="hidden" name="action" value="duplicate_recipe">
@@ -160,6 +168,20 @@ $recipes = $schemaReady ? hpp_get_recipe_list($pdo) : [];
                             </tbody>
                         </table>
                     </div>
+
+                    <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        var search = document.getElementById('recipe-search');
+                        if (!search) return;
+                        search.addEventListener('input', function () {
+                            var q = search.value.toLowerCase().trim();
+                            document.querySelectorAll('.recipe-data-row').forEach(function (row) {
+                                var text = (row.textContent || '').toLowerCase();
+                                row.style.display = (!q || text.indexOf(q) !== -1) ? '' : 'none';
+                            });
+                        });
+                    });
+                    </script>
                 <?php endif; ?>
             </main>
         </div>

@@ -159,4 +159,27 @@ class SeoAndRoutingTest extends TestCase
         $this->assertStringContainsString('User-agent: *', $content);
         $this->assertStringContainsString('Sitemap:', $content);
     }
+
+    public function testFormatDecimalAndRupiahOmitsTrailingZeroesAndCapsAtTwoDecimals(): void
+    {
+        require_once __DIR__ . '/../../includes/seo_helpers.php';
+
+        // Whole numbers must omit ,00
+        $this->assertSame('15.000', format_decimal(15000));
+        $this->assertSame('15.000', format_decimal(15000.00));
+        $this->assertSame('0', format_decimal(0));
+        $this->assertSame('100', format_decimal('100.00'));
+
+        // Decimals up to 2 places
+        $this->assertSame('15.000,5', format_decimal(15000.5));
+        $this->assertSame('15.000,25', format_decimal(15000.25));
+        $this->assertSame('12,35', format_decimal(12.346));
+        $this->assertSame('12,34', format_decimal(12.344));
+        $this->assertSame('12', format_decimal(12.0001));
+
+        // format_rupiah wrapper
+        $this->assertSame('Rp15.000', format_rupiah(15000));
+        $this->assertSame('Rp15.000,5', format_rupiah(15000.5));
+        $this->assertSame('15.000,25', format_rupiah(15000.25, 2, false));
+    }
 }

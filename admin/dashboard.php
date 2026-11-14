@@ -12,6 +12,17 @@ $hppReady = count(array_diff($hppTables, $existingTables)) === 0;
 $recipeCount = $hppReady ? (int) $pdo->query('SELECT COUNT(*) FROM hpp_recipes')->fetchColumn() : null;
 $ingredientCount = $hppReady ? (int) $pdo->query('SELECT COUNT(*) FROM hpp_ingredients')->fetchColumn() : null;
 
+$staleRecipeCount = 0;
+if ($hppReady) {
+    require_once __DIR__ . '/helpers/hpp_recipe_repository.php';
+    $allHppRecipes = hpp_get_recipe_list($pdo);
+    foreach ($allHppRecipes as $r) {
+        if (!empty($r['ingredient_prices_changed'])) {
+            $staleRecipeCount++;
+        }
+    }
+}
+
 $recentActivities = [];
 $logFile = __DIR__ . '/../logs/admin_activity.log';
 if (is_readable($logFile)) {
@@ -38,7 +49,7 @@ if (is_readable($logFile)) {
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="robots" content="noindex, nofollow">
     <title>Dashboard Admin - Alfi Kitchen</title>
-    <link rel="stylesheet" href="assets/css/admin.css">
+    <link rel="stylesheet" href="assets/css/admin.css?v=<?= (int) filemtime(__DIR__ . '/assets/css/admin.css') . '-' . (int) filesize(__DIR__ . '/assets/css/admin.css') ?>">
 </head>
 <body>
     <div class="admin-layout">
@@ -48,11 +59,19 @@ if (is_readable($logFile)) {
                 <h2>Dashboard</h2>
                 <div class="admin-header-actions">
                     <a href="../" target="_blank" rel="noopener noreferrer" class="btn-site-preview"><?= admin_icon('external') ?>Lihat Website</a>
-                    <a href="logout.php" class="btn btn-danger btn-with-icon"><?= admin_icon('logout') ?>Logout</a>
+                    <a href="logout.php" class="btn btn-danger btn-with-icon admin-header-logout"><?= admin_icon('logout') ?>Logout</a>
                 </div>
             </header>
             <main class="admin-container admin-dashboard">
                 <?php include __DIR__ . '/flash_message.php'; ?>
+                <?php if ($staleRecipeCount > 0): ?>
+                    <div class="alert alert-warning dashboard-alert" role="alert">
+                        <div class="dashboard-alert-text">
+                            <strong>Penyesuaian Biaya Resep:</strong> Ada <?= $staleRecipeCount ?> resep yang harga bahan bakunya berubah di Master Bahan. Silakan tinjau kalkulasi HPP.
+                        </div>
+                        <a href="hpp_recipes.php" class="btn btn-secondary btn-sm btn-with-icon"><?= admin_icon('calculator') ?><span>Tinjau Resep</span></a>
+                    </div>
+                <?php endif; ?>
                 <section class="admin-dashboard-stats" aria-label="Ringkasan katalog">
                     <article class="admin-stat">
                         <span class="admin-stat-label">Kategori produk</span>
@@ -135,8 +154,8 @@ if (is_readable($logFile)) {
                                 <tbody>
                                     <?php foreach ($recentActivities as $activity): ?>
                                         <tr>
-                                            <td><?= htmlspecialchars($activity['time'], ENT_QUOTES, 'UTF-8') ?></td>
-                                            <td><?= htmlspecialchars($activity['action'], ENT_QUOTES, 'UTF-8') ?></td>
+                                            <td class="table-cell-center"><?= htmlspecialchars($activity['time'], ENT_QUOTES, 'UTF-8') ?></td>
+                                            <td class="table-cell-center"><?= htmlspecialchars($activity['action'], ENT_QUOTES, 'UTF-8') ?></td>
                                             <td><?= htmlspecialchars($activity['details'], ENT_QUOTES, 'UTF-8') ?></td>
                                         </tr>
                                     <?php endforeach; ?>

@@ -67,6 +67,33 @@ function consume_admin_flash(): ?array {
     return $flash;
 }
 
+if (!function_exists('format_decimal')) {
+    /**
+     * Format angka desimal: maksimal 2 angka di belakang koma, hilangkan ',00' jika bulat.
+     */
+    function format_decimal($number, int $maxDecimals = 2): string {
+        if (!is_numeric($number)) {
+            return '0';
+        }
+        $val = round((float) $number, $maxDecimals);
+        $formatted = number_format($val, $maxDecimals, ',', '.');
+        if (str_contains($formatted, ',')) {
+            $formatted = rtrim(rtrim($formatted, '0'), ',');
+        }
+        return $formatted;
+    }
+}
+
+if (!function_exists('format_rupiah')) {
+    /**
+     * Format mata uang rupiah: maksimal 2 desimal, tanpa ',00' jika bulat.
+     */
+    function format_rupiah($number, int $maxDecimals = 2, bool $withPrefix = true): string {
+        $prefix = $withPrefix ? 'Rp' : '';
+        return $prefix . format_decimal($number, $maxDecimals);
+    }
+}
+
 function admin_icon(string $name): string {
     $paths = [
         'add' => '<path d="M12 5v14M5 12h14"/>',
@@ -81,6 +108,7 @@ function admin_icon(string $name): string {
         'duplicate' => '<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/>',
         'external' => '<path d="M14 3h7v7M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>',
         'image' => '<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/>',
+        'info' => '<circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/>',
         'key' => '<circle cx="8" cy="15" r="5"/><path d="m21 2-9.6 9.6M15.5 7.5l3 3L22 7l-3-3"/>',
         'log' => '<path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 6h.01M4 12h.01M4 18h.01"/>',
         'logout' => '<path d="M10 17l5-5-5-5M15 12H3"/><path d="M12 3h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6"/>',

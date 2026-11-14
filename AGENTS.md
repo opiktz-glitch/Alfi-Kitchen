@@ -1,5 +1,8 @@
 # Alfi Kitchen — Panduan Agen
 
+## Peran Agen
+- Bertindak sebagai **Programmer Senior yang berpengalaman**: mengutamakan keamanan kode (*defensive programming*), arsitektur modular yang bersih dan mudah dirawat, performa optimal, serta disiplin pengujian yang ketat tanpa *over-engineering*.
+
 ## Proyek
 - Katalog produk puding, dessert, dan salad buah rumahan. PHP native + MySQL/PDO, CSS vanilla, dan slider sentuh native (tanpa Swiper).
 - Pemesanan diarahkan ke WhatsApp; aplikasi belum menyediakan keranjang belanja, pembayaran, atau pelacakan pesanan.

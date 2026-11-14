@@ -189,8 +189,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         . ', new_price=' . $applied['new_price']
                     );
                     set_admin_flash(
-                        'Harga varian "' . $applied['item_name'] . '" berhasil diperbarui menjadi Rp'
-                        . number_format($applied['new_price'], 0, ',', '.') . '.'
+                        'Harga varian "' . $applied['item_name'] . '" berhasil diperbarui menjadi Rp '
+                        . format_decimal(ceil((float) $applied['new_price']), 0) . '.'
                     );
                     header('Location: hpp_edit.php?id=' . $recipeId);
                     exit;
@@ -256,6 +256,19 @@ $ingredientById = [];
 foreach ($ingredients as $ingredient) {
     $ingredientById[(int) $ingredient['id']] = $ingredient;
 }
+$cleanDecimal = static function ($val, int $maxDecimals = 2): string {
+    if ($val === null || $val === '') {
+        return '';
+    }
+    $strVal = str_replace(',', '.', trim((string) $val));
+    if (!is_numeric($strVal)) {
+        return (string) $val;
+    }
+    $rounded = round((float) $strVal, $maxDecimals);
+    $formatted = number_format($rounded, $maxDecimals, '.', '');
+    return str_contains($formatted, '.') ? rtrim(rtrim($formatted, '0'), '.') : $formatted;
+};
+
 foreach ($viewLines as &$viewLine) {
     if (!is_array($viewLine)) {
         continue;
@@ -265,6 +278,12 @@ foreach ($viewLines as &$viewLine) {
         ? filter_var($rawIngredientId, FILTER_VALIDATE_INT)
         : false;
     if ($postedIngredientId === false || $postedIngredientId < 1 || !isset($ingredientById[$postedIngredientId])) {
+        if (isset($viewLine['qty'])) {
+            $viewLine['qty'] = $cleanDecimal($viewLine['qty'], 2);
+        }
+        if (isset($viewLine['unit_cost'])) {
+            $viewLine['unit_cost'] = $cleanDecimal($viewLine['unit_cost'], 2);
+        }
         continue;
     }
     $rawLineId = $viewLine['id'] ?? null;
@@ -276,11 +295,22 @@ foreach ($viewLines as &$viewLine) {
         : null;
     $sameSavedIngredient = $savedLine !== null
         && (int) ($savedLine['ingredient_id'] ?? 0) === $postedIngredientId;
-    $viewLine['unit_cost'] = $sameSavedIngredient
+    $unitCost = $sameSavedIngredient
         ? $savedLine['unit_cost']
-        : number_format((float) $ingredientById[$postedIngredientId]['unit_cost'], 6, '.', '');
+        : $ingredientById[$postedIngredientId]['unit_cost'];
+    $viewLine['unit_cost'] = $cleanDecimal($unitCost, 2);
+    if (isset($viewLine['qty'])) {
+        $viewLine['qty'] = $cleanDecimal($viewLine['qty'], 2);
+    }
 }
 unset($viewLine);
+
+foreach ($viewCosts as &$viewCost) {
+    if (is_array($viewCost) && isset($viewCost['amount'])) {
+        $viewCost['amount'] = $cleanDecimal($viewCost['amount'], 2);
+    }
+}
+unset($viewCost);
 $csrfToken = generate_csrf_token();
 ?>
 <!DOCTYPE html>
@@ -300,8 +330,7 @@ $csrfToken = generate_csrf_token();
                 <h2><?= $recipeId === null ? 'Buat Resep HPP' : 'Edit Resep HPP' ?></h2>
                 <div class="admin-header-actions">
                     <a href="../" target="_blank" rel="noopener noreferrer" class="btn-site-preview"><?= admin_icon('external') ?>Lihat Website</a>
-                    <a href="hpp_recipes.php" class="btn btn-cancel btn-with-icon"><?= admin_icon('back') ?>Daftar Resep</a>
-                    <a href="logout.php" class="btn btn-danger btn-with-icon"><?= admin_icon('logout') ?>Logout</a>
+                    <a href="logout.php" class="btn btn-danger btn-with-icon admin-header-logout"><?= admin_icon('logout') ?>Logout</a>
                 </div>
             </header>
             <main class="admin-container hpp-editor">
@@ -321,107 +350,157 @@ $csrfToken = generate_csrf_token();
                         </div>
                     </div>
                 <?php else: ?>
-                <div class="alert hpp-editor-notice" role="note">
-                    Kalkulasi dan penyimpanan resep tidak mengubah harga jual di website. Harga publik hanya berubah setelah Anda meninjau dan mengonfirmasi penerapan harga.
-                </div>
+
                 <?php if ($changedIngredientPrices): ?>
-                    <div class="alert alert-error" role="alert">
-                        Harga master beberapa bahan berubah. Snapshot resep tetap dipakai sampai Anda memilih pembaruan snapshot secara eksplisit.
+                    <div class="alert alert-error hpp-slim-alert" role="alert">
+                        <span class="hpp-slim-alert-icon"><?= admin_icon('info') ?></span>
+                        <span class="hpp-slim-alert-text">Harga master beberapa bahan berubah. Snapshot resep tetap dipakai sampai Anda memilih pembaruan snapshot secara eksplisit.</span>
                     </div>
                 <?php endif; ?>
+                <div class="hpp-editor-tabs" role="tablist">
+                    <button type="button" class="hpp-editor-tab<?= $applyPreview === null ? ' is-active' : '' ?>" data-tab-target="tab-pane-materials" role="tab" aria-selected="<?= $applyPreview === null ? 'true' : 'false' ?>">
+                        <?= admin_icon('manage') ?> <span>1. Resep &amp; Bahan</span>
+                    </button>
+                    <button type="button" class="hpp-editor-tab<?= $applyPreview !== null ? ' is-active' : '' ?>" data-tab-target="tab-pane-costs-pricing" role="tab" aria-selected="<?= $applyPreview !== null ? 'true' : 'false' ?>">
+                        <?= admin_icon('calculator') ?> <span>2. Biaya &amp; Harga Jual</span>
+                        <?php if ($recipe !== null): ?>
+                            <span class="hpp-tab-badge">Jual</span>
+                        <?php endif; ?>
+                    </button>
+                </div>
+
                 <form method="post" action="hpp_edit.php<?= $recipeId === null ? '' : '?id=' . $recipeId ?>" id="hpp-recipe-form" data-submit-lock>
                     <input type="hidden" name="csrf_token" value="<?= $escape($csrfToken) ?>">
                     <input type="hidden" name="action" value="save_recipe">
                     <div class="hpp-editor-layout">
                     <div class="hpp-editor-inputs">
-                    <section class="form-card">
-                        <h3>Informasi Resep</h3>
-                        <div class="admin-form-grid">
-                            <div class="form-group">
-                                <label for="recipe-name">Nama resep</label>
-                                <input id="recipe-name" type="text" name="name" maxlength="120" required value="<?= $escape($value('name')) ?>">
+
+                    <div class="hpp-tab-pane" id="tab-pane-materials" data-tab-pane<?= $applyPreview !== null ? ' hidden' : '' ?>>
+                    <section class="form-card hpp-strip-card">
+                        <input type="hidden" name="round_step" value="<?= $escape($value('round_step', '1000')) ?>">
+                        <div class="hpp-strip-header">
+                            <div class="form-group hpp-strip-name">
+                                <label for="recipe-name">Nama Resep</label>
+                                <input id="recipe-name" type="text" name="name" maxlength="120" required value="<?= $escape($value('name')) ?>" placeholder="Nama resep...">
                             </div>
-                            <div class="form-group">
-                                <label for="recipe-variant">Varian (opsional)</label>
-                                <input id="recipe-variant" type="text" name="variant" maxlength="40" value="<?= $escape($value('variant')) ?>">
+                            <div class="form-group hpp-strip-variant">
+                                <label for="recipe-variant">Varian</label>
+                                <input id="recipe-variant" type="text" name="variant" maxlength="40" value="<?= $escape($value('variant')) ?>" placeholder="Varian (opsional)">
                             </div>
-                            <div class="form-group">
-                                <label for="recipe-yield">Hasil (jumlah jar)</label>
-                                <input id="recipe-yield" type="number" name="yield_jars" min="1" max="200" step="1" required value="<?= $escape($value('yield_jars', '1')) ?>">
+                            <div class="form-group hpp-strip-yield">
+                                <label for="recipe-yield">Jumlah Porsi / Kemasan</label>
+                                <input id="recipe-yield" type="number" name="yield_jars" min="1" max="200" step="1" required value="<?= $escape($value('yield_jars', '1')) ?>" placeholder="1">
                             </div>
-                            <div class="form-group">
-                                <label for="recipe-jar-ml">Ukuran jar (ml, opsional)</label>
-                                <input id="recipe-jar-ml" type="number" name="jar_ml" min="1" max="32767" step="1" value="<?= $escape($value('jar_ml')) ?>">
+                            <div class="form-group hpp-strip-jar-ml">
+                                <label for="recipe-jar-ml">Ukuran (ml/g)</label>
+                                <input id="recipe-jar-ml" type="number" name="jar_ml" min="1" max="32767" step="1" value="<?= $escape($value('jar_ml')) ?>" placeholder="Opsional">
                             </div>
-                            <div class="form-group">
-                                <label for="recipe-round-step">Pembulatan HPP resep (Rp)</label>
-                                <input id="recipe-round-step" type="number" name="round_step" min="1" max="2147483647" step="1" required value="<?= $escape($value('round_step', '1000')) ?>">
-                            </div>
-                            <div class="form-group form-span-full">
-                                <label for="recipe-note">Catatan (opsional)</label>
-                                <textarea id="recipe-note" name="note" maxlength="255" rows="2"><?= $escape($value('note')) ?></textarea>
+                            <div class="form-group hpp-strip-note">
+                                <label for="recipe-note">Catatan Resep (opsional)</label>
+                                <input id="recipe-note" type="text" name="note" maxlength="255" value="<?= $escape($value('note')) ?>" placeholder="Catatan internal resep...">
                             </div>
                         </div>
                     </section>
 
-                    <section class="form-card">
+                    <section class="form-card hpp-materials-card">
                         <div class="hpp-editor-section-heading">
-                            <div>
-                                <h3>Bahan</h3>
-                                <p class="hpp-help-text">Harga satuan bahan master dihitung dari data master. Item bebas memakai biaya satuan yang Anda masukkan.</p>
-                            </div>
-                            <button type="button" class="btn btn-cancel btn-with-icon" data-add-line><?= admin_icon('add') ?>Tambah Bahan</button>
+                            <h3>Bahan</h3>
+                            <a href="hpp_ingredients.php" target="_blank" class="hpp-link-subtle" title="Buka Master Bahan di tab baru"><?= admin_icon('manage') ?> <span>Master Bahan</span></a>
                         </div>
+
+                        <datalist id="master-ingredients-datalist">
+                            <?php foreach ($ingredients as $ing): ?>
+                                <option value="<?= $escape($ing['name']) ?>" data-id="<?= (int) $ing['id'] ?>" data-unit="<?= $escape($ing['base_unit']) ?>" data-unit-cost="<?= $escape($cleanDecimal($ing['unit_cost'], 2)) ?>">
+                                    <?= $escape($ing['name']) ?> (<?= $escape($ing['base_unit']) ?>)
+                                </option>
+                            <?php endforeach; ?>
+                        </datalist>
+
+                        <div class="hpp-quick-add-bar">
+                            <div class="hpp-quick-add-input-wrap">
+                                <input type="text" id="quick-ingredient-input" list="master-ingredients-datalist" placeholder="🔍 Ketik nama bahan master untuk tambah cepat (lalu tekan Enter)..." autocomplete="off">
+                            </div>
+                            <button type="button" class="btn btn-secondary btn-sm btn-with-icon" id="btn-quick-add"><?= admin_icon('add') ?><span>Tambah Cepat</span></button>
+                        </div>
+
+                        <div class="hpp-table-header hpp-materials-header" aria-hidden="true">
+                            <span>Bahan Baku</span>
+                            <span>Jumlah Digunakan</span>
+                            <span>Subtotal</span>
+                            <span></span>
+                        </div>
+
                         <div class="hpp-editor-rows" data-lines></div>
-                        <label class="hpp-refresh-snapshots">
+                        <p class="hpp-materials-footer-hint">
+                            Bahan belum ada di daftar? Tambahkan bahan baru di <a href="hpp_ingredients.php" target="_blank">Master Bahan</a>.
+                        </p>
+                        <label class="hpp-refresh-snapshots" title="Perbarui snapshot harga bahan master sebelum menyimpan"<?= $recipe === null ? ' hidden' : '' ?>>
                             <input type="checkbox" name="refresh_master_snapshots" value="1" data-refresh-snapshots<?= $refreshSnapshots ? ' checked' : '' ?>>
-                            Perbarui snapshot harga bahan master sebelum menyimpan
+                            <span>Gunakan harga master terbaru saat ini untuk resep ini</span>
                         </label>
-                        <p class="hpp-help-text">Snapshot lama hanya berubah jika opsi ini dicentang. Perubahan harga master tidak memperbarui resep secara otomatis.</p>
                     </section>
 
-                    <section class="form-card">
+                    <div class="hpp-editor-actions">
+                        <button type="submit" class="btn btn-primary btn-with-icon"><?= admin_icon('save') ?>Simpan Resep</button>
+                        <a href="hpp_recipes.php" class="btn btn-cancel btn-with-icon"><?= admin_icon('back') ?>Batal</a>
+                    </div>
+                    </div>
+
+                    <div class="hpp-tab-pane" id="tab-pane-costs-pricing" data-tab-pane<?= $applyPreview === null ? ' hidden' : '' ?>>
+                    <div class="alert hpp-editor-notice" role="note">
+                        <?= admin_icon('info') ?>
+                        <span>Kalkulasi dan penyimpanan resep tidak mengubah harga jual di website. Harga publik hanya berubah setelah Anda meninjau dan mengonfirmasi penerapan harga.</span>
+                    </div>
+                    <section class="form-card hpp-costs-card">
                         <div class="hpp-editor-section-heading">
-                            <div>
-                                <h3>Biaya Operasional</h3>
-                                <p class="hpp-help-text">Persentase dihitung dari total bahan; biaya per jar dikalikan hasil resep; biaya tetap dihitung sekali.</p>
-                            </div>
-                            <button type="button" class="btn btn-cancel btn-with-icon" data-add-cost><?= admin_icon('add') ?>Tambah Biaya</button>
+                            <h3>Biaya Operasional</h3>
+                            <button type="button" class="btn btn-cancel btn-sm btn-with-icon" data-add-cost><?= admin_icon('add') ?><span>Tambah Biaya</span></button>
+                        </div>
+                        <div class="hpp-table-header hpp-cost-table-header" aria-hidden="true">
+                            <span>Nama Biaya</span>
+                            <span>Jenis Perhitungan</span>
+                            <span>Nilai</span>
+                            <span>Subtotal Biaya</span>
+                            <span></span>
                         </div>
                         <div class="hpp-editor-rows" data-costs></div>
                     </section>
+
+                    <div class="hpp-editor-actions">
+                        <button type="submit" class="btn btn-primary btn-with-icon"><?= admin_icon('save') ?>Simpan Resep</button>
+                        <a href="hpp_recipes.php" class="btn btn-cancel btn-with-icon"><?= admin_icon('back') ?>Batal</a>
+                    </div>
+                    </div>
+
                     </div>
 
                     <section class="form-card hpp-calculation-card" aria-live="polite">
                         <h3>Pratinjau Kalkulasi</h3>
                         <p class="hpp-help-text">Pratinjau diperbarui saat data berubah. Nilai tersimpan tetap dihitung dan divalidasi ulang di server.</p>
                         <div class="hpp-calculation-summary">
-                            <div><span>Total bahan</span><strong data-total-material>Rp0</strong></div>
-                            <div><span>Biaya operasional</span><strong data-total-operational>Rp0</strong></div>
-                            <div><span>Total biaya aktual</span><strong data-total-actual>Rp0</strong></div>
-                            <div><span>HPP resep (dibulatkan ke atas)</span><strong data-hpp-recipe>Rp0</strong></div>
-                            <div><span>HPP per jar</span><strong data-hpp-per-jar>Rp0</strong></div>
+                            <div><span>Total bahan</span><strong data-total-material>Rp 0</strong></div>
+                            <div><span>Biaya operasional</span><strong data-total-operational>Rp 0</strong></div>
+                            <div><span>Total biaya aktual</span><strong data-total-actual>Rp 0</strong></div>
+                            <div><span>HPP resep (dibulatkan ke atas)</span><strong data-hpp-recipe>Rp 0</strong></div>
+                            <div><span>HPP per jar</span><strong data-hpp-per-jar>Rp 0</strong></div>
                         </div>
-                        <div class="table-responsive hpp-scenarios">
-                            <table>
-                                <thead>
-                                    <tr><th>Markup</th><th>Harga rekomendasi / jar</th><th>Selisih / jar</th><th>Margin aktual</th><th>Aksi</th></tr>
-                                </thead>
-                                <tbody data-scenarios></tbody>
-                            </table>
+                        <div class="hpp-scenarios-heading">
+                            <span>Skenario Markup &amp; Rekomendasi Harga</span>
                         </div>
+                        <div class="hpp-scenarios-list" data-scenarios></div>
+                        <?php if ($recipe === null): ?>
+                            <div class="hpp-scenarios-hint">
+                                <?= admin_icon('info') ?>
+                                <span>Simpan resep terlebih dahulu untuk dapat menerapkan harga rekomendasi ini ke produk website.</span>
+                            </div>
+                        <?php endif; ?>
                         <p class="hpp-calculation-status" data-calculation-status role="status"></p>
                     </section>
-                    </div>
-
-                    <div class="hpp-editor-actions">
-                        <button type="submit" class="btn btn-primary btn-with-icon"><?= admin_icon('save') ?>Simpan Resep</button>
-                        <a href="hpp_ingredients.php" class="btn btn-cancel btn-with-icon"><?= admin_icon('manage') ?>Kelola Master Bahan</a>
                     </div>
                 </form>
 
                 <?php if ($recipe !== null): ?>
-                    <section class="form-card hpp-public-price-card">
+                    <section class="form-card hpp-public-price-card" data-pricing-section<?= $applyPreview === null ? ' hidden' : '' ?>>
                         <h3>Terapkan Harga Jual ke Website</h3>
                         <p class="hpp-help-text">
                             Penerapan memakai HPP resep tersimpan. Pilih varian dan harga final; perubahan baru dilakukan setelah Anda mengonfirmasi harga lama dan baru.
@@ -442,7 +521,7 @@ $csrfToken = generate_csrf_token();
                                             ?>
                                             <option value="<?= $itemId ?>"<?= $isSelectedItem ? ' selected' : '' ?>>
                                                 <?= $escape($productItem['product_name']) ?> — <?= $escape($productItem['item_name']) ?>
-                                                (saat ini Rp<?= number_format((float) $productItem['price'], 0, ',', '.') ?>)
+                                                (saat ini Rp <?= format_decimal(ceil((float) $productItem['price']), 0) ?>)
                                             </option>
                                         <?php endforeach; ?>
                                     </select>
@@ -464,8 +543,8 @@ $csrfToken = generate_csrf_token();
                                 </div>
                             </div>
                             <div class="hpp-price-rounding-actions">
-                                <button type="button" class="btn btn-cancel" data-round-price="500">Bulatkan ke atas ke Rp500</button>
-                                <button type="button" class="btn btn-cancel" data-round-price="1000">Bulatkan ke atas ke Rp1.000</button>
+                                <button type="button" class="btn btn-cancel" data-round-price="500">Bulatkan ke atas ke Rp 500</button>
+                                <button type="button" class="btn btn-cancel" data-round-price="1000">Bulatkan ke atas ke Rp 1.000</button>
                             </div>
                             <p class="hpp-help-text">Pembulatan hanya mengisi harga usulan di atas. Harga website tidak berubah sampai Anda meninjau dan mengonfirmasi langkah berikutnya.</p>
                             <button type="submit" class="btn btn-primary btn-with-icon" data-loading-label="Menyiapkan tinjauan..."><?= admin_icon('check') ?>Tinjau Perubahan Harga</button>
@@ -474,7 +553,7 @@ $csrfToken = generate_csrf_token();
                 <?php endif; ?>
 
                 <?php if ($applyPreview !== null): ?>
-                    <section class="form-card hpp-price-confirmation" aria-labelledby="hpp-price-confirmation-title">
+                    <section class="form-card hpp-price-confirmation" data-pricing-section aria-labelledby="hpp-price-confirmation-title">
                         <h3 id="hpp-price-confirmation-title">Konfirmasi Penerapan Harga</h3>
                         <p>
                             Resep <strong><?= $escape($applyPreview['recipe_name']) ?></strong> akan dihubungkan ke
@@ -492,15 +571,15 @@ $csrfToken = generate_csrf_token();
                         <dl class="hpp-price-comparison">
                             <div>
                                 <dt>Harga lama</dt>
-                                <dd>Rp<?= number_format((float) $applyPreview['old_price'], 2, ',', '.') ?></dd>
+                                <dd>Rp <?= format_decimal(ceil((float) $applyPreview['old_price']), 0) ?></dd>
                             </div>
                             <div>
                                 <dt>Harga baru</dt>
-                                <dd>Rp<?= number_format((int) $applyPreview['new_price'], 0, ',', '.') ?></dd>
+                                <dd>Rp <?= format_decimal(ceil((float) $applyPreview['new_price']), 0) ?></dd>
                             </div>
                             <div>
                                 <dt>HPP per jar</dt>
-                                <dd>Rp<?= number_format((float) $applyPreview['hpp_per_jar'], 0, ',', '.') ?></dd>
+                                <dd>Rp <?= format_decimal(ceil((float) $applyPreview['hpp_per_jar']), 0) ?></dd>
                             </div>
                         </dl>
                         <?php if ($applyPreview['below_hpp']): ?>
@@ -523,42 +602,46 @@ $csrfToken = generate_csrf_token();
                 <template id="hpp-line-template">
                     <div class="hpp-editor-row" data-line-row>
                         <input type="hidden" name="lines[__INDEX__][id]" data-line-id>
-                        <div class="form-group">
-                            <label>Pilih bahan master</label>
+                        <input type="hidden" name="lines[__INDEX__][unit_cost]" data-line-unit-cost>
+                        <div class="form-group hpp-cell-ingredient">
+                            <label class="hpp-row-label">Bahan Baku</label>
                             <select name="lines[__INDEX__][ingredient_id]" data-ingredient-select>
                                 <option value="">Item bebas</option>
                                 <?php foreach ($ingredients as $ingredient): ?>
-                                    <option value="<?= (int) $ingredient['id'] ?>" data-unit="<?= $escape($ingredient['base_unit']) ?>" data-unit-cost="<?= $escape(number_format((float) $ingredient['unit_cost'], 6, '.', '')) ?>"><?= $escape($ingredient['name']) ?> (<?= $escape($ingredient['base_unit']) ?>)</option>
+                                    <option value="<?= (int) $ingredient['id'] ?>" data-unit="<?= $escape($ingredient['base_unit']) ?>" data-unit-cost="<?= $escape($cleanDecimal($ingredient['unit_cost'], 2)) ?>"><?= $escape($ingredient['name']) ?> (<?= $escape($ingredient['base_unit']) ?>)</option>
                                 <?php endforeach; ?>
                             </select>
                             <input type="hidden" name="lines[__INDEX__][custom_name]" data-custom-name-hidden disabled>
+                            <div class="hpp-custom-name-wrap" data-custom-group hidden>
+                                <input type="text" name="lines[__INDEX__][custom_name]" maxlength="120" data-custom-name placeholder="Nama item bebas...">
+                                <div class="hpp-custom-cost-wrap">
+                                    <span class="hpp-custom-cost-label">Biaya satuan (Rp):</span>
+                                    <input type="text" data-custom-cost-input inputmode="decimal" maxlength="16" placeholder="0">
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-group" data-custom-group>
-                            <label>Nama item bebas</label>
-                            <input type="text" name="lines[__INDEX__][custom_name]" maxlength="120" data-custom-name>
+                        <div class="form-group hpp-cell-qty">
+                            <label class="hpp-row-label">Jumlah</label>
+                            <div class="hpp-qty-input-group">
+                                <input type="text" name="lines[__INDEX__][qty]" inputmode="decimal" maxlength="15" placeholder="0" data-line-qty required>
+                                <span class="hpp-qty-unit-badge" data-unit-badge>satuan</span>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label>Jumlah bahan</label>
-                            <input type="text" name="lines[__INDEX__][qty]" inputmode="decimal" maxlength="15" placeholder="Contoh: 125 atau 0,5" data-line-qty required>
+                        <div class="hpp-editor-row-total">
+                            <span>Subtotal</span>
+                            <strong data-line-total>Rp 0</strong>
                         </div>
-                        <div class="form-group">
-                            <label>Biaya per satuan (Rp)</label>
-                            <input type="text" name="lines[__INDEX__][unit_cost]" inputmode="decimal" maxlength="16" data-line-unit-cost required>
-                            <small data-unit-label></small>
-                            <small data-snapshot-note></small>
-                        </div>
-                        <div class="hpp-editor-row-total"><span>Subtotal</span><strong data-line-total>Rp0</strong></div>
-                        <button type="button" class="btn btn-danger hpp-remove-row btn-with-icon" data-remove-line aria-label="Hapus baris bahan"><?= admin_icon('delete') ?>Hapus</button>
+                        <button type="button" class="btn btn-danger btn-sm btn-with-icon hpp-remove-row" data-remove-line aria-label="Hapus baris bahan" title="Hapus baris bahan"><?= admin_icon('delete') ?><span>Hapus</span></button>
                     </div>
                 </template>
                 <template id="hpp-cost-template">
                     <div class="hpp-editor-row hpp-cost-row" data-cost-row>
                         <div class="form-group">
-                            <label>Nama biaya</label>
-                            <input type="text" name="costs[__INDEX__][label]" maxlength="80" data-cost-label required>
+                            <label class="hpp-row-label">Nama biaya</label>
+                            <input type="text" name="costs[__INDEX__][label]" maxlength="80" data-cost-label required placeholder="Nama biaya...">
                         </div>
                         <div class="form-group">
-                            <label>Jenis perhitungan</label>
+                            <label class="hpp-row-label">Jenis perhitungan</label>
                             <select name="costs[__INDEX__][calc_type]" data-cost-type>
                                 <option value="pct_bahan">Persentase dari total bahan (%)</option>
                                 <option value="per_jar">Biaya per jar (Rp)</option>
@@ -566,11 +649,11 @@ $csrfToken = generate_csrf_token();
                             </select>
                         </div>
                         <div class="form-group">
-                            <label>Nilai</label>
-                            <input type="text" name="costs[__INDEX__][amount]" inputmode="decimal" maxlength="16" data-cost-amount required>
+                            <label class="hpp-row-label">Nilai</label>
+                            <input type="text" name="costs[__INDEX__][amount]" inputmode="decimal" maxlength="16" data-cost-amount required placeholder="0">
                         </div>
-                        <div class="hpp-editor-row-total"><span>Subtotal biaya</span><strong data-cost-total>Rp0</strong></div>
-                        <button type="button" class="btn btn-danger hpp-remove-row btn-with-icon" data-remove-cost aria-label="Hapus biaya operasional"><?= admin_icon('delete') ?>Hapus</button>
+                        <div class="hpp-editor-row-total"><span>Subtotal biaya</span><strong data-cost-total>Rp 0</strong></div>
+                        <button type="button" class="btn btn-danger btn-sm btn-with-icon hpp-remove-row" data-remove-cost aria-label="Hapus biaya operasional" title="Hapus biaya operasional"><?= admin_icon('delete') ?><span>Hapus</span></button>
                     </div>
                 </template>
                 <script type="application/json" id="hpp-editor-data"><?= json_encode(
@@ -583,7 +666,7 @@ $csrfToken = generate_csrf_token();
                     ],
                     JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT | JSON_THROW_ON_ERROR
                 ) ?></script>
-                <script src="assets/js/hpp_recipe_editor.js" defer></script>
+                <script src="assets/js/hpp_recipe_editor.js?v=<?= (int) filemtime(__DIR__ . '/assets/js/hpp_recipe_editor.js') . '-' . (int) filesize(__DIR__ . '/assets/js/hpp_recipe_editor.js') ?>" defer></script>
                 <?php endif; ?>
             </main>
         </div>

@@ -125,9 +125,9 @@ if (!function_exists('build_product_description')) {
             $min = min($prices);
             $max = max($prices);
             if (count($prices) > 1 && $min !== $max) {
-                $pricePart = ' Mulai Rp ' . number_format($min, 0, ',', '.') . '–Rp ' . number_format($max, 0, ',', '.') . '.';
+                $pricePart = ' Mulai Rp ' . format_decimal(ceil($min), 0) . '–Rp ' . format_decimal(ceil($max), 0) . '.';
             } else {
-                $pricePart = ' Harga Rp ' . number_format($min, 0, ',', '.') . '.';
+                $pricePart = ' Harga Rp ' . format_decimal(ceil($min), 0) . '.';
             }
         }
 
@@ -241,5 +241,34 @@ if (!function_exists('ensure_product_slug')) {
         }
 
         return $slug;
+    }
+}
+
+/**
+ * Format angka desimal: maksimal 2 angka di belakang koma, hilangkan ',00' jika bulat.
+ */
+if (!function_exists('format_decimal')) {
+    function format_decimal($number, int $maxDecimals = 2): string
+    {
+        if (!is_numeric($number)) {
+            return '0';
+        }
+        $val = round((float) $number, $maxDecimals);
+        $formatted = number_format($val, $maxDecimals, ',', '.');
+        if (str_contains($formatted, ',')) {
+            $formatted = rtrim(rtrim($formatted, '0'), ',');
+        }
+        return $formatted;
+    }
+}
+
+/**
+ * Format mata uang rupiah: maksimal 2 desimal, tanpa ',00' jika bulat.
+ */
+if (!function_exists('format_rupiah')) {
+    function format_rupiah($number, int $maxDecimals = 2, bool $withPrefix = true): string
+    {
+        $prefix = $withPrefix ? 'Rp ' : '';
+        return $prefix . format_decimal($number, $maxDecimals);
     }
 }

@@ -71,7 +71,7 @@ $items = $stmt->fetchAll();
 <head>
     <meta charset="UTF-8">
     <title>Kelola Jenis - <?= htmlspecialchars($main_product['name']) ?></title>
-    <link rel="stylesheet" href="assets/css/admin.css">
+    <link rel="stylesheet" href="assets/css/admin.css?v=<?= (int) filemtime(__DIR__ . '/assets/css/admin.css') . '-' . (int) filesize(__DIR__ . '/assets/css/admin.css') ?>">
 </head>
 <body>
     <div class="admin-layout">
@@ -81,19 +81,25 @@ $items = $stmt->fetchAll();
                 <h2>Kelola Varian Produk</h2>
                 <div class="admin-header-actions">
                     <a href="../" target="_blank" rel="noopener noreferrer" class="btn-site-preview"><?= admin_icon('external') ?>Lihat Website</a>
-                    <a href="logout.php" class="btn btn-danger btn-with-icon"><?= admin_icon('logout') ?>Logout</a>
+                    <a href="logout.php" class="btn btn-danger btn-with-icon admin-header-logout"><?= admin_icon('logout') ?>Logout</a>
                 </div>
             </header>
             <div class="admin-container">
         
         <div class="header-action">
             <h2>Kelola Jenis Produk: <?= htmlspecialchars($main_product['name']) ?></h2>
-            <a href="products.php" class="btn btn-cancel btn-with-icon"><?= admin_icon('back') ?>Kembali ke Kategori</a>
+            <div class="header-action-buttons">
+                <button type="button" class="btn btn-primary btn-with-icon admin-drawer-toggle" data-target="drawer-add-item" aria-expanded="<?= !empty($uploadError) ? 'true' : 'false' ?>"><?= admin_icon('add') ?><span>Tambah Varian Baru</span></button>
+                <a href="products.php" class="btn btn-cancel btn-with-icon"><?= admin_icon('back') ?>Kembali ke Kategori</a>
+            </div>
         </div>
         <?php include __DIR__ . '/flash_message.php'; ?>
 
-        <div class="form-card">
-            <h3>Tambah Varian</h3>
+        <div id="drawer-add-item" class="admin-drawer-card form-card" <?= empty($uploadError) ? 'hidden' : '' ?>>
+            <div class="admin-drawer-header">
+                <h3>Tambah Varian</h3>
+                <button type="button" class="btn-drawer-close" data-target="drawer-add-item" aria-label="Tutup formulir">✕</button>
+            </div>
             <?php if ($uploadError): ?>
                 <p role="alert" class="text-error"><?= htmlspecialchars($uploadError, ENT_QUOTES, 'UTF-8') ?></p>
             <?php endif; ?>
@@ -137,14 +143,14 @@ $items = $stmt->fetchAll();
                                 <div class="category-empty">
                                     <h3>Belum ada varian produk</h3>
                                     <p>Gunakan formulir di atas untuk menambahkan varian pertama.</p>
-                                    <a href="#add-item-form" class="btn btn-primary btn-with-icon"><?= admin_icon('add') ?>Tambah Varian</a>
+                                    <button type="button" class="btn btn-primary btn-with-icon admin-drawer-toggle" data-target="drawer-add-item"><?= admin_icon('add') ?>Tambah Varian</button>
                                 </div>
                             </td>
                         </tr>
                     <?php endif; ?>
                     <?php foreach ($items as $item): ?>
                     <tr>
-                        <td>
+                        <td class="table-cell-center">
                             <?php if($item['image']): ?>
                                 <img src="../<?= htmlspecialchars($item['image']) ?>" class="thumb">
                             <?php else: ?>
@@ -152,8 +158,8 @@ $items = $stmt->fetchAll();
                             <?php endif; ?>
                         </td>
                         <td class="table-cell-emphasis"><?= htmlspecialchars($item['name']) ?></td>
-                        <td class="table-cell-price">Rp<?= number_format($item['price'], 0, ',', '.') ?></td>
-                        <td>
+                        <td class="table-cell-price">Rp <?= format_decimal(ceil((float) $item['price']), 0) ?></td>
+                        <td class="table-cell-actions">
                             <a href="edit_item.php?id=<?= $item['id'] ?>&product_id=<?= $product_id ?>" class="btn btn-cancel btn-icon-only" aria-label="Edit varian <?= htmlspecialchars($item['name'], ENT_QUOTES, 'UTF-8') ?>" title="Edit varian"><?= admin_icon('edit') ?><span class="action-button-label">Edit</span></a>
                             <form method="POST" action="manage_items.php?product_id=<?= $product_id ?>" class="inline-action-form" data-submit-lock onsubmit="return confirm(<?= htmlspecialchars(json_encode('Hapus varian "' . $item['name'] . '"? Varian dan harga jualnya akan dihapus dari website. Tindakan ini tidak dapat dibatalkan.', JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_TAG | JSON_HEX_AMP), ENT_QUOTES, 'UTF-8') ?>)">
                                 <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
