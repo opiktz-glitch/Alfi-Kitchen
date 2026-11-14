@@ -3,7 +3,7 @@ $adminNavItems = [
     ['href' => 'dashboard.php', 'label' => 'Dashboard', 'icon' => 'dashboard'],
     ['href' => 'products.php', 'label' => 'Produk', 'icon' => 'manage'],
     ['href' => 'hpp_recipes.php', 'label' => 'Kalkulator HPP', 'icon' => 'calculator'],
-    ['href' => 'hpp_ingredients.php', 'label' => 'Master Bahan', 'icon' => 'manage'],
+    ['href' => 'hpp_ingredients.php', 'label' => 'Master Bahan', 'icon' => 'database'],
     ['href' => 'settings.php', 'label' => 'Pengaturan', 'icon' => 'settings'],
 ];
 $currentFile = basename($_SERVER['PHP_SELF'] ?? '');
@@ -32,9 +32,15 @@ $mobileNavItems = [
     ],
     [
         'href' => 'hpp_recipes.php',
-        'label' => 'Dapur HPP',
+        'label' => 'Kalkulator',
         'icon' => 'calculator',
-        'active' => in_array($activePage, ['hpp_recipes.php', 'hpp_ingredients.php'], true),
+        'active' => $activePage === 'hpp_recipes.php',
+    ],
+    [
+        'href' => 'hpp_ingredients.php',
+        'label' => 'Master Bahan',
+        'icon' => 'database',
+        'active' => $activePage === 'hpp_ingredients.php',
     ],
     [
         'href' => 'settings.php',
