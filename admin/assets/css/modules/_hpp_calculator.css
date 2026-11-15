@@ -875,6 +875,20 @@
   display: block;
 }
 
+/* Visibility Helper & Mobile Bar Defaults */
+.mobile-only {
+  display: none !important;
+}
+.desktop-only {
+  display: table-cell;
+}
+span.desktop-only {
+  display: inline;
+}
+.hpp-mobile-bottom-bar {
+  display: none;
+}
+
 /* Print CSS */
 @media print {
   body {
@@ -890,8 +904,16 @@
   .hpp-view-topbar,
   .btn-site-preview,
   .btn,
-  .admin-bottom-nav {
+  .admin-bottom-nav,
+  .hpp-mobile-bottom-bar,
+  .mobile-only {
     display: none !important;
+  }
+  .desktop-only {
+    display: table-cell !important;
+  }
+  span.desktop-only {
+    display: inline !important;
   }
   .hpp-view-container {
     max-width: 100% !important;

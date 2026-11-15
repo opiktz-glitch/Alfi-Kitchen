@@ -463,4 +463,153 @@
   .admin-bottom-nav a.is-active { background: #fff4eb; color: #85420f; font-weight: 700; }
   .admin-bottom-nav a:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
   body { padding-bottom: calc(68px + env(safe-area-inset-bottom)); }
+
+  /* === Lembar Resep HPP (hpp_view.php) di Layar HP === */
+  .desktop-only {
+    display: none !important;
+  }
+  td.mobile-only,
+  th.mobile-only {
+    display: table-cell !important;
+  }
+  span.mobile-only {
+    display: inline !important;
+  }
+  div.mobile-only {
+    display: block !important;
+  }
+
+  .hpp-view-container {
+    padding: 10px 8px calc(80px + env(safe-area-inset-bottom));
+  }
+  .hpp-view-topbar {
+    margin-bottom: 12px;
+    gap: 8px;
+  }
+  .hpp-view-topbar .btn-site-preview {
+    display: none !important;
+  }
+  .hpp-view-topbar .btn {
+    font-size: 0.82rem;
+    padding: 6px 10px;
+  }
+  .hpp-sheet-banner {
+    padding: 16px 12px;
+  }
+  .hpp-sheet-title {
+    font-size: 1.35rem;
+  }
+  .hpp-sheet-variant {
+    font-size: 1.05rem;
+  }
+  .hpp-sheet-subtitle {
+    font-size: 0.82rem;
+  }
+  .hpp-sheet-body {
+    padding: 14px 10px;
+  }
+  .hpp-sheet-section-header {
+    margin: 18px 0 8px;
+  }
+  .hpp-sheet-section-title {
+    font-size: 0.88rem;
+  }
+  .hpp-sheet-table {
+    font-size: 0.82rem;
+  }
+  .hpp-sheet-table th,
+  .hpp-sheet-table td {
+    padding: 6px 5px;
+  }
+  .hpp-sheet-table .num-col {
+    padding-right: 5px;
+  }
+  .qty-unit-inline.mobile-only {
+    display: inline !important;
+    font-size: 0.72rem;
+    color: #783815;
+    margin-left: 2px;
+    font-weight: 500;
+  }
+  .hpp-sheet-summary-box {
+    margin: 16px 0 12px;
+  }
+  .hpp-sheet-summary-table td {
+    padding: 8px 8px;
+    font-size: 0.82rem;
+  }
+  .hpp-sheet-summary-table .row-highlight td {
+    font-size: 0.95rem;
+    padding: 10px 8px;
+  }
+  .hpp-sheet-margin-table th,
+  .hpp-sheet-margin-table td {
+    padding: 6px 4px;
+    font-size: 0.76rem;
+  }
+  .hpp-sheet-margin-table .hpp-jar-price-cell {
+    font-size: 0.88rem;
+    font-weight: 800;
+  }
+  .hpp-target-tag {
+    display: block;
+    margin: 3px 0 0 0;
+    width: fit-content;
+    font-size: 0.62rem;
+    padding: 1px 5px;
+  }
+
+  /* Sticky Floating Action Bar di HP */
+  .hpp-mobile-bottom-bar {
+    display: flex !important;
+    flex-direction: column;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    background: rgba(255, 253, 249, 0.97);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-top: 1px solid #ebd9c8;
+    box-shadow: 0 -4px 18px rgba(74, 40, 16, 0.12);
+    padding: 8px 12px calc(8px + env(safe-area-inset-bottom));
+  }
+  .hpp-mobile-bottom-inner {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  .hpp-mobile-btn-back,
+  .hpp-mobile-btn-edit {
+    flex: 0 0 auto;
+    padding: 8px 12px;
+    font-size: 0.82rem;
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .hpp-mobile-btn-print {
+    flex: 1 1 auto;
+    padding: 8px 14px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--accent) !important;
+    color: #fff !important;
+    border-radius: var(--radius-sm);
+  }
+  .hpp-mobile-print-tip {
+    text-align: center;
+    font-size: 0.72rem;
+    color: #6a4a35;
+    margin-top: 5px;
+  }
 }

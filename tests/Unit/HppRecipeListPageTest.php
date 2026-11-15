@@ -56,6 +56,8 @@ class HppRecipeListPageTest extends TestCase
     public function testRecipeViewPageRendersCompleteRecipeSheetAndHasStrictSecurity(): void
     {
         $viewPage = file_get_contents(self::ADMIN_DIR . '/hpp_view.php');
+        $recipesPage = file_get_contents(self::ADMIN_DIR . '/hpp_recipes.php');
+        $css = resolve_css_imports(self::ADMIN_DIR . '/assets/css/admin.css');
 
         $this->assertStringContainsString("require 'auth_check.php'", $viewPage);
         $this->assertStringNotContainsString('style="', $viewPage, 'hpp_view.php tidak boleh menggunakan inline style');
@@ -65,6 +67,13 @@ class HppRecipeListPageTest extends TestCase
         $this->assertStringContainsString('Pembulatan (Harga 1 Resep)', $viewPage);
         $this->assertStringContainsString('Rencana Margin', $viewPage);
         $this->assertStringContainsString('window.print()', $viewPage);
+        $this->assertStringContainsString('hpp-mobile-bottom-bar', $viewPage);
+        $this->assertStringContainsString('mobile-only', $viewPage);
+        $this->assertStringContainsString('desktop-only', $viewPage);
+        $this->assertStringContainsString('Simpan sebagai PDF', $viewPage);
+        $this->assertStringContainsString('window.innerWidth <= 768', $recipesPage);
+        $this->assertStringContainsString('.hpp-mobile-bottom-bar', $css);
+        $this->assertStringContainsString('.qty-unit-inline.mobile-only', $css);
         $this->assertStringContainsString('htmlspecialchars(is_scalar($value) ? (string) $value : \'\', ENT_QUOTES, \'UTF-8\')', $viewPage);
     }
 }

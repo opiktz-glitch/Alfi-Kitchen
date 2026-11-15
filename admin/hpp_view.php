@@ -181,27 +181,34 @@ foreach ($marginPercentages as $pct) {
                         <thead>
                             <tr>
                                 <th>Keterangan</th>
-                                <th class="num-col">Jumlah</th>
-                                <th class="center-col">Satuan</th>
-                                <th class="num-col">Harga (Rp)</th>
-                                <th class="num-col">Total (Rp)</th>
+                                <th class="num-col col-qty">
+                                    <span class="desktop-only">Jumlah</span>
+                                    <span class="mobile-only">Takaran</span>
+                                </th>
+                                <th class="center-col col-unit desktop-only">Satuan</th>
+                                <th class="num-col col-pack-price">Harga (Rp)</th>
+                                <th class="num-col col-subtotal">Total (Rp)</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php foreach ($formattedLines as $line): ?>
                                 <tr>
                                     <td><?= $escape($line['name']) ?></td>
-                                    <td class="num-col"><?= format_decimal($line['qty'], 2) ?></td>
-                                    <td class="center-col"><?= $escape($line['unit']) ?></td>
-                                    <td class="num-col"><?= format_decimal($line['pack_price'], 0) ?></td>
-                                    <td class="num-col"><strong><?= format_decimal($line['subtotal'], 0) ?></strong></td>
+                                    <td class="num-col col-qty">
+                                        <span class="qty-num"><?= format_decimal($line['qty'], 2) ?></span>
+                                        <span class="qty-unit-inline mobile-only"><?= $escape($line['unit']) ?></span>
+                                    </td>
+                                    <td class="center-col col-unit desktop-only"><?= $escape($line['unit']) ?></td>
+                                    <td class="num-col col-pack-price"><?= format_decimal($line['pack_price'], 0) ?></td>
+                                    <td class="num-col col-subtotal"><strong><?= format_decimal($line['subtotal'], 0) ?></strong></td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
                         <tfoot>
                             <tr class="row-subtotal">
-                                <td colspan="4">Total Bahan Baku</td>
-                                <td class="num-col">Rp <?= format_decimal($materialTotal, 0) ?></td>
+                                <td colspan="4" class="desktop-only">Total Bahan Baku</td>
+                                <td colspan="3" class="mobile-only">Total Bahan Baku</td>
+                                <td class="num-col col-subtotal">Rp <?= format_decimal($materialTotal, 0) ?></td>
                             </tr>
                         </tfoot>
                     </table>
@@ -215,7 +222,8 @@ foreach ($marginPercentages as $pct) {
                     <table class="hpp-sheet-table">
                         <thead>
                             <tr>
-                                <th colspan="3">Keterangan</th>
+                                <th colspan="3" class="desktop-only">Keterangan</th>
+                                <th colspan="2" class="mobile-only">Keterangan</th>
                                 <th class="center-col">Perhitungan</th>
                                 <th class="num-col">Total (Rp)</th>
                             </tr>
@@ -223,7 +231,8 @@ foreach ($marginPercentages as $pct) {
                         <tbody>
                             <?php foreach ($formattedCosts as $cost): ?>
                                 <tr>
-                                    <td colspan="3"><?= $escape($cost['label']) ?></td>
+                                    <td colspan="3" class="desktop-only"><?= $escape($cost['label']) ?></td>
+                                    <td colspan="2" class="mobile-only"><?= $escape($cost['label']) ?></td>
                                     <td class="center-col"><?= $escape($cost['detail']) ?></td>
                                     <td class="num-col"><strong><?= format_decimal($cost['subtotal'], 0) ?></strong></td>
                                 </tr>
@@ -231,7 +240,8 @@ foreach ($marginPercentages as $pct) {
                         </tbody>
                         <tfoot>
                             <tr class="row-subtotal">
-                                <td colspan="4">Total Operasional</td>
+                                <td colspan="4" class="desktop-only">Total Operasional</td>
+                                <td colspan="3" class="mobile-only">Total Operasional</td>
                                 <td class="num-col">Rp <?= format_decimal($operationalTotal, 0) ?></td>
                             </tr>
                         </tfoot>
@@ -293,6 +303,20 @@ foreach ($marginPercentages as $pct) {
                 </div>
             </div>
         </article>
+
+        <?php if (!$isEmbedded): ?>
+            <!-- Bilah Aksi Melayang Khusus Mobile (Sticky Bottom Bar) -->
+            <aside class="hpp-mobile-bottom-bar no-print" aria-label="Aksi Cepat Lembar Resep">
+                <div class="hpp-mobile-bottom-inner">
+                    <a href="hpp_recipes.php" class="btn btn-secondary hpp-mobile-btn-back" title="Kembali ke Daftar Resep"><?= admin_icon('back') ?><span>Daftar</span></a>
+                    <a href="hpp_edit.php?id=<?= $recipeId ?>" class="btn btn-secondary hpp-mobile-btn-edit" title="Edit Resep"><?= admin_icon('edit') ?><span>Edit</span></a>
+                    <button type="button" class="btn btn-primary hpp-mobile-btn-print" onclick="window.print()"><?= admin_icon('print') ?>Cetak / Simpan PDF</button>
+                </div>
+                <div class="hpp-mobile-print-tip">
+                    <span>💡 Di HP: Pada menu printer, pilih <strong>"Simpan sebagai PDF"</strong></span>
+                </div>
+            </aside>
+        <?php endif; ?>
     </div>
 </body>
 </html>

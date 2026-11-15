@@ -20,6 +20,11 @@ bukan penanda rilis atau versi aplikasi.
   - Memperkaya helper `admin_icon()` di `admin/auth.php` dengan ikon SVG `view` (mata) dan `print` (printer).
   - Memperbarui query `hpp_get_recipe()` di `admin/helpers/hpp_recipe_repository.php` agar menyertakan data spesifikasi `pack_size` dan `pack_price` master bahan.
   - Menambahkan pengujian otomatis di `tests/Unit/HppRecipeListPageTest.php` dan `tests/Unit/AdminRefactorTest.php` (total 219 tes lulus 100%).
+  - **Optimasi Tampilan Khusus Mobile / HP**:
+    - Deteksi ukuran layar sentuh pada tombol `[Lihat]` di `admin/hpp_recipes.php`: otomatis membuka halaman penuh (`hpp_view.php?id=...`) di HP (≤ 768px) untuk menghindari scroll ganda dan keterbatasan iframe modal, sementara tampilan desktop (> 768px) tetap menggunakan modal popup.
+    - Struktur tabel adaptif (Opsi A) di HP: kolom `Jumlah` dan `Satuan` digabung menjadi kolom `Takaran` (e.g. `200 gram`), merampingkan tabel dari 5 menjadi 4 kolom sehingga muat pas di layar 360px tanpa geser horizontal.
+    - Menambahkan bilah aksi melayang bawah (*Sticky Bottom Floating Bar*) pada `hpp_view.php` dengan tombol lebar `Cetak / Simpan PDF` yang siap dijangkau ibu jari, tombol `Edit`, tombol `Daftar`, serta tips panduan ekspor PDF di HP.
+    - Pada saat dicetak (`@media print`), format tabel otomatis kembali ke tata letak standar 5 kolom dokumen fisik.
 - **Penyeragaman dan Pengerasan Format Upload Logo**:
   - Menyelaraskan form input di `admin/settings.php` (`accept="image/png"`) dan handler backend `store_uploaded_image()` agar secara konsisten hanya menerima file gambar format PNG murni (`image/png`, `image/x-png`).
   - Menghindari konflik penamaan file tujuan tetap `logo.png` dengan format non-PNG yang sebelumnya diterima di form.

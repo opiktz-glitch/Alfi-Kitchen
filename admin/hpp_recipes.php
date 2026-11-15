@@ -218,6 +218,9 @@ $recipes = $schemaReady ? hpp_get_recipe_list($pdo) : [];
                         document.querySelectorAll('[data-view-recipe]').forEach(function (btn) {
                             btn.addEventListener('click', function (e) {
                                 if (e.ctrlKey || e.metaKey || e.shiftKey || e.button !== 0) return;
+                                if (window.innerWidth <= 768) {
+                                    return;
+                                }
                                 e.preventDefault();
                                 var id = this.getAttribute('data-view-recipe');
                                 var title = this.getAttribute('data-view-title') || 'Lembar Resep HPP';
