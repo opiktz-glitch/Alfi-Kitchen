@@ -1400,7 +1400,106 @@ body {
   .hpp-table-header.hpp-cost-table-header {
     display: none !important;
   }
-  .hpp-editor-rows .hpp-editor-row,
+
+  /* Compact 2-Baris untuk Bahan di Layar HP (Mobile) */
+  .hpp-editor-rows .hpp-editor-row:not(.hpp-cost-row) {
+    display: grid !important;
+    grid-template-columns: 1fr auto !important;
+    grid-template-areas:
+      "ingredient delete"
+      "qty        total";
+    align-items: center;
+    gap: 8px 10px;
+    padding: 8px 10px;
+    background: #faf8f5 !important;
+    border-radius: var(--radius-sm);
+    margin-bottom: 6px;
+    border: 1px solid var(--line);
+  }
+
+  .hpp-editor-rows .hpp-editor-row:not(.hpp-cost-row) .hpp-cell-ingredient {
+    grid-area: ingredient;
+    margin: 0;
+    min-width: 0;
+  }
+  .hpp-editor-rows .hpp-editor-row:not(.hpp-cost-row) .hpp-cell-ingredient .hpp-row-label {
+    display: none !important;
+  }
+  .hpp-editor-rows .hpp-editor-row:not(.hpp-cost-row) .hpp-cell-ingredient select {
+    width: 100%;
+    min-height: 36px;
+    font-size: 0.85rem;
+  }
+
+  .hpp-editor-rows .hpp-editor-row:not(.hpp-cost-row) .hpp-remove-row {
+    grid-area: delete;
+    justify-self: end;
+    align-self: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    width: 36px;
+    height: 36px;
+    min-height: 36px;
+    min-width: 36px;
+    margin: 0;
+    border-radius: var(--radius-sm);
+  }
+  .hpp-editor-rows .hpp-editor-row:not(.hpp-cost-row) .hpp-remove-row span {
+    display: none !important;
+  }
+  .hpp-editor-rows .hpp-editor-row:not(.hpp-cost-row) .hpp-remove-row svg {
+    margin: 0;
+  }
+
+  .hpp-editor-rows .hpp-editor-row:not(.hpp-cost-row) .hpp-cell-qty {
+    grid-area: qty;
+    margin: 0;
+    min-width: 0;
+  }
+  .hpp-editor-rows .hpp-editor-row:not(.hpp-cost-row) .hpp-cell-qty .hpp-row-label {
+    display: none !important;
+  }
+  .hpp-editor-rows .hpp-editor-row:not(.hpp-cost-row) .hpp-qty-input-group {
+    max-width: 150px;
+    min-height: 34px;
+  }
+  .hpp-editor-rows .hpp-editor-row:not(.hpp-cost-row) .hpp-qty-input-group input {
+    min-height: 34px;
+    height: 34px;
+    font-size: 0.88rem;
+    padding: 4px 8px;
+  }
+  .hpp-editor-rows .hpp-editor-row:not(.hpp-cost-row) .hpp-qty-unit-badge {
+    min-height: 34px;
+    height: 34px;
+    font-size: 0.74rem;
+    padding: 0 8px;
+  }
+
+  .hpp-editor-rows .hpp-editor-row:not(.hpp-cost-row) .hpp-editor-row-total {
+    grid-area: total;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    text-align: right;
+    margin: 0;
+    gap: 4px;
+    min-height: 0;
+    font-size: 0.82rem;
+  }
+  .hpp-editor-rows .hpp-editor-row:not(.hpp-cost-row) .hpp-editor-row-total span {
+    display: inline;
+    color: var(--muted);
+    font-size: 0.74rem;
+  }
+  .hpp-editor-rows .hpp-editor-row:not(.hpp-cost-row) .hpp-editor-row-total strong {
+    font-size: 0.95rem;
+    color: var(--text);
+  }
+
+  /* Biaya Operasional di Mobile */
   .hpp-editor-rows .hpp-cost-row {
     grid-template-columns: 1fr !important;
     gap: 6px;
@@ -1410,17 +1509,17 @@ body {
     margin-bottom: 8px;
     border: 1px solid var(--line);
   }
-  .hpp-editor-rows .hpp-editor-row .hpp-row-label {
+  .hpp-editor-rows .hpp-cost-row .hpp-row-label {
     display: block !important;
     font-size: 0.74rem;
     font-weight: 600;
     color: var(--muted);
     margin-bottom: 2px;
   }
-  .hpp-editor-rows .hpp-editor-row-total {
+  .hpp-editor-rows .hpp-cost-row .hpp-editor-row-total {
     justify-content: space-between;
   }
-  .hpp-editor-rows .hpp-editor-row-total span {
+  .hpp-editor-rows .hpp-cost-row .hpp-editor-row-total span {
     display: inline;
   }
 }
