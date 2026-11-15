@@ -1,4 +1,4 @@
-/* === Module: _components.css === */
+﻿/* === Module: _components.css === */
 /* === Sticky table header + scroll hint === */
 .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; position: relative; }
 .table-responsive::after { content: ''; position: absolute; top: 0; right: 0; bottom: 0; width: 12px; pointer-events: none; background: linear-gradient(to left, rgba(0,0,0,0.06), transparent); opacity: 0; transition: opacity 0.2s ease; }
@@ -300,6 +300,16 @@
   stroke-linecap: round;
   stroke-linejoin: round;
   stroke-width: 1.8;
+}
+.category-action-view {
+  background: #fdf5ee;
+  border-color: #eeddcc;
+  color: #8c4a16;
+}
+.category-action-view:hover {
+  background: #f7e6d6;
+  border-color: #dfc5ad;
+  color: #63320c;
 }
 .category-action-primary,
 .category-action-secondary {

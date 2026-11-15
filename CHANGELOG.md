@@ -7,6 +7,19 @@ bukan penanda rilis atau versi aplikasi.
 ## 2026-11-15
 
 ### Added
+- **Fitur Lembar Resep HPP Lengkap & Pratinjau Modal (Sesuai Sampel PDF)**:
+  - Membuat halaman rincian cetak `admin/hpp_view.php` bergaya lembar resep fisik profesional sesuai contoh PDF referensi ("HPP Creamy Ice Jelly"), mencakup 4 seksi utama:
+    1. **Bahan Baku**: Keterangan nama bahan, takaran jumlah, satuan (`gram`, `ml`, `pcs`), harga beli kemasan acuan (Rp), dan total biaya bahan per takaran resep (Rp).
+    2. **Operasional**: Keterangan biaya (persentase dari bahan atau flat/per-jar) beserta subtotal biaya operasional (Rp).
+    3. **Ringkasan HPP**: Total bahan & operasional, pembulatan harga per 1 resep (batch), dan HPP pokok per jar.
+    4. **Rencana Margin & Rekomendasi Harga Jual**: Simulasi margin terstruktur (50%, 75%, 100%, 200%, serta persentase target toko) yang menghitung laba, harga jual 1 resep, dan harga jual rekomendasi per jar.
+  - Menambahkan tombol aksi **`Lihat`** berikon mata (`category-action-view`) di setiap baris daftar resep pada `admin/hpp_recipes.php`, lengkap dengan dukungan responsif desktop dan mobile (Smart Compact 2-baris).
+  - Menambahkan modal dialog interaktif `#hpp-view-modal` dengan `<iframe>` di `admin/hpp_recipes.php` untuk pratinjau lembar resep instan secara *pop-up* tanpa reload halaman, dengan kontrol tutup via tombol close, klik latar belakang modal, atau tombol Escape keyboard.
+  - Menambahkan tombol **`Lihat Lembar Resep`** di header editor resep `admin/hpp_edit.php` untuk resep yang sudah tersimpan.
+  - Menambahkan tombol aksi cetak (`window.print()`) dan dukungan gaya cetak `@media print` pada berkas CSS modular `_hpp_calculator.css` sehingga hasil cetak atau simpan ke file PDF menjadi bersih, rapi, dan menyembunyikan tombol antarmuka/navigasi.
+  - Memperkaya helper `admin_icon()` di `admin/auth.php` dengan ikon SVG `view` (mata) dan `print` (printer).
+  - Memperbarui query `hpp_get_recipe()` di `admin/helpers/hpp_recipe_repository.php` agar menyertakan data spesifikasi `pack_size` dan `pack_price` master bahan.
+  - Menambahkan pengujian otomatis di `tests/Unit/HppRecipeListPageTest.php` dan `tests/Unit/AdminRefactorTest.php` (total 219 tes lulus 100%).
 - **Penyeragaman dan Pengerasan Format Upload Logo**:
   - Menyelaraskan form input di `admin/settings.php` (`accept="image/png"`) dan handler backend `store_uploaded_image()` agar secara konsisten hanya menerima file gambar format PNG murni (`image/png`, `image/x-png`).
   - Menghindari konflik penamaan file tujuan tetap `logo.png` dengan format non-PNG yang sebelumnya diterima di form.

@@ -24,7 +24,10 @@ class HppRecipeListPageTest extends TestCase
         $this->assertStringContainsString('data-submit-lock', $page);
         $this->assertStringContainsString('class="category-icon-button category-action-primary"', $page);
         $this->assertStringContainsString('class="category-icon-button category-action-secondary"', $page);
+        $this->assertStringContainsString('class="category-icon-button category-action-view"', $page);
         $this->assertStringContainsString('class="category-icon-button category-action-delete"', $page);
+        $this->assertStringContainsString('hpp_view.php?id=', $page);
+        $this->assertStringContainsString('hpp-view-modal', $page);
         $this->assertStringContainsString('hpp-recipe-delete-form', $page);
         $this->assertStringContainsString("'href' => 'hpp_recipes.php'", $sidebar);
         $this->assertStringContainsString('htmlspecialchars(is_scalar($value) ? (string) $value : \'\', ENT_QUOTES, \'UTF-8\')', $page);
@@ -48,5 +51,20 @@ class HppRecipeListPageTest extends TestCase
         $this->assertStringContainsString('.hpp-recipe-actions .category-icon-button', $css);
         $this->assertMatchesRegularExpression('/\.hpp-recipe-actions\s*\{\s*display:\s*flex;\s*flex-wrap:\s*nowrap;/', $css);
         $this->assertDoesNotMatchRegularExpression('/\.hpp-recipe-delete-form\s*\{[^}]*border-left:/', $css);
+    }
+
+    public function testRecipeViewPageRendersCompleteRecipeSheetAndHasStrictSecurity(): void
+    {
+        $viewPage = file_get_contents(self::ADMIN_DIR . '/hpp_view.php');
+
+        $this->assertStringContainsString("require 'auth_check.php'", $viewPage);
+        $this->assertStringNotContainsString('style="', $viewPage, 'hpp_view.php tidak boleh menggunakan inline style');
+        $this->assertStringContainsString('hpp-recipe-sheet', $viewPage);
+        $this->assertStringContainsString('Bahan Baku', $viewPage);
+        $this->assertStringContainsString('Operasional', $viewPage);
+        $this->assertStringContainsString('Pembulatan (Harga 1 Resep)', $viewPage);
+        $this->assertStringContainsString('Rencana Margin', $viewPage);
+        $this->assertStringContainsString('window.print()', $viewPage);
+        $this->assertStringContainsString('htmlspecialchars(is_scalar($value) ? (string) $value : \'\', ENT_QUOTES, \'UTF-8\')', $viewPage);
     }
 }

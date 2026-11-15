@@ -421,7 +421,7 @@ if (!function_exists('hpp_get_recipe')) {
 
         $lineStmt = $pdo->prepare(
             'SELECT l.id, l.ingredient_id, l.custom_name, l.qty, l.unit_cost, l.sort_order, '
-            . 'i.name AS ingredient_name, i.base_unit '
+            . 'i.name AS ingredient_name, i.base_unit, i.pack_size, i.pack_price '
             . 'FROM hpp_recipe_lines l '
             . 'LEFT JOIN hpp_ingredients i ON i.id = l.ingredient_id '
             . 'WHERE l.recipe_id = ? ORDER BY l.sort_order, l.id'

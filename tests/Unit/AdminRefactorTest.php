@@ -138,6 +138,7 @@ class AdminRefactorTest extends TestCase
             'hpp_recipes.php',
             'hpp_edit.php',
             'hpp_ingredients.php',
+            'hpp_view.php',
         ];
 
         foreach ($pages as $page) {
@@ -317,6 +318,7 @@ class AdminRefactorTest extends TestCase
             ['hpp_recipes.php'],
             ['hpp_edit.php'],
             ['hpp_ingredients.php'],
+            ['hpp_view.php'],
         ];
     }
 

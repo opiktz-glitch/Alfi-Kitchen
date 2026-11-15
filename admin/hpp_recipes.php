@@ -148,6 +148,7 @@ $recipes = $schemaReady ? hpp_get_recipe_list($pdo) : [];
                                         </td>
                                         <td data-label="Aksi" class="table-cell-actions">
                                             <div class="hpp-recipe-actions">
+                                                <a href="hpp_view.php?id=<?= $recipeId ?>" class="category-icon-button category-action-view" aria-label="Lihat lembar resep" title="Lihat lembar resep" data-view-recipe="<?= $recipeId ?>" data-view-title="<?= $escape($recipeLabel) ?>"><?= admin_icon('view') ?>Lihat</a>
                                                 <a href="hpp_edit.php?id=<?= $recipeId ?>" class="category-icon-button category-action-primary" aria-label="Edit resep" title="Edit resep"><?= admin_icon('edit') ?>Edit</a>
                                                 <form method="post" action="hpp_recipes.php" class="hpp-inline-form" data-submit-lock>
                                                     <input type="hidden" name="csrf_token" value="<?= $escape(generate_csrf_token()) ?>">
@@ -169,16 +170,69 @@ $recipes = $schemaReady ? hpp_get_recipe_list($pdo) : [];
                         </table>
                     </div>
 
+                    <!-- Modal Dialog Preview Lembar Resep HPP -->
+                    <div id="hpp-view-modal" class="admin-modal-backdrop" hidden>
+                        <div class="admin-modal hpp-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="hpp-modal-title">
+                            <header class="admin-modal-header">
+                                <h3 id="hpp-modal-title" class="admin-modal-title">Lembar Resep HPP</h3>
+                                <button type="button" class="admin-modal-close" id="hpp-modal-close-btn" aria-label="Tutup modal">&times;</button>
+                            </header>
+                            <div class="admin-modal-body hpp-modal-body-iframe">
+                                <iframe id="hpp-modal-frame" class="hpp-modal-iframe" src="about:blank" title="Pratinjau Lembar Resep"></iframe>
+                            </div>
+                        </div>
+                    </div>
+
                     <script>
                     document.addEventListener('DOMContentLoaded', function () {
                         var search = document.getElementById('recipe-search');
-                        if (!search) return;
-                        search.addEventListener('input', function () {
-                            var q = search.value.toLowerCase().trim();
-                            document.querySelectorAll('.recipe-data-row').forEach(function (row) {
-                                var text = (row.textContent || '').toLowerCase();
-                                row.style.display = (!q || text.indexOf(q) !== -1) ? '' : 'none';
+                        if (search) {
+                            search.addEventListener('input', function () {
+                                var q = search.value.toLowerCase().trim();
+                                document.querySelectorAll('.recipe-data-row').forEach(function (row) {
+                                    var text = (row.textContent || '').toLowerCase();
+                                    row.style.display = (!q || text.indexOf(q) !== -1) ? '' : 'none';
+                                });
                             });
+                        }
+
+                        // Modal Preview Handler
+                        var modal = document.getElementById('hpp-view-modal');
+                        var iframe = document.getElementById('hpp-modal-frame');
+                        var closeBtn = document.getElementById('hpp-modal-close-btn');
+                        var modalTitle = document.getElementById('hpp-modal-title');
+
+                        function closeModal() {
+                            if (!modal) return;
+                            modal.hidden = true;
+                            if (iframe) iframe.src = 'about:blank';
+                        }
+
+                        if (closeBtn) closeBtn.addEventListener('click', closeModal);
+                        if (modal) {
+                            modal.addEventListener('click', function (e) {
+                                if (e.target === modal) closeModal();
+                            });
+                        }
+
+                        document.querySelectorAll('[data-view-recipe]').forEach(function (btn) {
+                            btn.addEventListener('click', function (e) {
+                                if (e.ctrlKey || e.metaKey || e.shiftKey || e.button !== 0) return;
+                                e.preventDefault();
+                                var id = this.getAttribute('data-view-recipe');
+                                var title = this.getAttribute('data-view-title') || 'Lembar Resep HPP';
+                                if (modalTitle) modalTitle.textContent = title;
+                                if (iframe) {
+                                    iframe.src = 'hpp_view.php?id=' + encodeURIComponent(id) + '&embedded=1';
+                                }
+                                if (modal) modal.hidden = false;
+                            });
+                        });
+
+                        document.addEventListener('keydown', function (e) {
+                            if (e.key === 'Escape' && modal && !modal.hidden) {
+                                closeModal();
+                            }
                         });
                     });
                     </script>

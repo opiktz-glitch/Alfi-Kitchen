@@ -330,6 +330,9 @@ $csrfToken = generate_csrf_token();
                 <h2><?= $recipeId === null ? 'Buat Resep HPP' : 'Edit Resep HPP' ?></h2>
                 <div class="admin-header-actions">
                     <a href="../" target="_blank" rel="noopener noreferrer" class="btn-site-preview"><?= admin_icon('external') ?>Lihat Website</a>
+                    <?php if ($recipeId !== null): ?>
+                        <a href="hpp_view.php?id=<?= (int)$recipeId ?>" target="_blank" class="btn btn-secondary btn-with-icon"><?= admin_icon('view') ?>Lihat Lembar Resep</a>
+                    <?php endif; ?>
                     <a href="logout.php" class="btn btn-danger btn-with-icon admin-header-logout"><?= admin_icon('logout') ?>Logout</a>
                 </div>
             </header>
