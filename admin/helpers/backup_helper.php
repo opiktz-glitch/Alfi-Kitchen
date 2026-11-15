@@ -560,3 +560,126 @@ function extract_images_archive(
         'error' => null,
     ];
 }
+
+/**
+ * Baca aktivitas restore terakhir dari log aktivitas admin.
+ *
+ * @param string|null $logPath Path kustom ke file log (opsional, untuk testing).
+ * @param string|null $filterType Filter jenis restore: 'database', 'images', atau null untuk semua.
+ * @return array{
+ *     timestamp: string,
+ *     formatted_date: string,
+ *     action: string,
+ *     username: string,
+ *     type: string,
+ *     status: string,
+ *     file: string,
+ *     schema: ?string,
+ *     queries: ?int,
+ *     extracted: ?int,
+ *     skipped: ?int,
+ *     error: ?string,
+ *     summary: string,
+ *     details: string
+ * }|null Mengembalikan data restore terakhir atau null jika belum ada.
+ */
+function get_latest_restore_activity(?string $logPath = null, ?string $filterType = null): ?array
+{
+    $logFile = $logPath ?? (__DIR__ . '/../../logs/admin_activity.log');
+    if (!is_file($logFile) || !is_readable($logFile)) {
+        return null;
+    }
+
+    $lines = @file($logFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    if ($lines === false || empty($lines)) {
+        return null;
+    }
+
+    // Cari dari baris paling akhir (terbaru)
+    for ($i = count($lines) - 1; $i >= 0; $i--) {
+        $line = trim($lines[$i]);
+        if (!str_contains($line, 'action=RESTORE_')) {
+            continue;
+        }
+
+        // Format log: Y-m-d H:i:s | ACTION | username=... | action=... | details=... | ip=...
+        $pattern = '/^(\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2})\s*\|\s*ACTION\s*\|\s*username=([^|]+)\s*\|\s*action=(RESTORE_[A-Za-z0-9_]+)\s*\|\s*details=(.*?)(?:\s*\|\s*ip=(.*))?$/';
+        if (!preg_match($pattern, $line, $matches)) {
+            continue;
+        }
+
+        $rawDate = $matches[1];
+        $username = trim($matches[2]);
+        $action = trim($matches[3]);
+        $detailsRaw = trim($matches[4]);
+
+        $type = null;
+        if (str_starts_with($action, 'RESTORE_DATABASE')) {
+            $type = 'database';
+        } elseif (str_starts_with($action, 'RESTORE_IMAGES')) {
+            $type = 'images';
+        } else {
+            continue;
+        }
+
+        if ($filterType !== null && $type !== $filterType) {
+            continue;
+        }
+
+        $status = str_ends_with($action, '_SUCCESS') ? 'success' : 'failed';
+
+        // Parse key=value dari string details
+        $detailsMap = [];
+        $parts = explode(',', $detailsRaw);
+        foreach ($parts as $part) {
+            $kv = explode('=', trim($part), 2);
+            if (count($kv) === 2) {
+                $detailsMap[trim($kv[0])] = trim($kv[1]);
+            }
+        }
+
+        $file = $detailsMap['file'] ?? '';
+        $schema = $detailsMap['schema'] ?? null;
+        $queries = isset($detailsMap['queries']) ? (int) $detailsMap['queries'] : null;
+        $extracted = isset($detailsMap['extracted']) ? (int) $detailsMap['extracted'] : null;
+        $skipped = isset($detailsMap['skipped']) ? (int) $detailsMap['skipped'] : null;
+        $error = $detailsMap['error'] ?? $detailsMap['reason'] ?? null;
+
+        $timeVal = strtotime($rawDate);
+        $formattedDate = $timeVal ? date('d M Y, H:i', $timeVal) . ' WIB' : $rawDate;
+
+        $summary = '';
+        if ($type === 'database') {
+            if ($status === 'success') {
+                $summary = 'Berhasil dipulihkan (' . ($queries !== null ? $queries . ' kueri dieksekusi' : 'selesai') . ($schema ? ', skema ' . $schema : '') . ')';
+            } else {
+                $summary = 'Restore gagal: ' . ($error ?? 'Terjadi kesalahan');
+            }
+        } else {
+            if ($status === 'success') {
+                $summary = 'Berhasil dipulihkan (' . ($extracted ?? 0) . ' file diekstrak' . ($skipped ? ', ' . $skipped . ' diabaikan' : '') . ')';
+            } else {
+                $summary = 'Restore gagal: ' . ($error ?? 'Terjadi kesalahan');
+            }
+        }
+
+        return [
+            'timestamp' => $rawDate,
+            'formatted_date' => $formattedDate,
+            'action' => $action,
+            'username' => $username,
+            'type' => $type,
+            'status' => $status,
+            'file' => $file,
+            'schema' => $schema,
+            'queries' => $queries,
+            'extracted' => $extracted,
+            'skipped' => $skipped,
+            'error' => $error,
+            'summary' => $summary,
+            'details' => $detailsRaw,
+        ];
+    }
+
+    return null;
+}

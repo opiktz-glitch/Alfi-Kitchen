@@ -186,6 +186,7 @@ if (isset($_GET['tab'])) {
                 </div>
             </header>
             <div class="admin-container">
+                <?php include __DIR__ . '/flash_message.php'; ?>
                 <nav class="admin-subnav" aria-label="Navigasi Pengaturan dan Sistem">
                     <a href="settings.php" class="admin-subnav-link is-active"><?= admin_icon('settings') ?> Pengaturan Toko</a>
                     <a href="activity_log.php" class="admin-subnav-link"><?= admin_icon('log') ?> Log Aktivitas</a>
@@ -343,6 +344,7 @@ if (isset($_GET['tab'])) {
             <div id="tab-database" class="settings-tab-pane" role="tabpanel" aria-labelledby="tab-btn-database"<?= $activeTab === 'tab-database' ? '' : ' hidden' ?>>
                 <?php
                 require_once __DIR__ . '/../includes/DatabaseMigrator.php';
+                require_once __DIR__ . '/helpers/backup_helper.php';
                 $migrator = new DatabaseMigrator($pdo);
                 $statusList = $migrator->getStatus();
                 $pendingMigrations = $migrator->getPendingMigrations();
@@ -352,6 +354,8 @@ if (isset($_GET['tab'])) {
                         $lastApplied = $st['version'];
                     }
                 }
+                $latestRestoreDb = get_latest_restore_activity(null, 'database');
+                $latestRestoreImages = get_latest_restore_activity(null, 'images');
                 ?>
                 <div class="settings-grid">
                     <section class="settings-panel">
@@ -413,6 +417,23 @@ if (isset($_GET['tab'])) {
                                 <?= admin_icon('upload') ?><span>Restore Database</span>
                             </button>
                         </form>
+                        <?php if ($latestRestoreDb): ?>
+                            <div class="restore-status-box <?= $latestRestoreDb['status'] === 'success' ? 'is-success' : 'is-error' ?>" role="status">
+                                <div class="restore-status-header">
+                                    <strong>Riwayat Restore Database Terakhir</strong>
+                                    <span class="restore-status-time"><?= htmlspecialchars($latestRestoreDb['formatted_date'], ENT_QUOTES, 'UTF-8') ?></span>
+                                </div>
+                                <div class="restore-status-body <?= $latestRestoreDb['status'] === 'success' ? 'is-success' : 'is-error' ?>">
+                                    <?= admin_icon($latestRestoreDb['status'] === 'success' ? 'check' : 'info') ?>
+                                    <span>
+                                        <?php if ($latestRestoreDb['file']): ?>
+                                            <code><?= htmlspecialchars($latestRestoreDb['file'], ENT_QUOTES, 'UTF-8') ?></code> &mdash;
+                                        <?php endif; ?>
+                                        <?= htmlspecialchars($latestRestoreDb['summary'], ENT_QUOTES, 'UTF-8') ?>
+                                    </span>
+                                </div>
+                            </div>
+                        <?php endif; ?>
                     </section>
 
                     <section class="settings-panel">
@@ -431,6 +452,23 @@ if (isset($_GET['tab'])) {
                                 <?= admin_icon('upload') ?><span>Restore Gambar</span>
                             </button>
                         </form>
+                        <?php if ($latestRestoreImages): ?>
+                            <div class="restore-status-box <?= $latestRestoreImages['status'] === 'success' ? 'is-success' : 'is-error' ?>" role="status">
+                                <div class="restore-status-header">
+                                    <strong>Riwayat Restore Gambar Terakhir</strong>
+                                    <span class="restore-status-time"><?= htmlspecialchars($latestRestoreImages['formatted_date'], ENT_QUOTES, 'UTF-8') ?></span>
+                                </div>
+                                <div class="restore-status-body <?= $latestRestoreImages['status'] === 'success' ? 'is-success' : 'is-error' ?>">
+                                    <?= admin_icon($latestRestoreImages['status'] === 'success' ? 'check' : 'info') ?>
+                                    <span>
+                                        <?php if ($latestRestoreImages['file']): ?>
+                                            <code><?= htmlspecialchars($latestRestoreImages['file'], ENT_QUOTES, 'UTF-8') ?></code> &mdash;
+                                        <?php endif; ?>
+                                        <?= htmlspecialchars($latestRestoreImages['summary'], ENT_QUOTES, 'UTF-8') ?>
+                                    </span>
+                                </div>
+                            </div>
+                        <?php endif; ?>
                     </section>
                 </div>
             </div>

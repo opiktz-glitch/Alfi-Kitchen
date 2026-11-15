@@ -167,5 +167,81 @@ class DatabaseRestoreTest extends TestCase
         $this->assertStringContainsString('enctype="multipart/form-data"', $settings);
         $this->assertStringContainsString('Restore Database (.sql)', $settings);
         $this->assertStringContainsString('Restore Gambar (.zip)', $settings);
+        $this->assertStringContainsString("include __DIR__ . '/flash_message.php'", $settings);
+        $this->assertStringContainsString('get_latest_restore_activity', $settings);
+        $this->assertStringContainsString('restore-status-box', $settings);
+    }
+
+    public function testGetLatestRestoreActivityReturnsNullWhenLogMissing(): void
+    {
+        $this->assertNull(get_latest_restore_activity(__DIR__ . '/non_existent_file.log'));
+    }
+
+    public function testGetLatestRestoreActivityParsesDatabaseAndImagesCorrectly(): void
+    {
+        $tmpLog = sys_get_temp_dir() . '/test_admin_activity_' . bin2hex(random_bytes(6)) . '.log';
+        $logLines = [
+            "2026-11-15 08:30:00 | ACTION | username=admin | action=LOGIN | details=ip=127.0.0.1\n",
+            "2026-11-15 09:10:00 | ACTION | username=admin | action=RESTORE_DATABASE_REJECTED | details=reason=Versi skema tidak sesuai, file=backup_v04.sql | ip=127.0.0.1\n",
+            "2026-11-15 09:20:00 | ACTION | username=admin | action=RESTORE_DATABASE_SUCCESS | details=schema=v05_hpp.sql, file=alfi_kitchen_backup_20261115.sql, queries=67 | ip=127.0.0.1\n",
+            "2026-11-15 09:30:00 | ACTION | username=admin | action=RESTORE_IMAGES_FAILED | details=error=Format arsip zip tidak valid, file=bad_images.zip | ip=127.0.0.1\n",
+            "2026-11-15 09:40:00 | ACTION | username=admin | action=RESTORE_IMAGES_SUCCESS | details=extracted=35, skipped=2, file=alfi_kitchen_images_20261115.zip | ip=127.0.0.1\n",
+        ];
+        file_put_contents($tmpLog, implode('', $logLines));
+
+        try {
+            // 1. Overall latest (seharusnya line 5: RESTORE_IMAGES_SUCCESS)
+            $latestOverall = get_latest_restore_activity($tmpLog);
+            $this->assertNotNull($latestOverall);
+            $this->assertSame('images', $latestOverall['type']);
+            $this->assertSame('success', $latestOverall['status']);
+            $this->assertSame('alfi_kitchen_images_20261115.zip', $latestOverall['file']);
+            $this->assertSame(35, $latestOverall['extracted']);
+            $this->assertSame(2, $latestOverall['skipped']);
+            $this->assertStringContainsString('35 file diekstrak', $latestOverall['summary']);
+
+            // 2. Filter Database (seharusnya line 3: RESTORE_DATABASE_SUCCESS)
+            $latestDb = get_latest_restore_activity($tmpLog, 'database');
+            $this->assertNotNull($latestDb);
+            $this->assertSame('database', $latestDb['type']);
+            $this->assertSame('success', $latestDb['status']);
+            $this->assertSame('alfi_kitchen_backup_20261115.sql', $latestDb['file']);
+            $this->assertSame('v05_hpp.sql', $latestDb['schema']);
+            $this->assertSame(67, $latestDb['queries']);
+            $this->assertStringContainsString('67 kueri dieksekusi', $latestDb['summary']);
+
+            // 3. Filter Images (seharusnya line 5: RESTORE_IMAGES_SUCCESS)
+            $latestImg = get_latest_restore_activity($tmpLog, 'images');
+            $this->assertNotNull($latestImg);
+            $this->assertSame('images', $latestImg['type']);
+            $this->assertSame('success', $latestImg['status']);
+            $this->assertSame('alfi_kitchen_images_20261115.zip', $latestImg['file']);
+        } finally {
+            if (is_file($tmpLog)) {
+                @unlink($tmpLog);
+            }
+        }
+    }
+
+    public function testGetLatestRestoreActivityHandlesFailureLogs(): void
+    {
+        $tmpLog = sys_get_temp_dir() . '/test_admin_activity_fail_' . bin2hex(random_bytes(6)) . '.log';
+        $logLines = [
+            "2026-11-15 10:00:00 | ACTION | username=admin | action=RESTORE_DATABASE_ERROR | details=error=Syntax error near DROP, file=corrupt.sql | ip=127.0.0.1\n",
+        ];
+        file_put_contents($tmpLog, implode('', $logLines));
+
+        try {
+            $latest = get_latest_restore_activity($tmpLog, 'database');
+            $this->assertNotNull($latest);
+            $this->assertSame('database', $latest['type']);
+            $this->assertSame('failed', $latest['status']);
+            $this->assertSame('corrupt.sql', $latest['file']);
+            $this->assertStringContainsString('Syntax error near DROP', $latest['summary']);
+        } finally {
+            if (is_file($tmpLog)) {
+                @unlink($tmpLog);
+            }
+        }
     }
 }

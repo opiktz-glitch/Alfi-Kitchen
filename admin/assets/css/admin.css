@@ -1962,6 +1962,62 @@ body {
   font-size: 0.84rem;
   color: #856404;
 }
+.restore-status-box {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  font-size: 0.88rem;
+}
+.restore-status-box.is-success {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+}
+.restore-status-box.is-error {
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+.restore-status-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  gap: 8px;
+  font-size: 0.84rem;
+}
+.restore-status-header strong {
+  color: var(--text);
+}
+.restore-status-time {
+  font-size: 0.78rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.restore-status-body {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  line-height: 1.4;
+}
+.restore-status-body.is-success {
+  color: #166534;
+}
+.restore-status-body.is-error {
+  color: #991b1b;
+}
+.restore-status-body .admin-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.restore-status-body code {
+  font-size: 0.82rem;
+  padding: 1px 4px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.05);
+}
 .form-spaced {
   margin-bottom: 16px;
 }
