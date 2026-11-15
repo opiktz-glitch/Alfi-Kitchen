@@ -1,0 +1,673 @@
+/* === Module: _hpp_calculator.css === */
+.hpp-refresh-snapshots {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #6a5848;
+}
+.hpp-refresh-snapshots[hidden] {
+  display: none !important;
+}
+.hpp-refresh-snapshots input {
+  width: auto;
+  margin: 0;
+}
+.hpp-calculation-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 14px 0;
+}
+.hpp-calculation-summary > div {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #faf8f5;
+}
+.hpp-calculation-summary span {
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+.hpp-calculation-summary strong {
+  color: var(--text);
+  font-size: 0.96rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+.hpp-calculation-summary > div:last-child {
+  grid-column: 1 / -1;
+  background: #fff4eb;
+  border-color: #f3cca8;
+}
+.hpp-calculation-summary > div:last-child strong {
+  color: #c45500;
+  font-size: 1.15rem;
+}
+.hpp-scenarios-heading {
+  margin: 14px 0 8px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+}
+.hpp-scenarios-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.hpp-scenarios-presets {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.hpp-scenario-custom {
+  background: #fdfaf6;
+  border-color: #f1cfb7;
+}
+.hpp-scenario-custom:hover {
+  background: #fdf6ee;
+  border-color: var(--accent);
+}
+.hpp-scenario-custom-badge {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  background: #fff;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-sm);
+  padding: 1px 6px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: var(--text);
+}
+.hpp-scenario-custom-sign,
+.hpp-scenario-custom-pct {
+  font-weight: 750;
+  color: var(--accent);
+}
+.hpp-scenario-custom-input {
+  width: 44px;
+  padding: 2px 2px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-align: center;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  outline: none;
+}
+.hpp-scenario-custom-input:focus {
+  background: #fff;
+  border-radius: 4px;
+}
+.hpp-scenario-custom-input::-webkit-outer-spin-button,
+.hpp-scenario-custom-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.hpp-scenario-custom-input[type=number] {
+  -moz-appearance: textfield;
+}
+.hpp-scenario-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  transition: all 0.15s ease;
+}
+.hpp-scenario-item:hover {
+  background: #faf8f5;
+  border-color: #d1cbc3;
+}
+.hpp-scenario-badge {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.74rem;
+  font-weight: 750;
+  padding: 3px 6px;
+  background: #fff4eb;
+  color: #85420f;
+  border: 1px solid #f0dfd1;
+  border-radius: 4px;
+  min-width: 44px;
+}
+.hpp-scenario-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1 1 auto;
+  gap: 2px;
+}
+.hpp-scenario-price {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.2;
+}
+.hpp-scenario-meta {
+  font-size: 0.72rem;
+  color: var(--muted);
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.hpp-scenario-action {
+  flex-shrink: 0;
+}
+.hpp-scenario-action .btn {
+  padding: 4px 8px;
+  font-size: 0.74rem;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+}
+.hpp-calculation-status {
+  min-height: 1.2em;
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+.hpp-scenarios-hint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0 0;
+  padding: 8px 10px;
+  background: #fff8e6;
+  border: 1px solid #f1d89b;
+  border-radius: var(--radius-sm);
+  color: #594514;
+  font-size: 0.74rem;
+  line-height: 1.4;
+}
+.hpp-scenarios-hint .admin-icon {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+.hpp-editor-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+.hpp-editor-actions .btn {
+  min-height: 40px;
+}
+.hpp-list-page {
+  max-width: 1240px;
+}
+.hpp-recipe-list-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.hpp-recipe-list-table th {
+  padding: 11px 14px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  border-bottom: 2px solid var(--line);
+  background: var(--bg);
+  white-space: nowrap;
+  text-align: center;
+}
+.hpp-recipe-list-table td {
+  padding: 11px 14px;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.88rem;
+}
+.hpp-recipe-list-table td[data-label="Nama resep / varian"] {
+  text-align: left;
+}
+.hpp-recipe-list-table td[data-label="HPP per jar"],
+.hpp-recipe-list-table td[data-label="Harga jual saat ini"],
+.hpp-recipe-list-table td[data-label="Status bahan"],
+.hpp-recipe-list-table td[data-label="Aksi"] {
+  text-align: center;
+}
+.hpp-recipe-list-table tbody tr:hover td {
+  background: #faf7f2;
+}
+.hpp-public-price-card {
+  margin-top: 20px;
+}
+.hpp-public-price-form .admin-form-grid {
+  max-width: 760px;
+}
+.hpp-price-rounding-actions,
+.hpp-confirm-price-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0;
+}
+.hpp-price-comparison {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 16px 0;
+}
+.hpp-price-comparison > div {
+  min-width: 150px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--bg);
+}
+.hpp-price-comparison dt {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+.hpp-price-comparison dd {
+  margin: 4px 0 0;
+  font-weight: 700;
+}
+.hpp-price-confirmation .alert {
+  max-width: 760px;
+}
+.hpp-scenarios [data-use-scenario-price] {
+  padding: 3px 6px;
+  font-size: 0.72rem;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+}
+.hpp-recipe-variant,
+.hpp-recipe-product {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+.hpp-recipe-variant {
+  display: inline-block;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: #fff3e8;
+  color: #875127;
+  font-weight: 600;
+}
+.hpp-status-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.hpp-status-badge.is-current {
+  background: #e7f4e9;
+  color: #28643a;
+}
+.hpp-status-badge.is-changed {
+  background: #fff0d9;
+  color: #80520c;
+}
+.hpp-muted-value {
+  color: var(--muted);
+}
+.hpp-recipe-actions {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.action-button-label {
+  display: none;
+}
+.btn.is-loading {
+  pointer-events: none;
+}
+.btn.is-loading::after {
+  width: 13px;
+  height: 13px;
+  flex: 0 0 13px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  content: '';
+  animation: admin-button-spin 0.7s linear infinite;
+}
+@keyframes admin-button-spin {
+  to { transform: rotate(360deg); }
+}
+.hpp-inline-form {
+  display: inline-flex;
+  margin: 0;
+}
+.hpp-recipe-delete-form {
+  flex: 0 0 auto;
+}
+.hpp-ingredients-table th {
+  padding: 11px 14px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  border-bottom: 2px solid var(--line);
+  background: var(--bg);
+  white-space: nowrap;
+  text-align: center;
+}
+.hpp-ingredients-table td {
+  padding: 11px 14px;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.88rem;
+}
+.hpp-ingredients-table td[data-label="Isi Kemasan"],
+.hpp-ingredients-table td[data-label="Harga Kemasan"],
+.hpp-ingredients-table td[data-label="Catatan"],
+.hpp-ingredients-table td[data-label="Aksi"] {
+  text-align: center;
+}
+.hpp-ingredients-table .table-action-group {
+  justify-content: center;
+}
+.hpp-ingredients-table td.ingredient-col-note {
+  color: var(--muted);
+  font-size: 0.82rem;
+  max-width: 220px;
+}
+.ingredient-pack-size-val {
+  font-weight: 500;
+  color: var(--text);
+}
+.ingredient-data-row:hover td {
+  background: #faf7f2;
+}
+.ingredient-title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.ingredient-title-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.ingredient-name {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text);
+}
+.ingredient-note {
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+.ingredient-pack-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.ingredient-pack-price {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text);
+}
+.ingredient-pack-size {
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+.badge-unit {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  background: #efebe4;
+  color: #5c5243;
+  text-transform: lowercase;
+  letter-spacing: 0.03em;
+}
+.badge-usage {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+.badge-usage.has-recipes {
+  background: #e6f4ea;
+  color: #137333;
+}
+.hpp-unit-price {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--text);
+}
+.table-action-group {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+}
+.ingredient-edit-drawer-row[hidden] {
+  display: none !important;
+}
+.ingredient-edit-drawer-row td {
+  padding: 0;
+  background: #fdfbf7;
+  border-bottom: 2px solid #e8dfd2;
+}
+.ingredient-edit-card {
+  padding: 18px 20px;
+  margin: 10px 14px 14px;
+  background: #ffffff;
+  border: 1px solid #e2dacd;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(41, 32, 24, 0.04);
+}
+.ingredient-edit-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--line);
+}
+.ingredient-edit-card-header h4 {
+  margin: 0 0 4px;
+  font-size: 1rem;
+  color: var(--text);
+}
+.ingredient-edit-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+.btn-with-icon {
+  gap: 8px;
+}
+.btn-with-icon .admin-icon,
+.btn-site-preview .admin-icon {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+}
+.form-hint,
+.text-muted {
+  color: var(--muted);
+}
+.form-hint {
+  display: block;
+  margin-top: 5px;
+  font-size: 0.82rem;
+}
+.form-group label .text-muted {
+  font-size: 0.82rem;
+  font-weight: 400;
+}
+.text-error {
+  color: #842029;
+}
+.admin-flash { margin-bottom: 16px; }
+.section-title { margin: 32px 0 12px; }
+.activity-toolbar,
+.settings-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.activity-summary {
+  margin: 0;
+  color: var(--muted);
+}
+.activity-clear-form,
+.inline-action-form {
+  display: inline-flex;
+  margin: 0;
+}
+.empty-table-cell {
+  padding: 30px;
+  text-align: center;
+}
+.table-cell-emphasis {
+  font-size: 1rem;
+  font-weight: 600;
+}
+.table-cell-price {
+  color: #85420f;
+  font-weight: 700;
+  text-align: center;
+}
+.settings-copy {
+  margin: 0 0 14px;
+  color: var(--muted);
+}
+.migration-status {
+  margin-bottom: 16px;
+  padding: 15px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: #fff8ef;
+}
+.migration-status-version {
+  margin-bottom: 8px;
+}
+.migration-status-ok,
+.migration-status-pending {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-weight: 650;
+}
+.migration-status-ok .admin-icon { width: 16px; height: 16px; }
+.migration-status-ok { color: #216e39; }
+.migration-status-pending { color: #856404; }
+.migration-status-list {
+  margin: 8px 0 0 20px;
+  font-size: 0.84rem;
+  color: #856404;
+}
+.restore-status-box {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  font-size: 0.88rem;
+}
+.restore-status-box.is-success {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+}
+.restore-status-box.is-error {
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+.restore-status-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  gap: 8px;
+  font-size: 0.84rem;
+}
+.restore-status-header strong {
+  color: var(--text);
+}
+.restore-status-time {
+  font-size: 0.78rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.restore-status-body {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  line-height: 1.4;
+}
+.restore-status-body.is-success {
+  color: #166534;
+}
+.restore-status-body.is-error {
+  color: #991b1b;
+}
+.restore-status-body .admin-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.restore-status-body code {
+  font-size: 0.82rem;
+  padding: 1px 4px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.05);
+}
+.form-spaced {
+  margin-bottom: 16px;
+}
+.form-group {
+  margin-bottom: 16px;
+}
+.form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+  font-size: 0.875rem;
+}
+.form-control,
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group input[type="password"],
+.form-group input[type="file"],
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  box-sizing: border-box;
+  font-size: 0.9rem;
+  font-family: inherit;
+  color: var(--text);
+  background: #fff;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}

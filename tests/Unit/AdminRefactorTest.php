@@ -29,7 +29,7 @@ class AdminRefactorTest extends TestCase
 
     public function testAdminCssContainsRequiredClasses(): void
     {
-        $css = file_get_contents(self::CSS_FILE);
+        $css = resolve_css_imports(self::CSS_FILE);
         $this->assertStringContainsString('.admin-header', $css);
         $this->assertStringContainsString('.admin-container', $css);
         $this->assertStringContainsString('.form-card', $css);
@@ -50,7 +50,7 @@ class AdminRefactorTest extends TestCase
 
     public function testAdminPrimaryButtonsUseNeutralStyling(): void
     {
-        $css = file_get_contents(self::CSS_FILE);
+        $css = resolve_css_imports(self::CSS_FILE);
 
         $this->assertMatchesRegularExpression(
             '/\.btn-primary\s*\{\s*border:\s*1px solid #e8e2db;\s*background:\s*#f5f3f0;\s*color:\s*#51483f;\s*\}/',
@@ -64,7 +64,7 @@ class AdminRefactorTest extends TestCase
 
     public function testAdminVisualStyleUsesCompactTypographyAndControls(): void
     {
-        $css = file_get_contents(self::CSS_FILE);
+        $css = resolve_css_imports(self::CSS_FILE);
 
         $this->assertStringContainsString('font-size: 14px;', $css);
         $this->assertStringContainsString('font-size: 1.45rem;', $css);
@@ -76,7 +76,7 @@ class AdminRefactorTest extends TestCase
 
     public function testAdminFormsUseAvailableWidthAndStackOnMobile(): void
     {
-        $css = file_get_contents(self::CSS_FILE);
+        $css = resolve_css_imports(self::CSS_FILE);
         $addProduct = file_get_contents(self::ADMIN_DIR . '/add_product.php');
         $editItem = file_get_contents(self::ADMIN_DIR . '/edit_item.php');
         $manageItems = file_get_contents(self::ADMIN_DIR . '/manage_items.php');
@@ -96,7 +96,7 @@ class AdminRefactorTest extends TestCase
     {
         $dashboard = file_get_contents(self::ADMIN_DIR . '/dashboard.php');
         $sidebar = file_get_contents(self::ADMIN_DIR . '/sidebar.php');
-        $css = file_get_contents(self::CSS_FILE);
+        $css = resolve_css_imports(self::CSS_FILE);
         $index = file_get_contents(self::ADMIN_DIR . '/index.php');
 
         $this->assertStringNotContainsString('<nav class="admin-nav"', $dashboard);
@@ -159,7 +159,7 @@ class AdminRefactorTest extends TestCase
             $this->assertStringContainsString('class="admin-header"', $content, $file . ' harus memakai header admin bersama');
         }
 
-        $css = file_get_contents(self::CSS_FILE);
+        $css = resolve_css_imports(self::CSS_FILE);
         $this->assertStringContainsString('.btn-with-icon', $css);
         $this->assertStringContainsString('.btn:focus-visible', $css);
         $this->assertStringContainsString('.admin-bottom-nav', $css);
@@ -168,7 +168,7 @@ class AdminRefactorTest extends TestCase
     public function testProductPagePrioritizesVariantManagementAndSeparatesDelete(): void
     {
         $dashboard = file_get_contents(self::ADMIN_DIR . '/products.php');
-        $css = file_get_contents(self::CSS_FILE);
+        $css = resolve_css_imports(self::CSS_FILE);
 
         $this->assertStringContainsString('aria-label="Kelola varian dan harga untuk', $dashboard);
         $this->assertStringContainsString('aria-label="Edit kategori', $dashboard);
@@ -195,7 +195,7 @@ class AdminRefactorTest extends TestCase
     public function testProductPageShowsConsistentCategoryThumbnailsAndVariantCounts(): void
     {
         $dashboard = file_get_contents(self::ADMIN_DIR . '/products.php');
-        $css = file_get_contents(self::CSS_FILE);
+        $css = resolve_css_imports(self::CSS_FILE);
 
         $this->assertStringContainsString('AS item_count', $dashboard);
         $this->assertStringContainsString('class="category-thumb"', $dashboard);
@@ -208,7 +208,7 @@ class AdminRefactorTest extends TestCase
     public function testProductPageUsesStackedCategoryCardsOnMobile(): void
     {
         $dashboard = file_get_contents(self::ADMIN_DIR . '/products.php');
-        $css = file_get_contents(self::CSS_FILE);
+        $css = resolve_css_imports(self::CSS_FILE);
 
         $this->assertStringContainsString('data-label="Kategori"', $dashboard);
         $this->assertStringContainsString('data-label="Jumlah varian"', $dashboard);
@@ -223,7 +223,7 @@ class AdminRefactorTest extends TestCase
     public function testProductPageSupportsSearchEmptyStatesAndNamedDeleteConfirmation(): void
     {
         $dashboard = file_get_contents(self::ADMIN_DIR . '/products.php');
-        $css = file_get_contents(self::CSS_FILE);
+        $css = resolve_css_imports(self::CSS_FILE);
 
         $this->assertStringContainsString('name="search"', $dashboard);
         $this->assertStringContainsString('LIKE ? ESCAPE', $dashboard);
@@ -385,7 +385,7 @@ class AdminRefactorTest extends TestCase
         $this->assertStringContainsString('function admin_icon(string $name): string', $auth);
         $this->assertStringContainsString('class="admin-icon" viewBox="0 0 24 24" aria-hidden="true"', $auth);
         $this->assertStringContainsString('throw new InvalidArgumentException(\'Ikon admin tidak dikenal.\')', $auth);
-        $this->assertStringContainsString('.btn-icon-only', file_get_contents(self::CSS_FILE));
+        $this->assertStringContainsString('.btn-icon-only', resolve_css_imports(self::CSS_FILE));
         $this->assertStringContainsString("admin_icon('manage')", file_get_contents(self::ADMIN_DIR . '/products.php'));
         $this->assertStringContainsString("admin_icon('edit')", file_get_contents(self::ADMIN_DIR . '/manage_items.php'));
         $this->assertStringContainsString("admin_icon('delete')", file_get_contents(self::ADMIN_DIR . '/manage_hero.php'));
@@ -396,7 +396,7 @@ class AdminRefactorTest extends TestCase
 
     public function testAdminActionsShowMobileLabelsAndSubmissionStatus(): void
     {
-        $css = file_get_contents(self::CSS_FILE);
+        $css = resolve_css_imports(self::CSS_FILE);
         $sidebar = file_get_contents(self::ADMIN_DIR . '/sidebar.php');
         $auth = file_get_contents(self::ADMIN_DIR . '/auth.php');
         $settings = file_get_contents(self::ADMIN_DIR . '/settings.php');

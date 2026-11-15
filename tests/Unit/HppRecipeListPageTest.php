@@ -42,9 +42,9 @@ class HppRecipeListPageTest extends TestCase
         $this->assertStringContainsString('HPP_DELETE_RECIPE', $page);
         $this->assertStringContainsString('Harga publik produk tidak berubah', $page);
         $this->assertStringNotContainsString('UPDATE product_items', strtoupper($page));
-        $this->assertStringContainsString('@media (max-width: 768px)', file_get_contents(self::ADMIN_DIR . '/assets/css/admin.css'));
-        $this->assertStringContainsString('.hpp-recipe-list-table tbody tr', file_get_contents(self::ADMIN_DIR . '/assets/css/admin.css'));
-        $css = file_get_contents(self::ADMIN_DIR . '/assets/css/admin.css');
+        $css = resolve_css_imports(self::ADMIN_DIR . '/assets/css/admin.css');
+        $this->assertStringContainsString('@media (max-width: 768px)', $css);
+        $this->assertStringContainsString('.hpp-recipe-list-table tbody tr', $css);
         $this->assertStringContainsString('.hpp-recipe-actions .category-icon-button', $css);
         $this->assertMatchesRegularExpression('/\.hpp-recipe-actions\s*\{\s*display:\s*flex;\s*flex-wrap:\s*nowrap;/', $css);
         $this->assertDoesNotMatchRegularExpression('/\.hpp-recipe-delete-form\s*\{[^}]*border-left:/', $css);

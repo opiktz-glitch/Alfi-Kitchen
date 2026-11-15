@@ -7,6 +7,12 @@ bukan penanda rilis atau versi aplikasi.
 ## 2026-11-15
 
 ### Added
+- **Refactoring Arsitektur CSS Modular Panel Admin**:
+  - Memecah berkas tunggal monolitik `admin/assets/css/admin.css` (4.045 baris) menjadi 8 modul terstruktur dan terfokus di direktori `admin/assets/css/modules/` (`_variables.css`, `_components.css`, `_modals.css`, `_navigation.css`, `_hpp_editor.css`, `_hpp_calculator.css`, `_responsive_admin.css`, `_responsive_hpp.css`).
+  - Memastikan seluruh berkas kode di seluruh proyek berada di bawah 1.000 baris (maksimal ~750 baris).
+  - Menyederhanakan `admin/assets/css/admin.css` menjadi entry-point ringkas berisi deklarasi `@import`.
+  - Menambahkan modul `tests/helpers.php` dengan fungsi `resolve_css_imports()` untuk harmonisasi otomatis unit test terhadap berkas CSS modular.
+  - Memperbarui panduan agen `AGENTS.md` untuk mengizinkan penambahan styling modular di `admin/assets/css/modules/`.
 - **Optimasi Antarmuka Mobile (Smart Compact UI di Layar HP)**:
   - Eliminasi *nested scrollbar* pada Tab 1 (Resep & Bahan) dan Tab 2 (Biaya Operasional) di editor HPP sehingga seluruh tab bergulir seragam menggunakan satu *page scroll*.
   - Tata letak **Smart Compact 2-Baris** pada kartu Bahan Baku di editor HPP: dropdown bahan & icon tombol hapus di Baris 1, input qty & subtotal di Baris 2 (hemat ruang vertikal ~63%).

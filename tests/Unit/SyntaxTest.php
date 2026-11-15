@@ -66,9 +66,25 @@ class SyntaxTest extends TestCase
     {
         $cssFile = self::PROJECT_ROOT . 'admin/assets/css/admin.css';
         $this->assertFileExists($cssFile, 'File admin.css harus ada');
-        $css = file_get_contents($cssFile);
+        $css = resolve_css_imports($cssFile);
         $this->assertStringContainsString(':root', $css, 'CSS harus memiliki variabel :root');
         $this->assertStringContainsString('body', $css, 'CSS harus memiliki style body');
         $this->assertNotEmpty($css, 'CSS tidak boleh kosong');
+
+        $modules = [
+            '_variables.css',
+            '_components.css',
+            '_modals.css',
+            '_navigation.css',
+            '_hpp_editor.css',
+            '_hpp_calculator.css',
+            '_responsive_admin.css',
+            '_responsive_hpp.css',
+        ];
+        foreach ($modules as $mod) {
+            $modFile = self::PROJECT_ROOT . 'admin/assets/css/modules/' . $mod;
+            $this->assertFileExists($modFile, "Modul CSS {$mod} harus ada");
+            $this->assertNotEmpty(file_get_contents($modFile), "Modul CSS {$mod} tidak boleh kosong");
+        }
     }
 }

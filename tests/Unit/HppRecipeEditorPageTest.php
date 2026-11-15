@@ -71,7 +71,7 @@ class HppRecipeEditorPageTest extends TestCase
 
     public function testEditorRowsFitBesideCalculatorAtLaptopWidths(): void
     {
-        $css = file_get_contents(self::ADMIN_DIR . '/assets/css/admin.css');
+        $css = resolve_css_imports(self::ADMIN_DIR . '/assets/css/admin.css');
 
         $this->assertMatchesRegularExpression(
             '/@media\s*\(max-width:\s*1440px\)\s*\{\s*\.hpp-editor-row\s*\{\s*grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\);/s',

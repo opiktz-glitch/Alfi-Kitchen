@@ -1,0 +1,110 @@
+/* === Module: _variables.css === */
+:root {
+  --accent: #e8935a;
+  --accent-hover: #d17d47;
+  --bg: #faf9f7;
+  --text: #3f352c;
+  --card: #ffffff;
+  --line: #e9e5df;
+  --muted: #766d64;
+  --danger: #b42332;
+  --danger-soft: #fff1f1;
+  --radius-sm: 8px;
+  --radius-md: 10px;
+}
+
+body {
+  font-family: 'Inter', Arial, sans-serif;
+  background: var(--bg);
+  margin: 0;
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* === Drag & drop upload === */
+.dropzone { border: 2px dashed var(--line); border-radius: 8px; padding: 16px; text-align: center; color: var(--muted); transition: border-color 0.2s, background 0.2s; }
+.dropzone.is-dragover { border-color: var(--accent); background: var(--bg); }
+.dropzone-preview { margin-top: 8px; max-width: 120px; max-height: 120px; border-radius: 6px; }
+.admin-layout { display: flex; min-height: 100vh; }
+.admin-sidebar {
+  box-sizing: border-box;
+  width: 240px;
+/* === Toast notifications === */
+.toast { position: fixed; top: 16px; right: 16px; z-index: 9999; min-width: 240px; max-width: 360px; padding: 12px 16px; border-radius: 8px; background: var(--card); color: var(--text); box-shadow: 0 8px 24px rgba(0,0,0,0.12); border-left: 4px solid var(--accent); font-size: 0.85rem; opacity: 1; transform: translateY(0); transition: opacity 0.3s ease, transform 0.3s ease; }
+.toast-error { border-left-color: #c0392b; }
+.toast-hide { opacity: 0; transform: translateY(-8px); }
+
+/* Preview gambar */
+.preview-img,
+.thumb-preview {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 2px solid var(--line);
+  margin-bottom: 10px;
+  display: block;
+}
+
+.current-logo {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 15px;
+  border: 1px solid var(--line);
+  display: block;
+}
+
+/* Thumb tabel */
+.thumb {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.thumb-hero {
+  width: 120px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  display: inline-block;
+  vertical-align: middle;
+}
+
+
+/* HR pemisah */
+.section-hr {
+  margin: 30px 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+}
+
+/* append spacing/typography scale, card dashboard, mobile bottom nav */
+:root { --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px; --space-6:24px; --space-8:32px; --fs-sm:0.85rem; --fs-base:1rem; --fs-lg:1.15rem; --fs-xl:1.4rem; }
+.hpp-slim-alert {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  margin-bottom: 12px;
+  font-size: 0.85rem;
+  line-height: 1.35;
+  border-radius: 8px;
+  min-height: 0;
+}
+.hpp-slim-alert-icon {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.hpp-slim-alert-text {
+  flex: 1;
+}

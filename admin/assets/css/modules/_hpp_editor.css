@@ -1,0 +1,558 @@
+/* === Module: _hpp_editor.css === */
+.hpp-editor-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.hpp-editor-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.18s ease;
+}
+.hpp-editor-tab * {
+  pointer-events: none;
+}
+.hpp-editor-tab:hover {
+  background: #fff;
+  color: var(--text);
+  border-color: #d1cbc3;
+}
+.hpp-editor-tab.is-active {
+  background: #fff4eb;
+  border-color: #f0dfd1;
+  color: #85420f;
+  font-weight: 700;
+  box-shadow: 0 1px 3px rgba(133, 66, 15, 0.08);
+}
+.hpp-editor-tab .admin-icon {
+  width: 16px;
+  height: 16px;
+}
+.hpp-tab-badge {
+  font-size: 0.65rem;
+  padding: 2px 6px;
+  background: #10b981;
+  color: #fff;
+  border-radius: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.hpp-tab-hpp-badge {
+  font-size: 0.72rem;
+  padding: 2px 8px;
+  background: #f1ebd8;
+  color: var(--text);
+  border-radius: 999px;
+  font-weight: 700;
+  margin-left: 6px;
+  text-transform: none;
+  transition: all 0.2s ease;
+}
+.hpp-tab-hpp-badge.is-calculated {
+  background: #e6f4ea;
+  color: #137333;
+}
+.hpp-editor-tab.is-active .hpp-tab-hpp-badge {
+  background: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+}
+.hpp-tab-pane[hidden] {
+  display: none !important;
+}
+.hpp-public-price-card[hidden],
+.hpp-price-confirmation[hidden] {
+  display: none !important;
+}
+.hpp-editor-layout {
+  display: block;
+  gap: 20px;
+}
+.hpp-editor-inputs {
+  min-width: 0;
+}
+.hpp-calculation-card {
+  box-sizing: border-box;
+  min-height: 0;
+  margin-bottom: 20px;
+}
+.hpp-editor-notice {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 14px;
+  background: #fff8e6;
+  border: 1px solid #f1d89b;
+  color: #594514;
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  margin-bottom: 16px;
+}
+.hpp-editor-notice .admin-icon {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+}
+.hpp-editor-section-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+.hpp-editor-section-heading h3,
+.hpp-calculation-card h3 {
+  margin: 0 0 6px;
+}
+.hpp-editor-section-heading .hpp-help-text {
+  margin-bottom: 0;
+}
+.hpp-strip-card {
+  padding: 12px 14px;
+  margin-bottom: 12px;
+}
+.hpp-strip-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 10px;
+}
+.hpp-strip-name {
+  flex: 2 1 180px;
+  margin-bottom: 0;
+}
+.hpp-strip-variant {
+  flex: 1.2 1 130px;
+  margin-bottom: 0;
+}
+.hpp-strip-yield {
+  flex: 1 1 140px;
+  margin-bottom: 0;
+}
+.hpp-strip-jar-ml {
+  flex: 0.8 1 100px;
+  margin-bottom: 0;
+}
+.hpp-strip-note {
+  flex: 1 1 100%;
+  margin-bottom: 0;
+}
+.hpp-link-subtle {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--primary);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+.hpp-link-subtle:hover {
+  color: var(--primary-dark);
+  text-decoration: underline;
+}
+.hpp-materials-footer-hint {
+  margin: 10px 0 0;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.hpp-materials-footer-hint a {
+  color: var(--primary);
+  font-weight: 600;
+  text-decoration: underline;
+}
+.hpp-materials-card,
+.hpp-costs-card {
+  padding: 14px;
+}
+.hpp-quick-add-bar {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 12px;
+  background: #fdfaf6;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+.hpp-quick-add-input-wrap {
+  flex: 1 1 auto;
+}
+.hpp-quick-add-input-wrap input {
+  box-sizing: border-box;
+  width: 100%;
+  height: 36px;
+  padding: 6px 10px;
+  font-size: 0.86rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid #d1cbc3;
+  background: #fff;
+  color: var(--text);
+}
+.hpp-quick-add-input-wrap input:focus {
+  outline: 2px solid var(--accent);
+  border-color: var(--accent);
+}
+.hpp-editor-row .hpp-row-label {
+  display: none;
+}
+.hpp-qty-input-group {
+  display: flex;
+  align-items: stretch;
+  position: relative;
+}
+.hpp-qty-input-group input {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-right: none;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.hpp-qty-unit-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+  background: #f4efe9;
+  border: 1px solid #d5cfc7;
+  border-left: none;
+  border-top-right-radius: var(--radius-sm);
+  border-bottom-right-radius: var(--radius-sm);
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: #6a5f54;
+  white-space: nowrap;
+}
+.hpp-editor-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+@media (max-width: 1440px) {
+  .hpp-editor-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 1440px) {
+  .hpp-cost-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.hpp-editor-row .form-group {
+  min-width: 0;
+  margin-bottom: 0;
+}
+.hpp-editor-row .form-group[hidden] {
+  display: none;
+}
+.hpp-editor-row input,
+.hpp-editor-row select {
+  min-height: 34px;
+  padding: 5px 8px;
+  font-size: 0.84rem;
+}
+.hpp-editor-row small {
+  display: block;
+  min-height: 0;
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 0.72rem;
+  line-height: 1.25;
+}
+.hpp-editor-row small:empty {
+  display: none;
+}
+.hpp-editor-row small[data-snapshot-note] {
+  color: #c45500;
+  font-size: 0.68rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.hpp-editor-row input.is-readonly-unit {
+  background: transparent;
+  border-color: transparent;
+  padding-left: 0;
+  font-weight: 600;
+  color: var(--text);
+  box-shadow: none;
+  cursor: default;
+}
+.hpp-editor-row input.is-readonly-unit:focus {
+  outline: none;
+}
+.hpp-editor-row-total {
+  display: flex;
+  min-height: 34px;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  font-size: 0.76rem;
+  color: var(--muted);
+}
+.hpp-editor-row-total strong {
+  color: var(--text);
+  font-size: 0.88rem;
+  white-space: nowrap;
+}
+.hpp-remove-row {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 5px 10px;
+  border: 1px solid #f1d4d7;
+  border-radius: var(--radius-sm);
+  background: #fff5f5;
+  color: #b42332;
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  white-space: nowrap;
+  justify-self: end;
+  transition: all 0.15s ease;
+}
+.hpp-remove-row:hover,
+.hpp-remove-row:focus-visible {
+  border-color: #e9b5ba;
+  background: #ffe8e9;
+  color: #8f1723;
+}
+.hpp-remove-row .admin-icon {
+  width: 14px;
+  height: 14px;
+}
+.hpp-cost-row {
+  display: grid;
+  grid-template-columns: minmax(180px, 1.2fr) minmax(210px, 1.3fr) minmax(130px, 0.8fr) minmax(120px, 0.8fr) auto;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 4px;
+  border: none;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  transition: background-color 0.15s ease;
+}
+.hpp-cost-row:hover {
+  background: #faf8f5;
+}
+@media (max-width: 1440px) {
+  .hpp-cost-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* === Spreadsheet Data Grid Mode (Compact Single-Line per Item) === */
+.hpp-table-header.hpp-materials-header,
+.hpp-table-header.hpp-cost-table-header {
+  display: grid !important;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 8px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+  background: #faf8f5;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  box-sizing: border-box;
+}
+
+.hpp-table-header.hpp-materials-header,
+.hpp-editor-rows .hpp-editor-row:not(.hpp-cost-row) {
+  grid-template-columns: minmax(180px, 2.5fr) minmax(120px, 1.2fr) minmax(110px, 1.1fr) 76px;
+  padding-left: 8px;
+  padding-right: 8px;
+  box-sizing: border-box;
+}
+
+.hpp-table-header.hpp-materials-header span:nth-child(1) {
+  text-align: left;
+}
+.hpp-table-header.hpp-materials-header span:nth-child(2),
+.hpp-table-header.hpp-materials-header span:nth-child(3),
+.hpp-table-header.hpp-materials-header span:nth-child(4) {
+  text-align: center;
+}
+
+.hpp-table-header.hpp-cost-table-header,
+.hpp-editor-rows .hpp-cost-row {
+  grid-template-columns: minmax(140px, 1.5fr) minmax(160px, 1.6fr) minmax(85px, 1fr) minmax(85px, 1fr) 76px;
+  padding-left: 8px;
+  padding-right: 8px;
+  box-sizing: border-box;
+}
+
+.hpp-table-header.hpp-cost-table-header span:nth-child(1),
+.hpp-table-header.hpp-cost-table-header span:nth-child(2) {
+  text-align: left;
+}
+.hpp-table-header.hpp-cost-table-header span:nth-child(3),
+.hpp-table-header.hpp-cost-table-header span:nth-child(4),
+.hpp-table-header.hpp-cost-table-header span:nth-child(5) {
+  text-align: center;
+}
+
+.hpp-editor-rows .hpp-editor-row {
+  display: grid;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 8px;
+  border: none;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: #fff;
+  transition: background-color 0.12s ease;
+}
+
+.hpp-editor-rows .hpp-editor-row:nth-child(even) {
+  background: #fdfcfb;
+}
+
+.hpp-editor-rows .hpp-editor-row:hover {
+  background: #fbf5ee;
+}
+
+.hpp-editor-rows .hpp-editor-row .hpp-row-label {
+  display: none !important;
+}
+
+.hpp-editor-rows .hpp-cell-qty .hpp-qty-input-group {
+  width: 100%;
+}
+
+.hpp-editor-rows .hpp-remove-row {
+  width: 100%;
+  box-sizing: border-box;
+  justify-content: center;
+}
+
+.hpp-custom-name-wrap {
+  margin-top: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.hpp-custom-name-wrap[hidden] {
+  display: none !important;
+}
+
+.hpp-custom-cost-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.hpp-custom-cost-label {
+  font-size: 0.72rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.hpp-custom-cost-wrap input {
+  max-width: 130px;
+  height: 28px !important;
+  min-height: 28px !important;
+  font-size: 0.78rem !important;
+}
+
+.hpp-editor-rows .hpp-editor-row input,
+.hpp-editor-rows .hpp-editor-row select {
+  box-sizing: border-box;
+  width: 100%;
+  height: 32px;
+  min-height: 32px;
+  padding: 4px 8px;
+  font-size: 0.83rem;
+  border: 1px solid #d5cfc7;
+  border-radius: var(--radius-sm);
+  background: #fff;
+  color: var(--text);
+}
+
+.hpp-editor-rows .hpp-editor-row input:focus,
+.hpp-editor-rows .hpp-editor-row select:focus {
+  outline: 2px solid var(--accent);
+  border-color: var(--accent);
+}
+
+.hpp-editor-rows .hpp-editor-row input[data-line-qty],
+.hpp-editor-rows .hpp-editor-row input[data-line-unit-cost],
+.hpp-editor-rows .hpp-editor-row input[data-cost-amount] {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.hpp-editor-rows .hpp-editor-row input.is-readonly-unit {
+  background: #f8f6f3;
+  border-color: #e5ded6;
+  color: #5c5247;
+  font-weight: 600;
+  box-shadow: none;
+  cursor: default;
+}
+
+.hpp-editor-rows .hpp-editor-row input.is-readonly-unit:focus {
+  outline: none;
+  border-color: #e5ded6;
+}
+
+.hpp-editor-rows .hpp-editor-row-total {
+  display: flex;
+  min-height: 32px;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 0.86rem;
+  font-variant-numeric: tabular-nums;
+  padding: 0 4px;
+}
+
+.hpp-editor-rows .hpp-editor-row-total span {
+  display: none;
+}
+
+.hpp-editor-rows .hpp-editor-row-total strong {
+  color: var(--text);
+  font-size: 0.88rem;
+  white-space: nowrap;
+}
+
+.hpp-editor-rows .hpp-editor-row.is-duplicate-highlight {
+  animation: rowDuplicatePulse 1.2s ease-out;
+  border-radius: var(--radius-sm);
+}
+@keyframes rowDuplicatePulse {
+  0% { background: #ffe699; box-shadow: 0 0 0 2px #d48806; }
+  60% { background: #fff7e6; box-shadow: 0 0 0 1px #faad14; }
+  100% { background: #ffffff; box-shadow: none; }
+}
+
+
+.hpp-editor-rows .hpp-remove-row {
+  height: 30px;
+  min-height: 30px;
+  padding: 3px 8px;
+  font-size: 0.75rem;
+  gap: 4px;
+}
+

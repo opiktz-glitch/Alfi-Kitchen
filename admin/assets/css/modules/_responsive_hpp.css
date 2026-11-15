@@ -1,0 +1,466 @@
+/* === Module: _responsive_hpp.css === */
+@media (max-width: 768px) {
+  .hpp-table-header.hpp-materials-header,
+  .hpp-table-header.hpp-cost-table-header {
+    display: none !important;
+  }
+
+  /* Compact 2-Baris untuk Bahan di Layar HP (Mobile) */
+  .hpp-editor-rows .hpp-editor-row:not(.hpp-cost-row) {
+    display: grid !important;
+    grid-template-columns: 1fr auto !important;
+    grid-template-areas:
+      "ingredient delete"
+      "qty        total";
+    align-items: center;
+    gap: 8px 10px;
+    padding: 8px 10px;
+    background: #faf8f5 !important;
+    border-radius: var(--radius-sm);
+    margin-bottom: 6px;
+    border: 1px solid var(--line);
+  }
+
+  .hpp-editor-rows .hpp-editor-row:not(.hpp-cost-row) .hpp-cell-ingredient {
+    grid-area: ingredient;
+    margin: 0;
+    min-width: 0;
+  }
+  .hpp-editor-rows .hpp-editor-row:not(.hpp-cost-row) .hpp-cell-ingredient .hpp-row-label {
+    display: none !important;
+  }
+  .hpp-editor-rows .hpp-editor-row:not(.hpp-cost-row) .hpp-cell-ingredient select {
+    width: 100%;
+    min-height: 36px;
+    font-size: 0.85rem;
+  }
+
+  .hpp-editor-rows .hpp-editor-row:not(.hpp-cost-row) .hpp-remove-row {
+    grid-area: delete;
+    justify-self: end;
+    align-self: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    width: 36px;
+    height: 36px;
+    min-height: 36px;
+    min-width: 36px;
+    margin: 0;
+    border-radius: var(--radius-sm);
+  }
+  .hpp-editor-rows .hpp-editor-row:not(.hpp-cost-row) .hpp-remove-row span {
+    display: none !important;
+  }
+  .hpp-editor-rows .hpp-editor-row:not(.hpp-cost-row) .hpp-remove-row svg {
+    margin: 0;
+  }
+
+  .hpp-editor-rows .hpp-editor-row:not(.hpp-cost-row) .hpp-cell-qty {
+    grid-area: qty;
+    margin: 0;
+    min-width: 0;
+  }
+  .hpp-editor-rows .hpp-editor-row:not(.hpp-cost-row) .hpp-cell-qty .hpp-row-label {
+    display: none !important;
+  }
+  .hpp-editor-rows .hpp-editor-row:not(.hpp-cost-row) .hpp-qty-input-group {
+    max-width: 150px;
+    min-height: 34px;
+  }
+  .hpp-editor-rows .hpp-editor-row:not(.hpp-cost-row) .hpp-qty-input-group input {
+    min-height: 34px;
+    height: 34px;
+    font-size: 0.88rem;
+    padding: 4px 8px;
+  }
+  .hpp-editor-rows .hpp-editor-row:not(.hpp-cost-row) .hpp-qty-unit-badge {
+    min-height: 34px;
+    height: 34px;
+    font-size: 0.74rem;
+    padding: 0 8px;
+  }
+
+  .hpp-editor-rows .hpp-editor-row:not(.hpp-cost-row) .hpp-editor-row-total {
+    grid-area: total;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    text-align: right;
+    margin: 0;
+    gap: 4px;
+    min-height: 0;
+    font-size: 0.82rem;
+  }
+  .hpp-editor-rows .hpp-editor-row:not(.hpp-cost-row) .hpp-editor-row-total span {
+    display: inline;
+    color: var(--muted);
+    font-size: 0.74rem;
+  }
+  .hpp-editor-rows .hpp-editor-row:not(.hpp-cost-row) .hpp-editor-row-total strong {
+    font-size: 0.95rem;
+    color: var(--text);
+  }
+
+  /* Compact untuk Biaya Operasional di Layar HP (Mobile) */
+  .hpp-editor-rows .hpp-cost-row {
+    display: grid !important;
+    grid-template-columns: 1fr auto !important;
+    grid-template-areas:
+      "name   delete"
+      "type   amount"
+      "total  total";
+    align-items: center;
+    gap: 8px 10px;
+    padding: 8px 10px;
+    background: #faf8f5 !important;
+    border-radius: var(--radius-sm);
+    margin-bottom: 6px;
+    border: 1px solid var(--line);
+  }
+
+  .hpp-editor-rows .hpp-cost-row .hpp-cell-cost-label {
+    grid-area: name;
+    margin: 0;
+    min-width: 0;
+  }
+  .hpp-editor-rows .hpp-cost-row .hpp-cell-cost-label .hpp-row-label {
+    display: none !important;
+  }
+  .hpp-editor-rows .hpp-cost-row .hpp-cell-cost-label input {
+    width: 100%;
+    min-height: 36px;
+    font-size: 0.85rem;
+  }
+
+  .hpp-editor-rows .hpp-cost-row .hpp-remove-row {
+    grid-area: delete;
+    justify-self: end;
+    align-self: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    width: 36px;
+    height: 36px;
+    min-height: 36px;
+    min-width: 36px;
+    margin: 0;
+    border-radius: var(--radius-sm);
+  }
+  .hpp-editor-rows .hpp-cost-row .hpp-remove-row span {
+    display: none !important;
+  }
+  .hpp-editor-rows .hpp-cost-row .hpp-remove-row svg {
+    margin: 0;
+  }
+
+  .hpp-editor-rows .hpp-cost-row .hpp-cell-cost-type {
+    grid-area: type;
+    margin: 0;
+    min-width: 0;
+  }
+  .hpp-editor-rows .hpp-cost-row .hpp-cell-cost-type .hpp-row-label {
+    display: none !important;
+  }
+  .hpp-editor-rows .hpp-cost-row .hpp-cell-cost-type select {
+    width: 100%;
+    min-height: 34px;
+    font-size: 0.82rem;
+  }
+
+  .hpp-editor-rows .hpp-cost-row .hpp-cell-cost-amount {
+    grid-area: amount;
+    margin: 0;
+    min-width: 0;
+    max-width: 130px;
+    justify-self: end;
+  }
+  .hpp-editor-rows .hpp-cost-row .hpp-cell-cost-amount .hpp-row-label {
+    display: none !important;
+  }
+  .hpp-editor-rows .hpp-cost-row .hpp-cell-cost-amount input {
+    width: 100%;
+    min-height: 34px;
+    font-size: 0.88rem;
+    padding: 4px 8px;
+    text-align: right;
+  }
+
+  .hpp-editor-rows .hpp-cost-row .hpp-editor-row-total {
+    grid-area: total;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    text-align: right;
+    margin: 0;
+    gap: 4px;
+    min-height: 0;
+    font-size: 0.82rem;
+    padding-top: 4px;
+    border-top: 1px dashed rgba(0, 0, 0, 0.08);
+  }
+  .hpp-editor-rows .hpp-cost-row .hpp-editor-row-total span {
+    display: inline;
+    color: var(--muted);
+    font-size: 0.74rem;
+  }
+  .hpp-editor-rows .hpp-cost-row .hpp-editor-row-total strong {
+    font-size: 0.95rem;
+    color: var(--text);
+  }
+
+  @media (min-width: 520px) {
+    .hpp-editor-rows .hpp-cost-row {
+      grid-template-columns: minmax(130px, 1.2fr) minmax(140px, 1.2fr) 90px auto 36px !important;
+      grid-template-areas: "name type amount total delete" !important;
+      gap: 8px 8px;
+    }
+    .hpp-editor-rows .hpp-cost-row .hpp-cell-cost-amount {
+      max-width: none;
+      justify-self: stretch;
+    }
+    .hpp-editor-rows .hpp-cost-row .hpp-editor-row-total {
+      padding-top: 0;
+      border-top: none;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .hpp-recipe-list-wrap {
+    overflow: visible;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+  .hpp-recipe-list-wrap::after {
+    display: none;
+  }
+  .hpp-recipe-list-wrap .hpp-recipe-list-table {
+    min-width: 0;
+    border-collapse: separate;
+    border-spacing: 0 12px;
+  }
+  .hpp-recipe-list-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  /* Smart Compact 2-Baris untuk Resep HPP di HP */
+  .hpp-recipe-list-table tbody tr {
+    display: block;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--card);
+    box-shadow: 0 1px 4px rgba(41, 32, 24, 0.03);
+  }
+  .hpp-recipe-list-table tbody tr:hover {
+    background: var(--card);
+  }
+  .hpp-recipe-list-table tbody tr.recipe-data-row {
+    display: grid !important;
+    grid-template-columns: 1fr auto !important;
+    grid-template-areas:
+      "title   actions"
+      "status  actions"
+      "hpp     price";
+    align-items: center;
+    gap: 4px 10px;
+    padding: 10px 12px;
+  }
+  .hpp-recipe-list-table tbody tr.recipe-data-row td {
+    padding: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+  }
+  .hpp-recipe-list-table tbody tr.recipe-data-row td::before {
+    display: none !important;
+  }
+
+  .hpp-recipe-list-table tbody tr.recipe-data-row td[data-label="Nama resep / varian"] {
+    grid-area: title;
+    min-width: 0;
+  }
+  .hpp-recipe-list-table tbody tr.recipe-data-row td[data-label="Nama resep / varian"] strong {
+    font-size: 0.92rem;
+    color: var(--text);
+    word-break: break-word;
+  }
+  .hpp-recipe-list-table tbody tr.recipe-data-row .hpp-recipe-variant {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--muted);
+    margin-left: 4px;
+  }
+  .hpp-recipe-list-table tbody tr.recipe-data-row .hpp-recipe-product {
+    display: block;
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-top: 1px;
+    word-break: break-word;
+  }
+
+  .hpp-recipe-list-table tbody tr.recipe-data-row td[data-label="Status bahan"] {
+    grid-area: status;
+  }
+  .hpp-recipe-list-table tbody tr.recipe-data-row .hpp-status-badge {
+    font-size: 0.68rem;
+    padding: 2px 7px;
+    border-radius: 12px;
+  }
+
+  .hpp-recipe-list-table tbody tr.recipe-data-row td[data-label="Aksi"] {
+    grid-area: actions;
+    justify-self: end;
+    align-self: flex-start;
+  }
+  .hpp-recipe-list-table .hpp-recipe-actions {
+    display: flex !important;
+    align-items: center;
+    gap: 4px;
+    margin: 0;
+    width: auto;
+    flex-wrap: nowrap;
+  }
+  .hpp-recipe-list-table .hpp-inline-form {
+    margin: 0;
+  }
+  .hpp-recipe-actions .category-icon-button {
+    width: 34px !important;
+    height: 34px !important;
+    min-width: 34px !important;
+    min-height: 34px !important;
+    padding: 0 !important;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+    font-size: 0 !important;
+  }
+  .hpp-recipe-actions .category-icon-button svg {
+    margin: 0;
+    width: 16px;
+    height: 16px;
+  }
+  .hpp-recipe-delete-form {
+    flex: 0 0 auto;
+  }
+
+  .hpp-recipe-list-table tbody tr.recipe-data-row td[data-label="HPP per jar"] {
+    grid-area: hpp;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.84rem;
+    color: #5c3b1e;
+    font-weight: 600;
+    padding-top: 4px !important;
+  }
+  .hpp-recipe-list-table tbody tr.recipe-data-row td[data-label="HPP per jar"]::before {
+    content: "HPP: ";
+    font-size: 0.76rem;
+    color: var(--muted);
+    font-weight: 500;
+    display: inline !important;
+  }
+
+  .hpp-recipe-list-table tbody tr.recipe-data-row td[data-label="Harga jual saat ini"] {
+    grid-area: price;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    text-align: right;
+    gap: 4px;
+    font-size: 0.88rem;
+    color: var(--text);
+    font-weight: 700;
+    padding-top: 4px !important;
+  }
+  .hpp-recipe-list-table tbody tr.recipe-data-row td[data-label="Harga jual saat ini"]::before {
+    content: "Jual: ";
+    font-size: 0.76rem;
+    color: var(--muted);
+    font-weight: 500;
+    display: inline !important;
+  }
+  .category-icon-button {
+    width: 52px;
+    min-width: 52px;
+    height: 48px;
+    min-height: 48px;
+    flex: 0 0 52px;
+    flex-direction: column;
+    gap: 3px;
+    padding: 4px;
+  }
+  .category-icon-button .action-button-label,
+  .btn-icon-only .action-button-label {
+    display: block;
+    font-size: 0.62rem;
+    line-height: 1;
+  }
+  .btn-icon-only {
+    width: auto;
+    min-width: 48px;
+    height: 48px;
+    min-height: 48px;
+    flex-direction: column;
+    gap: 3px;
+    padding: 4px;
+  }
+  .admin-bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 999;
+    justify-content: space-around;
+    gap: 2px;
+    padding: 5px max(4px, env(safe-area-inset-left)) calc(5px + env(safe-area-inset-bottom)) max(4px, env(safe-area-inset-right));
+    border-top: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.98);
+    box-shadow: 0 -4px 16px rgba(41, 32, 24, 0.07);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  .admin-bottom-nav a {
+    display: flex;
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 48px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    padding: 4px 2px;
+    border-radius: 8px;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.69rem;
+    font-weight: 550;
+    line-height: 1.15;
+    text-align: center;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+  .admin-bottom-nav a span {
+    display: block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .admin-bottom-nav .admin-icon { width: 18px; height: 18px; flex-shrink: 0; }
+  .admin-bottom-nav a.is-active { background: #fff4eb; color: #85420f; font-weight: 700; }
+  .admin-bottom-nav a:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+  body { padding-bottom: calc(68px + env(safe-area-inset-bottom)); }
+}

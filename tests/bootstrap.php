@@ -9,6 +9,8 @@
 
 namespace PHPUnit\Framework;
 
+require_once __DIR__ . '/helpers.php';
+
 if (!class_exists('PHPUnit\Framework\TestCase', false)) {
     class AssertionFailedError extends \RuntimeException {}
 

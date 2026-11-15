@@ -52,6 +52,6 @@
 
 ## Larangan
 - Jangan meng-commit `.env`, `config.php`, atau gambar hasil upload.
-- Jangan menambahkan blok `<style>` inline di admin; gunakan `admin/assets/css/admin.css`.
+- Jangan menambahkan blok `<style>` inline di admin; gunakan `admin/assets/css/admin.css` atau modul-modul terstrukturnya di `admin/assets/css/modules/`.
 - Jangan melewati pemeriksaan autentikasi atau CSRF.
 - Jangan menggunakan Swiper; slider native telah menggantikannya.
