@@ -361,11 +361,12 @@ $csrfToken = generate_csrf_token();
                     <button type="button" class="hpp-editor-tab<?= $applyPreview === null ? ' is-active' : '' ?>" data-tab-target="tab-pane-materials" role="tab" aria-selected="<?= $applyPreview === null ? 'true' : 'false' ?>">
                         <?= admin_icon('manage') ?> <span>1. Resep &amp; Bahan</span>
                     </button>
-                    <button type="button" class="hpp-editor-tab<?= $applyPreview !== null ? ' is-active' : '' ?>" data-tab-target="tab-pane-costs-pricing" role="tab" aria-selected="<?= $applyPreview !== null ? 'true' : 'false' ?>">
-                        <?= admin_icon('calculator') ?> <span>2. Biaya &amp; Harga Jual</span>
-                        <?php if ($recipe !== null): ?>
-                            <span class="hpp-tab-badge">Jual</span>
-                        <?php endif; ?>
+                    <button type="button" class="hpp-editor-tab" data-tab-target="tab-pane-costs" role="tab" aria-selected="false">
+                        <?= admin_icon('settings') ?> <span>2. Biaya Operasional</span>
+                    </button>
+                    <button type="button" class="hpp-editor-tab<?= $applyPreview !== null ? ' is-active' : '' ?>" data-tab-target="tab-pane-calculation" role="tab" aria-selected="<?= $applyPreview !== null ? 'true' : 'false' ?>">
+                        <?= admin_icon('calculator') ?> <span>3. Kalkulasi &amp; Harga Jual</span>
+                        <span class="hpp-tab-badge hpp-tab-hpp-badge" data-tab-hpp-badge>HPP: Rp 0</span>
                     </button>
                 </div>
 
@@ -373,7 +374,6 @@ $csrfToken = generate_csrf_token();
                     <input type="hidden" name="csrf_token" value="<?= $escape($csrfToken) ?>">
                     <input type="hidden" name="action" value="save_recipe">
                     <div class="hpp-editor-layout">
-                    <div class="hpp-editor-inputs">
 
                     <div class="hpp-tab-pane" id="tab-pane-materials" data-tab-pane<?= $applyPreview !== null ? ' hidden' : '' ?>>
                     <section class="form-card hpp-strip-card">
@@ -442,11 +442,12 @@ $csrfToken = generate_csrf_token();
 
                     <div class="hpp-editor-actions">
                         <button type="submit" class="btn btn-primary btn-with-icon"><?= admin_icon('save') ?>Simpan Resep</button>
+                        <button type="button" class="btn btn-secondary btn-with-icon" id="btn-next-to-costs"><span>Lanjut: Biaya Operasional &rarr;</span></button>
                         <a href="hpp_recipes.php" class="btn btn-cancel btn-with-icon"><?= admin_icon('back') ?>Batal</a>
                     </div>
                     </div>
 
-                    <div class="hpp-tab-pane" id="tab-pane-costs-pricing" data-tab-pane<?= $applyPreview === null ? ' hidden' : '' ?>>
+                    <div class="hpp-tab-pane" id="tab-pane-costs" data-tab-pane hidden>
                     <div class="alert hpp-editor-notice" role="note">
                         <?= admin_icon('info') ?>
                         <span>Kalkulasi dan penyimpanan resep tidak mengubah harga jual di website. Harga publik hanya berubah setelah Anda meninjau dan mengonfirmasi penerapan harga.</span>
@@ -468,12 +469,13 @@ $csrfToken = generate_csrf_token();
 
                     <div class="hpp-editor-actions">
                         <button type="submit" class="btn btn-primary btn-with-icon"><?= admin_icon('save') ?>Simpan Resep</button>
+                        <button type="button" class="btn btn-secondary btn-with-icon" id="btn-back-to-materials"><span>&larr; Bahan</span></button>
+                        <button type="button" class="btn btn-secondary btn-with-icon" id="btn-next-to-calculation"><span>Lanjut: Hasil Kalkulasi &rarr;</span></button>
                         <a href="hpp_recipes.php" class="btn btn-cancel btn-with-icon"><?= admin_icon('back') ?>Batal</a>
                     </div>
                     </div>
 
-                    </div>
-
+                    <div class="hpp-tab-pane" id="tab-pane-calculation" data-tab-pane<?= $applyPreview === null ? ' hidden' : '' ?>>
                     <section class="form-card hpp-calculation-card" aria-live="polite">
                         <h3>Pratinjau Kalkulasi</h3>
                         <p class="hpp-help-text">Pratinjau diperbarui saat data berubah. Nilai tersimpan tetap dihitung dan divalidasi ulang di server.</p>
@@ -496,6 +498,14 @@ $csrfToken = generate_csrf_token();
                         <?php endif; ?>
                         <p class="hpp-calculation-status" data-calculation-status role="status"></p>
                     </section>
+
+                    <div class="hpp-editor-actions">
+                        <button type="submit" class="btn btn-primary btn-with-icon"><?= admin_icon('save') ?>Simpan Resep</button>
+                        <button type="button" class="btn btn-secondary btn-with-icon" id="btn-back-to-costs"><span>&larr; Kembali ke Biaya</span></button>
+                        <a href="hpp_recipes.php" class="btn btn-cancel btn-with-icon"><?= admin_icon('back') ?>Batal</a>
+                    </div>
+                    </div>
+
                     </div>
                 </form>
 

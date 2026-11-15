@@ -886,6 +886,25 @@ body {
   font-weight: 700;
   text-transform: uppercase;
 }
+.hpp-tab-hpp-badge {
+  font-size: 0.72rem;
+  padding: 2px 8px;
+  background: #f1ebd8;
+  color: var(--text);
+  border-radius: 999px;
+  font-weight: 700;
+  margin-left: 6px;
+  text-transform: none;
+  transition: all 0.2s ease;
+}
+.hpp-tab-hpp-badge.is-calculated {
+  background: #e6f4ea;
+  color: #137333;
+}
+.hpp-editor-tab.is-active .hpp-tab-hpp-badge {
+  background: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+}
 .hpp-tab-pane[hidden] {
   display: none !important;
 }
@@ -894,22 +913,19 @@ body {
   display: none !important;
 }
 .hpp-editor-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1.6fr) minmax(300px, 0.9fr);
-  align-items: start;
+  display: block;
   gap: 20px;
 }
 .hpp-editor-inputs {
   min-width: 0;
 }
 .hpp-calculation-card {
-  position: sticky;
-  top: 16px;
   box-sizing: border-box;
   min-height: 0;
   max-height: calc(100vh - 32px);
   overflow-y: auto;
   overscroll-behavior: contain;
+  margin-bottom: 20px;
 }
 .hpp-editor-notice {
   display: flex;

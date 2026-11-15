@@ -241,6 +241,11 @@
     var lineRows = Array.prototype.slice.call(linesContainer.querySelectorAll('[data-line-row]'));
 
     if (result === null) {
+      var tabHppBadgeNull = document.querySelector('[data-tab-hpp-badge]');
+      if (tabHppBadgeNull) {
+        tabHppBadgeNull.textContent = 'HPP: —';
+        tabHppBadgeNull.classList.remove('is-calculated');
+      }
       status.textContent = 'Lengkapi input dengan angka yang valid untuk melihat pratinjau.';
       scenarios.replaceChildren();
       lineRows.forEach(function (row) {
@@ -252,6 +257,17 @@
       form.querySelector('[data-hpp-recipe]').textContent = '—';
       form.querySelector('[data-hpp-per-jar]').textContent = '—';
       return;
+    }
+
+    var tabHppBadge = document.querySelector('[data-tab-hpp-badge]');
+    if (tabHppBadge) {
+      if (result.hppPerJar > 0) {
+        tabHppBadge.textContent = 'HPP: ' + rupiah(result.hppPerJar);
+        tabHppBadge.classList.add('is-calculated');
+      } else {
+        tabHppBadge.textContent = 'HPP: Rp 0';
+        tabHppBadge.classList.remove('is-calculated');
+      }
     }
 
     lineRows.forEach(function (row) {
@@ -304,7 +320,10 @@
         usePriceButton.dataset.useScenarioPrice = String(price);
         usePriceButton.addEventListener('click', function () {
           finalPriceInput.value = usePriceButton.dataset.useScenarioPrice;
-          switchTab('tab-pane-costs-pricing');
+          switchTab('tab-pane-calculation');
+          if (typeof finalPriceInput.scrollIntoView === 'function') {
+            finalPriceInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
           finalPriceInput.focus();
         });
         action.appendChild(usePriceButton);
@@ -496,7 +515,7 @@
       }
     });
     var pricingSections = document.querySelectorAll('[data-pricing-section]');
-    var showPricing = targetId === 'tab-pane-costs-pricing';
+    var showPricing = targetId === 'tab-pane-calculation';
     Array.prototype.forEach.call(pricingSections, function (sec) {
       if (showPricing) {
         sec.removeAttribute('hidden');
@@ -515,16 +534,28 @@
       switchTab(tabBtn.getAttribute('data-tab-target'));
       return;
     }
-    var nextBtn = e.target.closest('#btn-next-to-costs');
-    if (nextBtn) {
+    var nextToCostsBtn = e.target.closest('#btn-next-to-costs');
+    if (nextToCostsBtn) {
       e.preventDefault();
-      switchTab('tab-pane-costs-pricing');
+      switchTab('tab-pane-costs');
       return;
     }
-    var backBtn = e.target.closest('#btn-back-to-materials');
-    if (backBtn) {
+    var backToMatBtn = e.target.closest('#btn-back-to-materials');
+    if (backToMatBtn) {
       e.preventDefault();
       switchTab('tab-pane-materials');
+      return;
+    }
+    var nextToCalcBtn = e.target.closest('#btn-next-to-calculation');
+    if (nextToCalcBtn) {
+      e.preventDefault();
+      switchTab('tab-pane-calculation');
+      return;
+    }
+    var backToCostsBtn = e.target.closest('#btn-back-to-costs');
+    if (backToCostsBtn) {
+      e.preventDefault();
+      switchTab('tab-pane-costs');
       return;
     }
     var toggleBtn = e.target.closest('#btn-toggle-recipe-details');

@@ -36,6 +36,12 @@ class HppRecipeEditorPageTest extends TestCase
         $this->assertStringNotContainsString('UPDATE product_items', strtoupper($page));
         $this->assertStringContainsString("'href' => 'hpp_recipes.php'", $sidebar);
         $this->assertStringContainsString('href="hpp_ingredients.php"', $page);
+        $this->assertStringContainsString('tab-pane-materials', $page);
+        $this->assertStringContainsString('tab-pane-costs', $page);
+        $this->assertStringContainsString('tab-pane-calculation', $page);
+        $this->assertStringContainsString('data-tab-hpp-badge', $page);
+        $this->assertStringContainsString('data-tab-hpp-badge', $script);
+        $this->assertStringContainsString('btn-next-to-calculation', $page);
     }
 
     public function testPublicPriceApplicationRequiresReviewAndExplicitConfirmation(): void
