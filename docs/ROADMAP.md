@@ -31,7 +31,7 @@ kembali pada konfigurasi hosting sebelum perubahan produksi.
   sesuai dan rename file ke nama acak untuk mencegah eksekusi skrip terselubung.
 - [ ] **Paksa redirect HTTP ke HTTPS.** Tambahkan redirect di `.htaccess` agar
   cookie session tidak dikirim plaintext.
-- [ ] **Restore database dan gambar dengan verifikasi skema.** Sediakan fitur
+- [x] **Restore database dan gambar dengan verifikasi skema.** Sediakan fitur
   restore database (.sql) dan gambar (.zip) di panel Pengaturan. Wajib memverifikasi
   kesamaan versi skema migrasi (`schema_migrations`), menolak restore jika versi
   berbeda, serta mencegah Zip Slip pada file gambar. Rencana kerja lengkap dicatat

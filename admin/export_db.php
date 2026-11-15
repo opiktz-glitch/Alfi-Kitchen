@@ -1,6 +1,8 @@
 <?php
 require 'auth_check.php';
 require_once __DIR__ . '/../includes/bootstrap.php';
+require_once __DIR__ . '/helpers/backup_helper.php';
+require_once __DIR__ . '/../includes/DatabaseMigrator.php';
 
 
 // Proteksi rate-limit cooldown: cegah server overload di InfinityFree (jeda minimal 60 detik)
@@ -11,6 +13,10 @@ if ($remainingWait !== null) {
 }
 
 log_admin_action('EXPORT_DATABASE_BACKUP', 'status=success');
+
+// Dapatkan daftar migrasi yang diterapkan untuk header metadata skema
+$migrator = new DatabaseMigrator($pdo);
+$appliedMigrations = array_keys($migrator->getAppliedMigrations());
 
 // Dapatkan semua nama tabel dengan urutan yang benar (Parent sebelum Child)
 $tables = [
@@ -27,8 +33,7 @@ $tables = [
     'hpp_recipe_costs',
 ];
 
-$sqlScript = "-- Export Database Alfi Kitchen\n";
-$sqlScript .= "-- Tanggal: " . date('Y-m-d H:i:s') . "\n\n";
+$sqlScript = generate_backup_header($appliedMigrations) . "\n\n";
 $sqlScript .= "SET FOREIGN_KEY_CHECKS = 0;\n\n";
 
 // Drop tabel dari Child ke Parent (Reverse)

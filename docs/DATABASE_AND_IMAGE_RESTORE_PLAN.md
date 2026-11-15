@@ -82,12 +82,12 @@ Di halaman **Pengaturan** (`admin/settings.php`) &rarr; **Tab 3: Database & Back
 
 ---
 
-## 4. Tahapan Pengerjaan (Implementation Steps)
+## 4. Tahapan Pengerjaan (Implementation Steps) [SELESAI]
 
-| Tahap | Fokus Pekerjaan | Berkas Terkait |
-| :--- | :--- | :--- |
-| **Tahap 1** | **Pembaruan Header Export DB:** Menambahkan metadata skema migrasi dan timestamp pada output backup `.sql`. | `admin/export_db.php` |
-| **Tahap 2** | **Modul Backend Restore Database:** Handler validasi upload, parser verifikasi migrasi, filter whitelist tabel, sinkronisasi sesi admin, dan eksekusi SQL aman. | `admin/restore_db.php` |
-| **Tahap 3** | **Modul Backend Restore Gambar:** Handler upload ZIP, proteksi anti-Zip Slip (path traversal), filter ekstensi aman, ekstraksi ke `uploads/`. | `admin/restore_images.php` |
-| **Tahap 4** | **Antarmuka Panel Admin:** Penambahan kartu Restore Database dan Restore Gambar di Tab 3 Pengaturan dengan validasi CSRF dan konfirmasi interaktif. | `admin/settings.php`, `admin/assets/css/admin.css` |
-| **Tahap 5** | **Pengujian Komprehensif (Unit Tests):** Membuat test suite untuk memverifikasi penolakan backup beda versi skema, penolakan file traversal, dan izin restore skema identik. | `tests/Unit/DatabaseRestoreTest.php`, `tests/run_tests.php` |
+| Tahap | Fokus Pekerjaan | Berkas Terkait | Status |
+| :--- | :--- | :--- | :---: |
+| **Tahap 1** | **Pembaruan Header Export DB:** Menambahkan metadata skema migrasi dan timestamp pada output backup `.sql`. | `admin/export_db.php`, `admin/helpers/backup_helper.php` | ✅ Selesai |
+| **Tahap 2** | **Modul Backend Restore Database:** Handler validasi upload, parser verifikasi migrasi, filter whitelist tabel, sinkronisasi sesi admin, dan eksekusi SQL aman. | `admin/restore_db.php` | ✅ Selesai |
+| **Tahap 3** | **Modul Backend Restore Gambar:** Handler upload ZIP, proteksi anti-Zip Slip (path traversal), filter ekstensi aman, ekstraksi ke `uploads/`. | `admin/restore_images.php` | ✅ Selesai |
+| **Tahap 4** | **Antarmuka Panel Admin:** Penambahan kartu Restore Database dan Restore Gambar di Tab 3 Pengaturan dengan validasi CSRF dan konfirmasi interaktif. | `admin/settings.php` | ✅ Selesai |
+| **Tahap 5** | **Pengujian Komprehensif (Unit Tests):** Membuat test suite untuk memverifikasi penolakan backup beda versi skema, penolakan file traversal, dan izin restore skema identik. | `tests/Unit/DatabaseRestoreTest.php`, `tests/run_tests.php` | ✅ Selesai |

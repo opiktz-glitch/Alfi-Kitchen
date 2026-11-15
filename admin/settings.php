@@ -341,9 +341,21 @@ if (isset($_GET['tab'])) {
 
             <!-- Tab 3: Database & Backup -->
             <div id="tab-database" class="settings-tab-pane" role="tabpanel" aria-labelledby="tab-btn-database"<?= $activeTab === 'tab-database' ? '' : ' hidden' ?>>
+                <?php
+                require_once __DIR__ . '/../includes/DatabaseMigrator.php';
+                $migrator = new DatabaseMigrator($pdo);
+                $statusList = $migrator->getStatus();
+                $pendingMigrations = $migrator->getPendingMigrations();
+                $lastApplied = null;
+                foreach ($statusList as $st) {
+                    if ($st['status'] === 'applied') {
+                        $lastApplied = $st['version'];
+                    }
+                }
+                ?>
                 <div class="settings-grid">
                     <section class="settings-panel">
-                        <h3>Backup Data &amp; Gambar</h3>
+                        <h3>Unduh Backup Data &amp; Gambar</h3>
                         <p class="settings-copy">Anda bisa mengekspor database (.sql) dan seluruh gambar produk (.zip) ke laptop Anda.</p>
                         <div class="settings-actions">
                             <a href="export_db.php" class="btn btn-backup-database btn-with-icon" data-download-status data-loading-label="Menyiapkan backup database..."><?= admin_icon('database') ?>Backup Database</a>
@@ -352,18 +364,6 @@ if (isset($_GET['tab'])) {
                     </section>
 
                     <section class="settings-panel">
-                        <?php
-                        require_once __DIR__ . '/../includes/DatabaseMigrator.php';
-                        $migrator = new DatabaseMigrator($pdo);
-                        $statusList = $migrator->getStatus();
-                        $pendingMigrations = $migrator->getPendingMigrations();
-                        $lastApplied = null;
-                        foreach ($statusList as $st) {
-                            if ($st['status'] === 'applied') {
-                                $lastApplied = $st['version'];
-                            }
-                        }
-                        ?>
                         <h3>Versi &amp; Migrasi Database</h3>
                         <p class="settings-copy">
                             Sistem migrasi skema database otomatis. Anda dapat menerapkan pembaruan struktur tabel langsung dari panel admin ini tanpa harus membuka phpMyAdmin cPanel.
@@ -391,6 +391,46 @@ if (isset($_GET['tab'])) {
                             <button type="submit" name="run_migrations" class="btn btn-primary btn-with-icon" onclick="return confirm('Terapkan migrasi database sekarang?')"><?= admin_icon('check') ?>Jalankan Migrasi</button>
                         </form>
                         <?php endif; ?>
+                    </section>
+
+                    <section class="settings-panel">
+                        <h3>Restore Database (.sql)</h3>
+                        <p class="settings-copy">
+                            Pulihkan database dari file backup <code>.sql</code>. Sistem wajib memverifikasi kesesuaian versi skema sebelum mengeksekusi restore.
+                        </p>
+                        <div class="alert alert-error hpp-slim-alert">
+                            <span class="hpp-slim-alert-icon"><?= admin_icon('info') ?></span>
+                            <span class="hpp-slim-alert-text">PERINGATAN: Seluruh data katalog, varian, dan resep saat ini akan ditimpa oleh data file backup.</span>
+                        </div>
+                        <form action="restore_db.php" method="post" enctype="multipart/form-data" data-submit-lock onsubmit="return confirm('PERINGATAN: Seluruh data saat ini akan digantikan oleh isi file backup database. Tindakan ini tidak dapat dibatalkan.\n\nPastikan versi skema backup sama dengan versi sistem saat ini (<?= htmlspecialchars($lastApplied ?? 'v05_hpp.sql') ?>).\n\nLanjutkan restore database?')">
+                            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
+                            <div class="form-group">
+                                <label for="restore-sql-file">Pilih File Backup (.sql)</label>
+                                <input type="file" id="restore-sql-file" name="backup_file" accept=".sql" required class="form-control">
+                                <small class="hpp-help-text">Maksimal 10 MB. Versi skema aktif saat ini: <strong><?= htmlspecialchars($lastApplied ?? 'v05_hpp.sql') ?></strong></small>
+                            </div>
+                            <button type="submit" class="btn btn-danger btn-with-icon" data-loading-label="Memverifikasi &amp; me-restore...">
+                                <?= admin_icon('upload') ?><span>Restore Database</span>
+                            </button>
+                        </form>
+                    </section>
+
+                    <section class="settings-panel">
+                        <h3>Restore Gambar (.zip)</h3>
+                        <p class="settings-copy">
+                            Ekstrak dan pulihkan file gambar produk, slider beranda, dan logo dari file arsip <code>.zip</code> hasil backup ke folder <code>uploads/</code>.
+                        </p>
+                        <form action="restore_images.php" method="post" enctype="multipart/form-data" data-submit-lock onsubmit="return confirm('Ekstrak dan pulihkan file gambar dari file arsip ZIP ini ke folder uploads?')">
+                            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
+                            <div class="form-group">
+                                <label for="restore-images-file">Pilih File Arsip Gambar (.zip)</label>
+                                <input type="file" id="restore-images-file" name="images_zip" accept=".zip,application/zip" required class="form-control">
+                                <small class="hpp-help-text">Maksimal 50 MB. Hanya file gambar (.jpg, .png, .webp, .svg, .gif) yang akan diekstrak.</small>
+                            </div>
+                            <button type="submit" class="btn btn-secondary btn-with-icon" data-loading-label="Mengekstrak gambar...">
+                                <?= admin_icon('upload') ?><span>Restore Gambar</span>
+                            </button>
+                        </form>
                     </section>
                 </div>
             </div>
