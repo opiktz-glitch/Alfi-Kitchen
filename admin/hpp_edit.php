@@ -489,7 +489,23 @@ $csrfToken = generate_csrf_token();
                         <div class="hpp-scenarios-heading">
                             <span>Skenario Markup &amp; Rekomendasi Harga</span>
                         </div>
-                        <div class="hpp-scenarios-list" data-scenarios></div>
+                        <div class="hpp-scenarios-list">
+                            <div class="hpp-scenario-item hpp-scenario-custom" id="custom-scenario-item">
+                                <div class="hpp-scenario-custom-badge" title="Ketik persentase markup kustom manual">
+                                    <span class="hpp-scenario-custom-sign">+</span>
+                                    <input type="number" id="custom-markup-input" class="hpp-scenario-custom-input" min="0" max="10000" step="any" placeholder="60" value="60" aria-label="Persentase markup kustom">
+                                    <span class="hpp-scenario-custom-pct">%</span>
+                                </div>
+                                <div class="hpp-scenario-info">
+                                    <span class="hpp-scenario-price" id="custom-scenario-price">Rp 0</span>
+                                    <span class="hpp-scenario-meta" id="custom-scenario-meta">Kustom manual</span>
+                                </div>
+                                <div class="hpp-scenario-action">
+                                    <button type="button" class="btn btn-primary btn-sm" id="btn-use-custom-scenario" data-use-scenario-price="" disabled>Gunakan</button>
+                                </div>
+                            </div>
+                            <div class="hpp-scenarios-presets" data-scenarios></div>
+                        </div>
                         <?php if ($recipe === null): ?>
                             <div class="hpp-scenarios-hint">
                                 <?= admin_icon('info') ?>

@@ -234,6 +234,38 @@
     };
   }
 
+  var lastCalculatedHppPerJar = null;
+
+  function updateCustomScenario(hppPerJar) {
+    lastCalculatedHppPerJar = hppPerJar;
+    var customInput = document.getElementById('custom-markup-input');
+    var customPriceEl = document.getElementById('custom-scenario-price');
+    var customMetaEl = document.getElementById('custom-scenario-meta');
+    var customBtn = document.getElementById('btn-use-custom-scenario');
+    if (!customInput || !customPriceEl || !customMetaEl || !customBtn) return;
+
+    var markupVal = amount(customInput.value);
+    if (hppPerJar == null || hppPerJar <= 0 || markupVal === null || markupVal < 0) {
+      customPriceEl.textContent = '—';
+      customMetaEl.textContent = 'Ketik % untuk simulasi manual';
+      customBtn.disabled = true;
+      customBtn.dataset.useScenarioPrice = '';
+      return;
+    }
+
+    var theoreticalPrice = hppPerJar * (1 + markupVal / 100);
+    var price = Math.ceil(roundHalfUpTwo(theoreticalPrice));
+    var profit = price - hppPerJar;
+    var margin = price > 0 ? (profit / price) * 100 : 0;
+    var marginRounded = Math.round(margin * 100) / 100;
+    var marginText = (marginRounded % 1 === 0 ? marginRounded.toFixed(0) : marginRounded.toFixed(2).replace(/\.?0+$/, '').replace('.', ',')) + '%';
+
+    customPriceEl.textContent = rupiah(price);
+    customMetaEl.textContent = 'Laba ' + rupiah(profit) + ' · Margin ' + marginText;
+    customBtn.disabled = false;
+    customBtn.dataset.useScenarioPrice = String(price);
+  }
+
   function calculate() {
     var result = getRecipeInputs();
     var status = form.querySelector('[data-calculation-status]');
@@ -248,6 +280,7 @@
       }
       status.textContent = 'Lengkapi input dengan angka yang valid untuk melihat pratinjau.';
       scenarios.replaceChildren();
+      updateCustomScenario(null);
       lineRows.forEach(function (row) {
         row.querySelector('[data-line-total]').textContent = '—';
       });
@@ -269,6 +302,8 @@
         tabHppBadge.classList.remove('is-calculated');
       }
     }
+
+    updateCustomScenario(result.hppPerJar);
 
     lineRows.forEach(function (row) {
       var qty = amount(row.querySelector('[data-line-qty]').value) || 0;
@@ -577,6 +612,36 @@
       return;
     }
   });
+
+  var customInput = document.getElementById('custom-markup-input');
+  if (customInput) {
+    try {
+      var savedCustomMarkup = localStorage.getItem('alfi_custom_markup_percent');
+      if (savedCustomMarkup && savedCustomMarkup.trim() !== '') {
+        customInput.value = savedCustomMarkup;
+      }
+    } catch (e) {}
+
+    customInput.addEventListener('input', function () {
+      try {
+        localStorage.setItem('alfi_custom_markup_percent', customInput.value);
+      } catch (e) {}
+      updateCustomScenario(lastCalculatedHppPerJar);
+    });
+  }
+
+  var customBtn = document.getElementById('btn-use-custom-scenario');
+  if (customBtn) {
+    customBtn.addEventListener('click', function () {
+      if (!customBtn.dataset.useScenarioPrice || !finalPriceInput) return;
+      finalPriceInput.value = customBtn.dataset.useScenarioPrice;
+      switchTab('tab-pane-calculation');
+      if (typeof finalPriceInput.scrollIntoView === 'function') {
+        finalPriceInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      finalPriceInput.focus();
+    });
+  }
 
   (editorData.lines || []).forEach(addLine);
   (editorData.costs || []).forEach(addCost);

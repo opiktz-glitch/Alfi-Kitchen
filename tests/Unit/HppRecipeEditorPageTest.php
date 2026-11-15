@@ -42,6 +42,10 @@ class HppRecipeEditorPageTest extends TestCase
         $this->assertStringContainsString('data-tab-hpp-badge', $page);
         $this->assertStringContainsString('data-tab-hpp-badge', $script);
         $this->assertStringContainsString('btn-next-to-calculation', $page);
+        $this->assertStringContainsString('custom-markup-input', $page);
+        $this->assertStringContainsString('custom-scenario-item', $page);
+        $this->assertStringContainsString('btn-use-custom-scenario', $page);
+        $this->assertStringContainsString('updateCustomScenario', $script);
     }
 
     public function testPublicPriceApplicationRequiresReviewAndExplicitConfirmation(): void

@@ -1507,6 +1507,60 @@ body {
   flex-direction: column;
   gap: 8px;
 }
+.hpp-scenarios-presets {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.hpp-scenario-custom {
+  background: #fdfaf6;
+  border-color: #f1cfb7;
+}
+.hpp-scenario-custom:hover {
+  background: #fdf6ee;
+  border-color: var(--accent);
+}
+.hpp-scenario-custom-badge {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  background: #fff;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-sm);
+  padding: 1px 6px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: var(--text);
+}
+.hpp-scenario-custom-sign,
+.hpp-scenario-custom-pct {
+  font-weight: 750;
+  color: var(--accent);
+}
+.hpp-scenario-custom-input {
+  width: 44px;
+  padding: 2px 2px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-align: center;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  outline: none;
+}
+.hpp-scenario-custom-input:focus {
+  background: #fff;
+  border-radius: 4px;
+}
+.hpp-scenario-custom-input::-webkit-outer-spin-button,
+.hpp-scenario-custom-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.hpp-scenario-custom-input[type=number] {
+  -moz-appearance: textfield;
+}
 .hpp-scenario-item {
   display: flex;
   align-items: center;
