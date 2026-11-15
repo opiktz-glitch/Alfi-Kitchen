@@ -213,5 +213,45 @@ class UploadHelperRefactorTest extends TestCase
             $this->assertTrue(function_exists($fn), "Fungsi $fn harus tersedia setelah require helper");
         }
     }
+
+    public function testSettingsPageUsesStrictPngForLogoUpload(): void
+    {
+        $settingsContent = file_get_contents(self::PROJECT_ROOT . 'admin/settings.php');
+
+        $this->assertStringContainsString(
+            "store_uploaded_image(\$_FILES['logo'], 'logo', true, ['image/png', 'image/x-png'], 'logo.png')",
+            $settingsContent,
+            'Settings page harus memvalidasi format logo khusus PNG'
+        );
+        $this->assertStringContainsString(
+            'accept="image/png"',
+            $settingsContent,
+            'Input file logo pada form settings harus membatasi accept ke image/png'
+        );
+    }
+
+    public function testStoreUploadedImageRejectsNonPngWhenPngStrictlyRequired(): void
+    {
+        require_once self::UPLOAD_HELPER;
+
+        $tmpFile = tempnam(sys_get_temp_dir(), 'test_upload_');
+        // Valid 1x1 JPEG
+        $validJpeg = base64_decode('/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAP//////////////////////////////////////////////////////////////////////////////////////wgALCAABAAEBAREA/8QAFBABAAAAAAAAAAAAAAAAAAAAAP/aAAgBAQABPxA=');
+        file_put_contents($tmpFile, $validJpeg);
+
+        $mockFile = [
+            'name' => 'test.jpg',
+            'type' => 'image/jpeg',
+            'tmp_name' => $tmpFile,
+            'error' => UPLOAD_ERR_OK,
+            'size' => strlen($validJpeg),
+        ];
+
+        $res = store_uploaded_image($mockFile, 'logo', true, ['image/png', 'image/x-png'], 'logo.png');
+        @unlink($tmpFile);
+
+        $this->assertNull($res['path']);
+        $this->assertSame('Format file tidak didukung. File harus berupa gambar PNG yang valid.', $res['error']);
+    }
 }
 

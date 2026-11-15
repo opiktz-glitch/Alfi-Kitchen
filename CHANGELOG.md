@@ -7,6 +7,13 @@ bukan penanda rilis atau versi aplikasi.
 ## 2026-11-15
 
 ### Added
+- **Penyeragaman dan Pengerasan Format Upload Logo**:
+  - Menyelaraskan form input di `admin/settings.php` (`accept="image/png"`) dan handler backend `store_uploaded_image()` agar secara konsisten hanya menerima file gambar format PNG murni (`image/png`, `image/x-png`).
+  - Menghindari konflik penamaan file tujuan tetap `logo.png` dengan format non-PNG yang sebelumnya diterima di form.
+  - Memberikan pesan kesalahan yang jelas dan spesifik (`Format file tidak didukung. File harus berupa gambar PNG yang valid.`) jika format file yang diunggah tidak sesuai.
+  - Menambahkan pencatatan aktivitas admin `UPDATE_LOGO` pada file log aktivitas.
+  - Memperbarui panduan agen `AGENTS.md` dan menandai checklist selesai di `docs/ROADMAP.md` untuk item session fixation, rate limit login, dan konsistensi logo.
+  - Menambahkan unit test regresi di `tests/Unit/UploadHelperRefactorTest.php` untuk memastikan upload logo menolak file non-PNG.
 - **Refactoring Arsitektur CSS Modular Panel Admin**:
   - Memecah berkas tunggal monolitik `admin/assets/css/admin.css` (4.045 baris) menjadi 8 modul terstruktur dan terfokus di direktori `admin/assets/css/modules/` (`_variables.css`, `_components.css`, `_modals.css`, `_navigation.css`, `_hpp_editor.css`, `_hpp_calculator.css`, `_responsive_admin.css`, `_responsive_hpp.css`).
   - Memastikan seluruh berkas kode di seluruh proyek berada di bawah 1.000 baris (maksimal ~750 baris).

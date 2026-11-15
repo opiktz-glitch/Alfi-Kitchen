@@ -21,9 +21,9 @@ kembali pada konfigurasi hosting sebelum perubahan produksi.
   Permissions-Policy di `.htaccess` (saat ini baru X-Frame-Options, nosniff,
   dan Referrer-Policy) untuk mencegah XSS, memaksa HTTPS, dan mematikan
   fitur browser yang tidak perlu.
-- [ ] **Cegah session fixation.** Panggil `session_regenerate_id(true)` saat
+- [x] **Cegah session fixation.** Panggil `session_regenerate_id(true)` saat
   login sukses agar session ID lama tidak dapat disalahgunakan.
-- [ ] **Terapkan rate-limit login.** Tabel `login_attempts` sudah ada; pastikan
+- [x] **Terapkan rate-limit login.** Tabel `login_attempts` sudah ada; pastikan
   `login.php` memblokir sementara setelah N percobaan gagal per IP/username.
 - [ ] **Nonaktifkan display_errors di produksi.** Pastikan error tidak
   ditampilkan ke browser (bocor path/kredensial); simpan ke log server.
@@ -55,10 +55,9 @@ kembali pada konfigurasi hosting sebelum perubahan produksi.
 - [ ] **Validasi password di server.** Terapkan batas panjang password pada
   handler pengubahan password, bukan hanya atribut HTML. Uji input terlalu
   pendek, valid, dan tidak valid.
-- [ ] **Samakan format logo yang diterima.** UI menerima beberapa format,
-  sedangkan nama tujuan tetap `logo.png` dan helper mewajibkan ekstensi sesuai
-  MIME. Jika logo memang harus PNG, terima dan validasi PNG saja serta
-  tampilkan pesan yang sesuai; uji format yang diterima dan ditolak.
+- [x] **Samakan format logo yang diterima.** UI dan backend kini membatasi
+  khusus format PNG murni (`image/png`, file `.png`), disimpan ke `logo.png`
+  dengan pesan error yang jelas jika format tidak didukung.
 
 ## P2 — SEO dan pengindeksan
 

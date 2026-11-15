@@ -21,7 +21,8 @@ function store_uploaded_image($file, $prefix = 'image', $required = false, $allo
     }
 
     $temporaryPath = $file['tmp_name'] ?? '';
-    $fileSize = is_uploaded_file($temporaryPath) ? filesize($temporaryPath) : false;
+    $isUploaded = is_uploaded_file($temporaryPath) || (defined('TESTS_RUNNING') && file_exists($temporaryPath));
+    $fileSize = $isUploaded ? filesize($temporaryPath) : false;
     if ($fileSize === false || $fileSize < 1 || $fileSize > 5 * 1024 * 1024) {
         return ['path' => null, 'error' => 'Ukuran gambar harus lebih dari 0 dan maksimal 5 MB.'];
     }
@@ -51,6 +52,9 @@ function store_uploaded_image($file, $prefix = 'image', $required = false, $allo
         || !in_array(($imageInfo['mime'] ?? ''), $mimeTypes, true)
         || ($imageInfo[0] * $imageInfo[1]) > 40000000
     ) {
+        if ($allowedMimeTypes !== null && count(array_diff($mimeTypes, ['image/png', 'image/x-png'])) === 0) {
+            return ['path' => null, 'error' => 'Format file tidak didukung. File harus berupa gambar PNG yang valid.'];
+        }
         return ['path' => null, 'error' => 'File harus berupa gambar JPEG, PNG, GIF, atau WEBP yang valid.'];
     }
 

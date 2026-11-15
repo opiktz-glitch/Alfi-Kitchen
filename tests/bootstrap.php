@@ -9,6 +9,10 @@
 
 namespace PHPUnit\Framework;
 
+if (!defined('TESTS_RUNNING')) {
+    define('TESTS_RUNNING', true);
+}
+
 require_once __DIR__ . '/helpers.php';
 
 if (!class_exists('PHPUnit\Framework\TestCase', false)) {

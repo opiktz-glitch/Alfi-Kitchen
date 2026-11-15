@@ -43,12 +43,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['hero_image'])) {
     $message = "Gambar slider berhasil dihapus!";
     $messageClass = 'alert alert-success';
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['logo'])) {
-    $upload = store_uploaded_image($_FILES['logo'], 'logo', true, ['image/png', 'image/jpeg', 'image/jpg', 'image/gif', 'image/webp', 'image/pjpeg'], 'logo.png');
+    $upload = store_uploaded_image($_FILES['logo'], 'logo', true, ['image/png', 'image/x-png'], 'logo.png');
     if ($upload['error']) {
         $message = $upload['error'];
         $messageClass = 'alert alert-error';
     } else {
+        log_admin_action('UPDATE_LOGO', 'filename=logo.png');
         $message = "Logo berhasil diperbarui!";
+        $messageClass = 'alert alert-success';
     }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
     $new_password = $_POST['new_password'];
@@ -315,8 +317,9 @@ if (isset($_GET['tab'])) {
                         <form action="" method="post" enctype="multipart/form-data" data-submit-lock>
                             <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
                             <div class="form-group">
-                                <label>Upload Logo Baru (Rasio 1:1, PNG/JPG/GIF/WEBP)</label>
-                                <input type="file" name="logo" accept="image/png,image/jpeg,image/jpg,image/gif,image/webp" required>
+                                <label for="logo-file">Upload Logo Baru (Format PNG, Rekomendasi Rasio 1:1)</label>
+                                <input type="file" id="logo-file" name="logo" accept="image/png" required>
+                                <small class="settings-hint">Format yang didukung: <strong>PNG</strong> (.png), ukuran maksimal 5 MB.</small>
                             </div>
                             <button type="submit" class="btn btn-primary btn-with-icon"><?= admin_icon('save') ?>Simpan Logo</button>
                         </form>
