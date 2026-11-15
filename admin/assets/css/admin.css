@@ -1077,25 +1077,6 @@ body {
   gap: 0;
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
-  max-height: 520px;
-  overflow-y: auto;
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
-  padding-right: 4px;
-}
-.hpp-editor-rows::-webkit-scrollbar {
-  width: 6px;
-}
-.hpp-editor-rows::-webkit-scrollbar-track {
-  background: #faf8f5;
-  border-radius: 4px;
-}
-.hpp-editor-rows::-webkit-scrollbar-thumb {
-  background: #d9d0c6;
-  border-radius: 4px;
-}
-.hpp-editor-rows::-webkit-scrollbar-thumb:hover {
-  background: var(--accent);
 }
 @media (max-width: 1440px) {
   .hpp-editor-row {
