@@ -354,7 +354,7 @@ $csrfToken = generate_csrf_token();
                 <?php if ($changedIngredientPrices): ?>
                     <div class="alert alert-error hpp-slim-alert" role="alert">
                         <span class="hpp-slim-alert-icon"><?= admin_icon('info') ?></span>
-                        <span class="hpp-slim-alert-text">Harga master beberapa bahan berubah. Snapshot resep tetap dipakai sampai Anda memilih pembaruan snapshot secara eksplisit.</span>
+                        <span class="hpp-slim-alert-text">💡 <strong>Harga bahan berubah di Master Bahan:</strong> Biaya modal resep lama tetap dipertahankan sampai Anda mencentang opsi "Perbarui biaya resep" di bawah.</span>
                     </div>
                 <?php endif; ?>
                 <div class="hpp-editor-tabs" role="tablist">
@@ -436,7 +436,7 @@ $csrfToken = generate_csrf_token();
                         </p>
                         <label class="hpp-refresh-snapshots" title="Perbarui snapshot harga bahan master sebelum menyimpan"<?= $recipe === null ? ' hidden' : '' ?>>
                             <input type="checkbox" name="refresh_master_snapshots" value="1" data-refresh-snapshots<?= $refreshSnapshots ? ' checked' : '' ?>>
-                            <span>Gunakan harga master terbaru saat ini untuk resep ini</span>
+                            <span>🔄 Perbarui biaya resep mengikuti harga beli bahan terbaru di toko</span>
                         </label>
                     </section>
 

@@ -141,9 +141,9 @@ $recipes = $schemaReady ? hpp_get_recipe_list($pdo) : [];
                                         </td>
                                         <td data-label="Status bahan" class="table-cell-center">
                                             <?php if ($recipe['ingredient_prices_changed']): ?>
-                                                <span class="hpp-status-badge is-changed">Harga bahan berubah</span>
+                                                <span class="hpp-status-badge is-changed" title="Harga bahan baku di Master Bahan telah berubah. Buka resep ini untuk meninjau dan menghitung ulang HPP.">⚠️ Perlu Update (Harga bahan berubah)</span>
                                             <?php else: ?>
-                                                <span class="hpp-status-badge is-current">Sesuai snapshot</span>
+                                                <span class="hpp-status-badge is-current" title="Biaya modal resep ini telah sesuai dengan harga bahan baku terbaru di Master Bahan.">✓ Biaya Terkini</span>
                                             <?php endif; ?>
                                         </td>
                                         <td data-label="Aksi" class="table-cell-actions">
