@@ -3169,58 +3169,115 @@ td:has(.thumb-hero) {
     display: block;
     overflow: hidden;
     border: 1px solid var(--line);
-    border-radius: 10px;
+    border-radius: var(--radius-sm);
     background: var(--card);
-    box-shadow: 0 1px 5px rgba(41, 32, 24, 0.03);
+    box-shadow: 0 1px 4px rgba(41, 32, 24, 0.03);
   }
   .category-table tbody tr:hover {
     background: var(--card);
   }
-  .category-table tbody td {
+  /* Smart Compact 2-Baris untuk Kategori Produk di HP */
+  .category-table tbody tr.category-main-row {
+    display: grid !important;
+    grid-template-columns: 1fr auto !important;
+    grid-template-areas:
+      "category actions"
+      "variants actions";
+    align-items: center;
+    gap: 4px 10px;
+    padding: 10px 12px;
+  }
+  .category-table tbody tr.category-main-row td {
+    padding: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+  }
+  .category-table tbody tr.category-main-row td::before {
+    display: none !important;
+  }
+  .category-table tbody tr.category-main-row td[data-label="Kategori"] {
+    grid-area: category;
+    min-width: 0;
+  }
+  .category-table tbody tr.category-main-row .category-summary {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 14px;
-    padding: 14px;
-    border-bottom: 1px solid var(--line);
-  }
-  .category-table tbody td:last-child {
-    border-bottom: 0;
-  }
-  .category-table tbody td[data-label]::before {
-    flex: 0 0 auto;
-    color: var(--muted);
-    content: attr(data-label);
-    font-size: 0.82rem;
-    font-weight: 600;
-  }
-  .category-summary {
-    min-width: 0;
     gap: 10px;
+    min-width: 0;
   }
-  .category-thumb {
-    width: 42px;
-    height: 42px;
-    flex-basis: 42px;
+  .category-table tbody tr.category-main-row .category-thumb {
+    width: 40px;
+    height: 40px;
+    flex: 0 0 40px;
+    border-radius: var(--radius-sm);
+    object-fit: cover;
   }
-  .category-table tbody td[data-label="Aksi"] {
-    display: block;
+  .category-table tbody tr.category-main-row .category-name {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--text);
+    word-break: break-word;
   }
-  .category-table tbody td[data-label="Aksi"]::before {
-    display: block;
-    margin-bottom: 8px;
+
+  .category-table tbody tr.category-main-row td[data-label="Jumlah varian"] {
+    grid-area: variants;
+    display: flex;
+    align-items: center;
+    padding-top: 2px !important;
   }
-  .category-actions {
+  .category-table tbody tr.category-main-row .category-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: #6a5848;
+    background: #f4ede4;
+    border: 1px solid #e5dacd;
+    border-radius: 20px;
+    padding: 3px 10px;
+    cursor: pointer;
+    min-height: 26px;
+  }
+  .category-table tbody tr.category-main-row .category-count:hover {
+    background: #ebdccf;
+  }
+
+  .category-table tbody tr.category-main-row td[data-label="Aksi"] {
+    grid-area: actions;
+    justify-self: end;
+    align-self: center;
+    display: flex !important;
+  }
+  .category-table tbody tr.category-main-row .category-actions {
+    display: flex !important;
+    align-items: center;
+    gap: 4px;
+    margin: 0;
     width: auto;
-    flex-wrap: wrap;
-    gap: 8px;
   }
-  .category-icon-button {
-    min-height: 44px;
-    padding: 0 10px;
+  .category-table tbody tr.category-main-row .category-actions-main {
+    display: flex;
+    align-items: center;
+    gap: 4px;
   }
-  .category-actions-delete {
-    padding-left: 8px;
+  .category-table tbody tr.category-main-row .category-actions-delete {
+    padding-left: 0;
+    margin: 0;
+  }
+  .category-table tbody tr.category-main-row .category-icon-button {
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+    min-height: 34px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+  }
+  .category-table tbody tr.category-main-row .category-icon-button .action-button-label {
+    display: none !important;
   }
   .category-variants-row[hidden] {
     display: none !important;
