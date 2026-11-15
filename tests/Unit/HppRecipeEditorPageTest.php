@@ -79,8 +79,7 @@ class HppRecipeEditorPageTest extends TestCase
         );
         $this->assertStringContainsString('box-sizing: border-box;', $css);
         $this->assertStringContainsString('min-height: 0;', $css);
-        $this->assertStringContainsString('max-height: calc(100vh - 32px);', $css);
-        $this->assertStringContainsString('overflow-y: auto;', $css);
+        $this->assertStringNotContainsString('max-height: calc(100vh - 32px);', $css);
         $this->assertStringContainsString('@media (max-width: 1200px)', $css);
     }
 }
