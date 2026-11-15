@@ -4,6 +4,30 @@ Perubahan penting pada Alfi Kitchen dicatat di sini, berdasarkan riwayat commit
 repository. Tanggal menunjukkan tanggal perubahan tercatat di Git; entri ini
 bukan penanda rilis atau versi aplikasi.
 
+## 2026-11-15
+
+### Added
+- **Restore Database (.sql) & Restore Gambar (.zip)**:
+  - Modul backend `admin/helpers/backup_helper.php` dengan parser verifikasi versi skema migrasi `schema_migrations`, whitelist tabel resmi, anti-lockout sesi admin, dan proteksi Zip Slip.
+  - Skrip handler `admin/restore_db.php` dan `admin/restore_images.php`.
+  - Panel Restore Database dan Restore Gambar di Tab 3 Pengaturan (`admin/settings.php`).
+  - Integrasi notifikasi toast flash message di `admin/settings.php` via `flash_message.php`.
+  - Widget "Riwayat Restore Terakhir" (`get_latest_restore_activity`) di Tab 3 untuk membaca status pemulihan terakhir dari `logs/admin_activity.log`.
+  - Loading state dan double-submit lock (`data-submit-lock`, `data-loading-label`) pada tombol aksi restore.
+- **Kalkulator HPP — 3 Tab & Live Custom Markup**:
+  - Restrukturisasi form editor resep (`admin/hpp_edit.php`) menjadi 3 Tab Terarah: `1. Resep & Bahan`, `2. Biaya Operasional`, dan `3. Kalkulasi & Harga Jual`.
+  - Live HPP Badge pada header tombol Tab 3 yang ter-update secara *realtime* saat takaran bahan atau biaya diedit.
+  - Tombol navigasi langkah antar-tab (`Lanjut: Biaya Operasional →`, `← Bahan`, `Lanjut: Hasil Kalkulasi →`, `← Kembali ke Biaya`).
+  - Skenario Markup Kustom Manual interaktif di posisi paling atas daftar skenario, dengan input persentase bebas, kalkulasi laba/margin seketika, tombol "Gunakan", dan penyimpanan otomatis di `localStorage`.
+- **Navigasi & Viewport Mobile**:
+  - Menu `Master Bahan` ditambahkan ke navigasi bawah mobile (bottom nav) sehingga genap 5 menu utama (Beranda, Produk, Kalkulator, Master Bahan, Setelan).
+  - Penambahan `<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">` dan `<meta name="robots" content="noindex, nofollow">` pada seluruh halaman form admin agar tidak zoom out ke tampilan desktop di layar HP.
+- **Unit Testing**:
+  - Penambahan suite tes `DatabaseRestoreTest`, `HppRecipeListPageTest`, dan `TestRunnerCliTest`. Total tes mencapai 215 unit test dengan tingkat kelulusan 100%.
+
+### Changed
+- Scroll pada Tab Kalkulasi HPP diubah menjadi satu scrollbar utama (*single page scroll*) dengan menghapus aturan `overflow-y: auto` dan `max-height` pada `.hpp-calculation-card` untuk mengeliminasi *nested scrollbar*.
+
 ## 2026-11-01
 
 ### Added

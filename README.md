@@ -48,10 +48,13 @@ tersebut, aplikasi membaca environment `.env` jika tersedia.
 - Katalog kategori dan varian produk dengan URL produk berbasis slug.
 - Panel admin untuk mengelola produk, gambar hero, konten homepage, dan nomor
   WhatsApp.
+- Kalkulator HPP (Harga Pokok Penjualan) dengan manajemen resep, biaya operasional,
+  dan simulasi markup rekomendasi harga (preset & kustom manual).
 - Upload gambar dengan batas 5 MB, validasi MIME/struktur, dan batas dimensi.
 - Thumbnail responsif dengan cache; konversi dan kompresi memerlukan dukungan
   GD.
-- Ekspor backup database dan gambar dari panel pengaturan admin.
+- Ekspor backup dan pemulihan (restore) database (.sql) berversi skema migrasi
+  serta arsip gambar (.zip) dari panel pengaturan admin.
 - SEO dasar, sitemap, halaman 404, dan manifest PWA.
 
 ## Tes

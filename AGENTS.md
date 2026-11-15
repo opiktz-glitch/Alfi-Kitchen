@@ -35,7 +35,7 @@
 - Runner `tests\run_tests.php` tanpa opsi menjalankan semua suite untuk menjaga kompatibilitas CI. Gunakan `--list-suites` untuk melihat suite yang tersedia dan `--suite=NamaSuite[,NamaSuite]` untuk subset; nama harus cocok persis. Untuk perubahan berisiko rendah, pilih suite terkait; tetap jalankan seluruh suite sebelum rilis.
 - Perubahan dokumentasi saja tidak memerlukan tes kecuali dokumentasi mengubah instruksi operasional; periksa fakta dan tautan terkait.
 - Laporkan perintah, hasil aktual (termasuk jumlah yang dijalankan bila tersedia), alasan pemilihan level, serta batas verifikasi yang belum dilakukan. Jangan mengandalkan jumlah tes tetap.
-- Cakupan suite saat ini: `SyntaxTest`, `AdminRefactorTest`, `ThumbSecurityTest`, `UploadHelperRefactorTest`, `DatabaseMigratorTest`, `FallbackLogoTest`, `EnvLoaderTest`, `BackupAndLogTest`, `SeoAndRoutingTest`, `HppCalcTest`, `HppIngredientTest`, `HppIngredientPageTest`, `HppRecipeRepositoryTest`, dan `HppRecipeEditorPageTest`.
+- Cakupan suite saat ini: `SyntaxTest`, `AdminRefactorTest`, `ThumbSecurityTest`, `UploadHelperRefactorTest`, `DatabaseMigratorTest`, `FallbackLogoTest`, `EnvLoaderTest`, `BackupAndLogTest`, `SeoAndRoutingTest`, `HppCalcTest`, `HppIngredientTest`, `HppIngredientPageTest`, `HppRecipeRepositoryTest`, `HppRecipeEditorPageTest`, `HppRecipeListPageTest`, `DatabaseRestoreTest`, dan `TestRunnerCliTest`.
 - CI menjalankan tes sebelum deployment (`.github/workflows/deploy.yml`).
 - GD bersifat opsional pada PHP CLI lokal. Jalur fallback tanpa GD lebih mudah diuji daripada perilaku resize/WebP yang memerlukan ekstensi GD aktif.
 
