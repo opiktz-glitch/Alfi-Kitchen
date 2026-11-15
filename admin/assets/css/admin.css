@@ -3591,12 +3591,152 @@ td:has(.thumb-hero) {
 @media (max-width: 768px) {
   .dashboard-section-heading {
     flex-direction: column;
+    gap: 6px;
+    margin-bottom: 10px;
   }
+  .dashboard-section-heading h3 {
+    margin: 0;
+    font-size: 0.95rem;
+  }
+  .dashboard-section-heading p {
+    font-size: 0.78rem;
+  }
+  .dashboard-alert {
+    padding: 10px 12px;
+    gap: 10px;
+  }
+  .dashboard-alert-text {
+    font-size: 0.82rem;
+    min-width: 0;
+  }
+
+  /* 1. Smart Compact Statistik di HP (2x2 Grid) */
+  .admin-dashboard-stats {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+    margin-bottom: 12px !important;
+  }
+  .admin-stat {
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    gap: 4px;
+  }
+  .admin-stat-value {
+    font-size: 1.55rem;
+  }
+  .admin-stat-label {
+    font-size: 0.72rem;
+  }
+  .dashboard-stat-note {
+    font-size: 0.68rem;
+    margin-top: 2px;
+  }
+
+  /* 2. Smart Compact Akses Cepat di HP (2x2 Grid) */
   .dashboard-shortcuts {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
   }
   .dashboard-shortcut-card {
-    min-height: 64px;
+    min-height: 52px;
+    padding: 8px 10px;
+    gap: 8px;
+    border-radius: var(--radius-sm);
+    align-items: center;
+  }
+  .dashboard-shortcut-icon {
+    width: 30px;
+    height: 30px;
+    flex: 0 0 30px;
+    border-radius: 7px;
+  }
+  .dashboard-shortcut-icon .admin-icon {
+    width: 15px;
+    height: 15px;
+  }
+  .dashboard-shortcut-copy {
+    gap: 0;
+    min-width: 0;
+  }
+  .dashboard-shortcut-copy strong {
+    font-size: 0.76rem;
+    line-height: 1.25;
+    word-break: break-word;
+  }
+  .dashboard-shortcut-copy small {
+    display: none !important;
+  }
+  .dashboard-shortcut-card > .admin-icon {
+    display: none !important;
+  }
+
+  /* 3. Smart Compact Feed Aktivitas Terbaru di HP */
+  .dashboard-activity-table {
+    overflow: visible;
+  }
+  .dashboard-activity-table table {
+    display: block;
+    width: 100%;
+  }
+  .dashboard-activity-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  .dashboard-activity-table tbody {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .dashboard-activity-table tbody tr {
+    display: grid !important;
+    grid-template-columns: auto 1fr !important;
+    grid-template-areas:
+      "action time"
+      "detail detail";
+    gap: 2px 8px;
+    padding: 8px 10px;
+    background: #faf8f5;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+  }
+  .dashboard-activity-table tbody td {
+    padding: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+  }
+  .dashboard-activity-table tbody td:nth-child(2) {
+    grid-area: action;
+    justify-self: start;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #85420f;
+    background: #f4ede4;
+    border: 1px solid #e5dacd;
+    padding: 1px 6px !important;
+    border-radius: 4px;
+    letter-spacing: 0.02em;
+    font-family: monospace;
+  }
+  .dashboard-activity-table tbody td:nth-child(1) {
+    grid-area: time;
+    justify-self: end;
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+  .dashboard-activity-table tbody td:nth-child(3) {
+    grid-area: detail;
+    font-size: 0.8rem;
+    color: var(--text);
+    line-height: 1.35;
+    padding-top: 2px !important;
+    word-break: break-word;
   }
   .hpp-recipe-list-wrap {
     overflow: visible;
