@@ -662,11 +662,11 @@ $csrfToken = generate_csrf_token();
                 </template>
                 <template id="hpp-cost-template">
                     <div class="hpp-editor-row hpp-cost-row" data-cost-row>
-                        <div class="form-group">
+                        <div class="form-group hpp-cell-cost-label">
                             <label class="hpp-row-label">Nama biaya</label>
                             <input type="text" name="costs[__INDEX__][label]" maxlength="80" data-cost-label required placeholder="Nama biaya...">
                         </div>
-                        <div class="form-group">
+                        <div class="form-group hpp-cell-cost-type">
                             <label class="hpp-row-label">Jenis perhitungan</label>
                             <select name="costs[__INDEX__][calc_type]" data-cost-type>
                                 <option value="pct_bahan">Persentase dari total bahan (%)</option>
@@ -674,11 +674,11 @@ $csrfToken = generate_csrf_token();
                                 <option value="flat">Biaya tetap per resep (Rp)</option>
                             </select>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group hpp-cell-cost-amount">
                             <label class="hpp-row-label">Nilai</label>
-                            <input type="text" name="costs[__INDEX__][amount]" inputmode="decimal" maxlength="16" data-cost-amount required placeholder="0">
+                            <input type="text" name="costs[__INDEX__][amount]" inputmode="decimal" maxlength="16" data-cost-amount required placeholder="Nilai...">
                         </div>
-                        <div class="hpp-editor-row-total"><span>Subtotal biaya</span><strong data-cost-total>Rp 0</strong></div>
+                        <div class="hpp-editor-row-total"><span>Subtotal</span><strong data-cost-total>Rp 0</strong></div>
                         <button type="button" class="btn btn-danger btn-sm btn-with-icon hpp-remove-row" data-remove-cost aria-label="Hapus biaya operasional" title="Hapus biaya operasional"><?= admin_icon('delete') ?><span>Hapus</span></button>
                     </div>
                 </template>
