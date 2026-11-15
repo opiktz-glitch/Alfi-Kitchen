@@ -47,7 +47,7 @@ tersebut, aplikasi membaca environment `.env` jika tersedia.
 
 - Katalog kategori dan varian produk dengan URL produk berbasis slug.
 - Panel admin untuk mengelola produk, gambar hero, konten homepage, dan nomor
-  WhatsApp.
+  WhatsApp dengan tata letak responsif *Smart Compact* di layar HP.
 - Kalkulator HPP (Harga Pokok Penjualan) dengan manajemen resep, biaya operasional,
   dan simulasi markup rekomendasi harga (preset & kustom manual).
 - Upload gambar dengan batas 5 MB, validasi MIME/struktur, dan batas dimensi.

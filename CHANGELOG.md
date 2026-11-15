@@ -7,6 +7,21 @@ bukan penanda rilis atau versi aplikasi.
 ## 2026-11-15
 
 ### Added
+- **Optimasi Antarmuka Mobile (Smart Compact UI di Layar HP)**:
+  - Eliminasi *nested scrollbar* pada Tab 1 (Resep & Bahan) dan Tab 2 (Biaya Operasional) di editor HPP sehingga seluruh tab bergulir seragam menggunakan satu *page scroll*.
+  - Tata letak **Smart Compact 2-Baris** pada kartu Bahan Baku di editor HPP: dropdown bahan & icon tombol hapus di Baris 1, input qty & subtotal di Baris 2 (hemat ruang vertikal ~63%).
+  - Tata letak **Smart Compact** pada kartu Biaya Operasional di editor HPP: nama biaya & icon hapus di Baris 1, jenis perhitungan & nilai input di Baris 2, subtotal biaya di Baris 3/footer (hemat ruang vertikal ~56%).
+  - Tata letak **Smart Compact 2-Baris** pada Master Bahan Baku (`admin/hpp_ingredients.php`): nama bahan, catatan, dan icon aksi di Baris 1; spesifikasi kemasan dan harga kemasan di Baris 2 (hemat ruang vertikal ~65%).
+  - Tata letak **Smart Compact 2-Baris** pada Manajemen Produk (`admin/products.php`): thumbnail & nama kategori di kiri dan 3 icon aksi (Kelola, Edit, Hapus) di kanan atas Baris 1; badge jumlah varian interaktif di Baris 2 (hemat ruang vertikal ~65%).
+  - Tata letak **Smart Compact Mobile** pada Dashboard (`admin/dashboard.php`): grid 2x2 pada 4 kartu statistik, grid 2x2 pada 4 kartu akses cepat, dan feed timeline ringkas anti-overflow pada log aktivitas terbaru (hemat ruang vertikal ~65%).
+  - Tata letak **Smart Compact 2-Baris** pada Halaman Utama Kalkulator HPP (`admin/hpp_recipes.php`): nama resep, varian, dan 3 icon aksi di Baris 1; HPP per jar dan harga jual saat ini berdampingan langsung di Baris 2 (hemat ruang vertikal ~66%).
+  - Tata letak **Smart Compact** pada Tab Pengaturan (`admin/settings.php`): pill tab bar yang ringkas, formulir kontak & footer yang lebih padat, serta tombol Backup Database & Gambar disajikan 2 kolom berdampingan (*side-by-side*).
+  - Seluruh tampilan desktop/laptop (> 768px) pada seluruh halaman admin tetap 100% utuh tanpa perubahan.
+- **Penyempurnaan Bahasa Ramah Pengguna (User-Friendly Wording)**:
+  - Mengganti istilah teknis `"Sesuai snapshot"` menjadi **`✓ Biaya Terkini`** pada daftar resep HPP.
+  - Memperjelas status peringatan menjadi **`⚠️ Perlu Update (Harga bahan berubah)`**.
+  - Mengubah opsi pembaruan resep di editor menjadi **`🔄 Perbarui biaya resep mengikuti harga beli bahan terbaru di toko`**.
+  - Notifikasi peringatan di atas editor resep disesuaikan dengan penjelasan praktis yang mudah dimengerti pemilik dapur.
 - **Restore Database (.sql) & Restore Gambar (.zip)**:
   - Modul backend `admin/helpers/backup_helper.php` dengan parser verifikasi versi skema migrasi `schema_migrations`, whitelist tabel resmi, anti-lockout sesi admin, dan proteksi Zip Slip.
   - Skrip handler `admin/restore_db.php` dan `admin/restore_images.php`.
