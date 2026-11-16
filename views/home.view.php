@@ -58,52 +58,6 @@
   width: 24px;
   border-radius: 12px;
 }
-
-/* Video Teaser Card di Kolom Kiri Beranda */
-.home-video-card {
-  margin-top: 24px;
-  width: 100%;
-  max-width: 280px;
-  border-radius: 18px;
-  background: #fffdfa;
-  border: 1px solid rgba(133, 66, 15, 0.14);
-  box-shadow: 0 6px 20px rgba(45, 25, 10, 0.06);
-  padding: 10px;
-  box-sizing: border-box;
-}
-.home-video-badge {
-  display: flex;
-  align-items: center;
-  margin-bottom: 8px;
-  padding: 2px 4px;
-}
-.home-video-badge span {
-  font-size: 0.74rem;
-  font-weight: 700;
-  color: var(--accent, #a64b2a);
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
-}
-.home-video-wrapper {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 9 / 16;
-  border-radius: 12px;
-  overflow: hidden;
-  background: #2a1d14;
-}
-.home-video-player {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-@media (max-width: 820px) {
-  .home-video-card {
-    margin: 20px auto 0;
-    align-self: center;
-  }
-}
 </style>
 
 <div class="hero swiper mySwiper" id="heroSlider" aria-roledescription="carousel" aria-label="Slider Promo">
@@ -161,31 +115,6 @@
   <div class="col-text">
     <h1><?= nl2br(htmlspecialchars($homeTitle, ENT_QUOTES, 'UTF-8')) ?></h1>
     <p><?= nl2br(htmlspecialchars($homeDescription, ENT_QUOTES, 'UTF-8')) ?></p>
-    <?php
-    $videoRelPath = 'uploads/alfikitchen_video.mp4';
-    $posterRelPath = 'uploads/alfikitchen_poster.jpg';
-    $hasVideo = file_exists(__DIR__ . '/../' . $videoRelPath);
-    $hasPoster = file_exists(__DIR__ . '/../' . $posterRelPath);
-    ?>
-    <?php if ($hasVideo): ?>
-      <div class="home-video-card">
-        <div class="home-video-badge">
-          <span>✨ Kreasi Dapur Alfi</span>
-        </div>
-        <div class="home-video-wrapper">
-          <video 
-            controls 
-            playsinline 
-            preload="none" 
-            <?= $hasPoster ? 'poster="' . $posterRelPath . '"' : '' ?>
-            class="home-video-player"
-            aria-label="Video kreasi hidangan Alfi Kitchen">
-            <source src="<?= $videoRelPath ?>" type="video/mp4">
-            Browser Anda tidak mendukung pemutar video HTML5.
-          </video>
-        </div>
-      </div>
-    <?php endif; ?>
   </div>
   <div class="col-product" id="menu">
     <h2 class="col-product-title">Produk Kami</h2>
