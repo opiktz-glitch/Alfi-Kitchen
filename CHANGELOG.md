@@ -4,6 +4,16 @@ Perubahan penting pada Alfi Kitchen dicatat di sini, berdasarkan riwayat commit
 repository. Tanggal menunjukkan tanggal perubahan tercatat di Git; entri ini
 bukan penanda rilis atau versi aplikasi.
 
+## 2026-11-16
+
+### Added
+- **Kartu Video Teaser Kreasi Dapur di Halaman Beranda ([views/home.view.php](file:///c:/xampp/htdocs/Alfi_Kitchen/views/home.view.php))**:
+  - Menyematkan kartu video vertikal responsif (*card mockup*, lebar maksimal 280px, aspek rasio 9:16) di kolom kiri `.col-text` tepat di bawah deskripsi pengantar toko.
+  - Memanfaatkan ruang vertikal kosong di bawah teks pada tampilan desktop dan berfungsi sebagai visual pembuka yang menggugah selera sebelum pengunjung melihat daftar produk di HP.
+  - Menggunakan konfigurasi web terbaik: `controls`, `playsinline`, `preload="none"`, dan gambar sampul `poster="uploads/alfikitchen_poster.jpg"` sehingga tidak membebani kuota awal pengunjung (0 byte konsumsi video saat halaman pertama kali dibuka).
+  - Menggunakan *defensive check* `file_exists()` agar kartu video hanya tampil bila file video tersedia di `uploads/alfikitchen_video.mp4`.
+  - Mengoptimalkan berkas video dengan penempatan atom `moov` di awal (*FastStart / progressive streaming*) dan ekstraksi poster dari detik ke-3 menggunakan FFmpeg.
+
 ## 2026-11-15
 
 ### Added
