@@ -251,54 +251,103 @@ if (isset($_GET['tab'])) {
 
             <!-- Tab 2: Slider Beranda -->
             <div id="tab-slider" class="settings-tab-pane" role="tabpanel" aria-labelledby="tab-btn-slider"<?= $activeTab === 'tab-slider' ? '' : ' hidden' ?>>
-                <div class="settings-grid">
-                    <section class="settings-panel">
-                        <h3>Unggah Gambar Slider Baru</h3>
-                        <p class="settings-copy">Unggah foto banner promosi atau puding untuk slider beranda (Format: JPG/PNG/WebP, disarankan rasio lanskap/banner).</p>
-                        <form action="" method="post" enctype="multipart/form-data" data-submit-lock>
+                <div class="settings-grid settings-grid-slider">
+                    <!-- Kolom Kiri: Unggah Banner Slider Baru -->
+                    <section class="settings-panel slider-upload-panel">
+                        <div class="slider-panel-header">
+                            <h3>Unggah Banner Slider Baru</h3>
+                            <p class="settings-copy">Unggah foto banner promosi atau produk untuk slider beranda.</p>
+                        </div>
+                        <form action="" method="post" enctype="multipart/form-data" data-submit-lock id="slider-upload-form">
                             <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
-                            <div class="form-group">
-                                <label>Pilih Gambar Slider</label>
-                                <input type="file" name="hero_image" class="form-control" accept="image/jpeg,image/png,image/gif,image/webp" required>
+                            
+                            <!-- Modern Drag & Drop Zone -->
+                            <div class="hero-dropzone" id="hero-dropzone" tabindex="0" role="button" aria-label="Pilih atau seret gambar banner ke sini">
+                                <input type="file" id="hero-file-input" name="hero_image" class="hero-file-input" accept="image/jpeg,image/png,image/gif,image/webp" required>
+                                <div class="hero-dropzone-content" id="hero-dropzone-prompt">
+                                    <div class="hero-dropzone-icon">
+                                        <?= admin_icon('upload') ?>
+                                    </div>
+                                    <div class="hero-dropzone-text">
+                                        <strong>Pilih atau seret foto ke sini</strong>
+                                        <span>Format: JPG, PNG, GIF, WebP (Maks. 5 MB)</span>
+                                    </div>
+                                </div>
+
+                                <!-- Pre-upload Live Preview Area -->
+                                <div class="hero-preview-area" id="hero-preview-area" hidden>
+                                    <div class="hero-preview-frame">
+                                        <img id="hero-preview-img" src="" alt="Pratinjau Banner Slider">
+                                    </div>
+                                    <div class="hero-preview-meta">
+                                        <span id="hero-preview-filename" class="hero-preview-filename"></span>
+                                        <button type="button" class="btn btn-secondary btn-sm" id="hero-preview-reset-btn">Ganti Foto</button>
+                                    </div>
+                                </div>
                             </div>
-                            <button type="submit" class="btn btn-primary btn-with-icon"><?= admin_icon('upload') ?>Unggah Gambar Slider</button>
+
+                            <button type="submit" class="btn btn-primary btn-with-icon btn-upload-slider" id="btn-submit-slider">
+                                <?= admin_icon('upload') ?><span>Unggah Banner Slider</span>
+                            </button>
                         </form>
+
+                        <!-- Box Panduan Spesifikasi Banner -->
+                        <div class="slider-spec-guide">
+                            <div class="slider-spec-title">
+                                <span>💡 Panduan Banner Ideal:</span>
+                            </div>
+                            <ul class="slider-spec-list">
+                                <li><strong>Rasio 16:9 (Lanskap)</strong>: Sangat cocok untuk tampilan desktop maupun mobile.</li>
+                                <li><strong>Resolusi Rekomendasi</strong>: Minimal 1280 × 720 px (atau 1600 × 900 px).</li>
+                                <li><strong>Area Teks Aman</strong>: Pusatkan teks promosi di bagian tengah agar tidak terpotong logo floating di beranda.</li>
+                            </ul>
+                        </div>
                     </section>
-                    <section class="settings-panel">
-                        <h3>Daftar Slider Beranda Aktif (<?= count($hero_images) ?>)</h3>
-                        <p class="settings-copy">Gambar-gambar berikut akan otomatis tampil bergantian di slider utama beranda website.</p>
+
+                    <!-- Kolom Kanan: Galeri Slider Aktif -->
+                    <section class="settings-panel slider-gallery-panel">
+                        <div class="slider-gallery-header">
+                            <div>
+                                <h3>Daftar Slider Beranda Aktif</h3>
+                                <p class="settings-copy">Banner berikut otomatis tampil bergantian di slider utama beranda website.</p>
+                            </div>
+                            <span class="slider-count-badge"><?= count($hero_images) ?> Banner Aktif</span>
+                        </div>
+
                         <?php if (empty($hero_images)): ?>
-                            <p class="dashboard-empty">Belum ada gambar slider yang diunggah.</p>
+                            <div class="slider-empty-state">
+                                <div class="slider-empty-icon"><?= admin_icon('slider') ?></div>
+                                <h4>Belum ada banner slider</h4>
+                                <p class="dashboard-empty">Silakan unggah foto banner pertama Anda menggunakan formulir di sebelah kiri.</p>
+                            </div>
                         <?php else: ?>
-                            <div class="table-responsive">
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>Pratinjau</th>
-                                            <th>Nama Berkas</th>
-                                            <th class="table-cell-center">Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach ($hero_images as $h): ?>
-                                            <tr>
-                                                <td class="table-cell-center">
-                                                    <img src="../<?= htmlspecialchars($h['image']) ?>" class="thumb thumb-hero" alt="Hero Slide">
-                                                </td>
-                                                <td><?= htmlspecialchars(basename((string) $h['image'])) ?></td>
-                                                <td class="table-cell-center">
-                                                    <form method="post" action="" class="inline-action-form" data-submit-lock onsubmit="return confirm(<?= htmlspecialchars(json_encode('Hapus gambar slider "' . basename((string) $h['image']) . '"?'), ENT_QUOTES, 'UTF-8') ?>)">
-                                                        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
-                                                        <input type="hidden" name="delete_hero_image" value="<?= (int) $h['id'] ?>">
-                                                        <button type="submit" class="category-icon-button category-action-delete" title="Hapus gambar slider" aria-label="Hapus gambar slider">
-                                                            <?= admin_icon('delete') ?><span class="action-button-label">Hapus</span>
-                                                        </button>
-                                                    </form>
-                                                </td>
-                                            </tr>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
+                            <div class="hero-cards-grid">
+                                <?php foreach ($hero_images as $index => $h): ?>
+                                    <article class="hero-banner-card">
+                                        <div class="hero-banner-media">
+                                            <img src="../<?= htmlspecialchars($h['image']) ?>" class="thumb-hero" alt="Slide <?= $index + 1 ?>" loading="lazy">
+                                            <span class="hero-slide-badge">
+                                                <?= $index === 0 ? '★ Slide #1 (Utama)' : 'Slide #' . ($index + 1) ?>
+                                            </span>
+                                        </div>
+                                        <div class="hero-banner-footer">
+                                            <div class="hero-banner-info">
+                                                <span class="hero-banner-name" title="<?= htmlspecialchars(basename((string) $h['image'])) ?>">
+                                                    <?= htmlspecialchars(basename((string) $h['image'])) ?>
+                                                </span>
+                                            </div>
+                                            <div class="hero-banner-actions">
+                                                <form method="post" action="" class="inline-action-form" data-submit-lock onsubmit="return confirm(<?= htmlspecialchars(json_encode('Hapus gambar slider "' . basename((string) $h['image']) . '"?'), ENT_QUOTES, 'UTF-8') ?>)">
+                                                    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
+                                                    <input type="hidden" name="delete_hero_image" value="<?= (int) $h['id'] ?>">
+                                                    <button type="submit" class="btn btn-danger btn-sm hero-delete-btn" title="Hapus gambar slider" aria-label="Hapus gambar slider <?= htmlspecialchars(basename((string) $h['image'])) ?>">
+                                                        <?= admin_icon('delete') ?><span>Hapus</span>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </article>
+                                <?php endforeach; ?>
                             </div>
                         <?php endif; ?>
                     </section>
@@ -528,6 +577,73 @@ if (isset($_GET['tab'])) {
         var hash = window.location.hash ? window.location.hash.substring(1) : '';
         if (hash && document.getElementById(hash)) {
             switchTab(hash);
+        }
+
+        // Slider Drag & Drop + Instant Live Preview
+        var dropzone = document.getElementById('hero-dropzone');
+        var fileInput = document.getElementById('hero-file-input');
+        var promptArea = document.getElementById('hero-dropzone-prompt');
+        var previewArea = document.getElementById('hero-preview-area');
+        var previewImg = document.getElementById('hero-preview-img');
+        var previewFilename = document.getElementById('hero-preview-filename');
+        var resetBtn = document.getElementById('hero-preview-reset-btn');
+
+        if (dropzone && fileInput) {
+            function handleFile(file) {
+                if (!file || !file.type.match(/^image\//)) return;
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    if (previewImg) previewImg.src = e.target.result;
+                    if (previewFilename) {
+                        var sizeKb = Math.round(file.size / 1024);
+                        previewFilename.textContent = file.name + ' (' + sizeKb + ' KB)';
+                    }
+                    if (promptArea) promptArea.hidden = true;
+                    if (previewArea) previewArea.hidden = false;
+                };
+                reader.readAsDataURL(file);
+            }
+
+            fileInput.addEventListener('change', function () {
+                if (this.files && this.files[0]) {
+                    handleFile(this.files[0]);
+                }
+            });
+
+            ['dragenter', 'dragover'].forEach(function (eventName) {
+                dropzone.addEventListener(eventName, function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    dropzone.classList.add('is-dragover');
+                }, false);
+            });
+
+            ['dragleave', 'drop'].forEach(function (eventName) {
+                dropzone.addEventListener(eventName, function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    dropzone.classList.remove('is-dragover');
+                }, false);
+            });
+
+            dropzone.addEventListener('drop', function (e) {
+                var dt = e.dataTransfer;
+                if (dt && dt.files && dt.files.length > 0) {
+                    fileInput.files = dt.files;
+                    handleFile(dt.files[0]);
+                }
+            });
+
+            if (resetBtn) {
+                resetBtn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    fileInput.value = '';
+                    if (previewImg) previewImg.src = '';
+                    if (previewArea) previewArea.hidden = true;
+                    if (promptArea) promptArea.hidden = false;
+                });
+            }
         }
     });
     </script>

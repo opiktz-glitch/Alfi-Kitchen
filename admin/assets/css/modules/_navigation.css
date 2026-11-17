@@ -575,3 +575,305 @@
   flex-shrink: 0;
 }
 .admin-bottom-nav { display: none; }
+
+/* === Tab Slider Beranda (Visual Grid & Drag-Drop UI) === */
+@media (min-width: 992px) {
+  .settings-grid-slider {
+    grid-template-columns: 360px minmax(0, 1fr) !important;
+    gap: 24px !important;
+    align-items: start !important;
+  }
+}
+
+.slider-upload-panel,
+.slider-gallery-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.slider-panel-header {
+  margin-bottom: 14px;
+}
+
+.slider-gallery-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+
+.slider-gallery-header h3 {
+  margin: 0 0 4px;
+}
+
+.slider-count-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: #fbf1e8;
+  color: #783815;
+  font-size: 0.76rem;
+  font-weight: 700;
+  border: 1px solid #ebd9c8;
+}
+
+/* Drag & Drop Zone */
+.hero-dropzone {
+  position: relative;
+  border: 2px dashed #dbc9b8;
+  border-radius: 12px;
+  background: #fdfbf7;
+  padding: 22px 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+  margin-bottom: 14px;
+}
+
+.hero-dropzone:hover,
+.hero-dropzone.is-dragover {
+  border-color: var(--accent);
+  background: #fff8f0;
+}
+
+.hero-file-input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.hero-dropzone-icon {
+  margin-bottom: 8px;
+  color: var(--accent);
+}
+
+.hero-dropzone-icon svg {
+  width: 32px;
+  height: 32px;
+}
+
+.hero-dropzone-text strong {
+  display: block;
+  font-size: 0.88rem;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.hero-dropzone-text span {
+  display: block;
+  font-size: 0.74rem;
+  color: var(--muted);
+}
+
+/* Pre-upload Live Preview */
+.hero-preview-area {
+  position: relative;
+  z-index: 3;
+}
+
+.hero-preview-frame {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #2a1d14;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  margin-bottom: 10px;
+}
+
+.hero-preview-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.hero-preview-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.hero-preview-filename {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text);
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.btn-upload-slider {
+  width: 100%;
+  justify-content: center;
+  margin-bottom: 18px;
+}
+
+/* Panduan Spesifikasi Banner */
+.slider-spec-guide {
+  background: #fcf8f3;
+  border: 1px solid #ebd9c8;
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 0.78rem;
+  margin-top: auto;
+}
+
+.slider-spec-title {
+  font-weight: 700;
+  color: #783815;
+  margin-bottom: 6px;
+}
+
+.slider-spec-list {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--muted);
+}
+
+.slider-spec-list li {
+  margin-bottom: 4px;
+  line-height: 1.4;
+}
+
+.slider-spec-list li:last-child {
+  margin-bottom: 0;
+}
+
+/* Visual Banner Card Grid (Laptop & Tablet) */
+.hero-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.hero-banner-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.hero-banner-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  border-color: #dbc9b8;
+}
+
+.hero-banner-media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #f7e6d2;
+  overflow: hidden;
+}
+
+.hero-banner-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.hero-slide-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: rgba(30, 20, 10, 0.82);
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+  backdrop-filter: blur(4px);
+  letter-spacing: 0.3px;
+}
+
+.hero-banner-footer {
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: #fffdfa;
+  border-top: 1px solid #f3ece4;
+}
+
+.hero-banner-info {
+  min-width: 0;
+  flex: 1;
+}
+
+.hero-banner-name {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hero-banner-actions {
+  flex-shrink: 0;
+}
+
+.hero-delete-btn {
+  padding: 5px 10px;
+  font-size: 0.74rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: var(--radius-sm);
+}
+
+.hero-delete-btn .admin-icon {
+  width: 14px;
+  height: 14px;
+}
+
+/* Empty State */
+.slider-empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  background: #fdfbf7;
+  border: 1px dashed #dbc9b8;
+  border-radius: 12px;
+}
+
+.slider-empty-icon {
+  margin-bottom: 12px;
+  color: #c4a994;
+}
+
+.slider-empty-icon svg {
+  width: 48px;
+  height: 48px;
+}
+
+.slider-empty-state h4 {
+  margin: 0 0 6px;
+  font-size: 1.05rem;
+  color: #4a2810;
+}
+
+.slider-empty-state p {
+  margin: 0;
+  font-size: 0.84rem;
+  color: var(--muted);
+}

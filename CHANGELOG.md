@@ -4,6 +4,17 @@ Perubahan penting pada Alfi Kitchen dicatat di sini, berdasarkan riwayat commit
 repository. Tanggal menunjukkan tanggal perubahan tercatat di Git; entri ini
 bukan penanda rilis atau versi aplikasi.
 
+## 2026-11-17
+
+### Added
+- **Optimasi UI Tab Slider Beranda Versi Laptop (Opsi A) ([admin/settings.php](file:///c:/xampp/htdocs/Alfi_Kitchen/admin/settings.php#tab-slider))**:
+  - Restrukturisasi tata letak layar laptop/desktop menjadi layout asimetris 360px : 1fr (`.settings-grid-slider`), memberikan ruang pandang yang jauh lebih luas dan proporsional untuk banner promosi.
+  - Mengganti format tabel teks standar menjadi **Galeri Kartu Banner Visual (16:9)** (`.hero-cards-grid`) lengkap dengan badge urutan slide (`★ Slide #1 (Utama)`, `Slide #2`, dst.), nama berkas, dan tombol hapus terintegrasi.
+  - Menambahkan **Modern Drag & Drop Zone** (`.hero-dropzone`) dengan efek hover dinamis dan dukungan seret file langsung dari desktop.
+  - Menambahkan **Instant Pre-Upload Live Preview** dengan pembacaan gambar seketika via `FileReader` sebelum tombol unggah ditekan, lengkap dengan informasi ukuran file dan tombol ganti/batal.
+  - Menambahkan kartu panduan spesifikasi banner ideal (Rasio 16:9, resolusi 1280×720 / 1600×900 px, dan area teks aman).
+  - Styling modular tersimpan rapi di [admin/assets/css/modules/_navigation.css](file:///c:/xampp/htdocs/Alfi_Kitchen/admin/assets/css/modules/_navigation.css) tanpa inline style dan tetap adaptif 1 kolom di layar mobile.
+
 ## 2026-11-15
 
 ### Added
