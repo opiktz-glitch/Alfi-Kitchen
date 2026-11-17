@@ -219,32 +219,93 @@ if (isset($_GET['tab'])) {
             <!-- Tab 1: Kontak & WhatsApp -->
             <div id="tab-kontak" class="settings-tab-pane" role="tabpanel" aria-labelledby="tab-btn-kontak"<?= $activeTab === 'tab-kontak' ? '' : ' hidden' ?>>
                 <div class="settings-grid">
-                    <section class="settings-panel">
-                        <h3>Nomor WhatsApp</h3>
-                        <p class="settings-copy">Nomor ini akan digunakan untuk tombol "Pesan via WhatsApp" yang muncul di semua halaman. Gunakan format internasional tanpa tanda + (contoh: 6281234567890).</p>
-                        <form action="" method="post" data-submit-lock>
+                    <!-- Kolom Kiri: Nomor WhatsApp & Live Chat Simulator -->
+                    <section class="settings-panel slider-upload-panel">
+                        <div class="slider-panel-header">
+                            <h3>Nomor WhatsApp Toko</h3>
+                            <p class="settings-copy">Digunakan untuk tombol pemesanan "Pesan via WhatsApp" di seluruh halaman website.</p>
+                        </div>
+                        <form action="" method="post" data-submit-lock id="form-whatsapp">
                             <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
                             <div class="form-group">
-                                <label>Nomor WhatsApp</label>
-                                <input type="text" name="whatsapp_number" value="<?= htmlspecialchars($current_wa) ?>" placeholder="Contoh: 6281234567890" required>
+                                <label for="wa-number-input">Nomor WhatsApp</label>
+                                <input type="text" id="wa-number-input" name="whatsapp_number" value="<?= htmlspecialchars($current_wa) ?>" placeholder="Contoh: 6281234567890" required class="form-control">
+                                <small class="settings-hint">Gunakan format internasional tanpa + atau spasi (contoh: <code>6281234567890</code>)</small>
                             </div>
-                            <button type="submit" name="save_whatsapp" class="btn btn-save-whatsapp btn-with-icon"><?= admin_icon('save') ?>Simpan Nomor WhatsApp</button>
+                            <button type="submit" name="save_whatsapp" class="btn btn-save-whatsapp btn-with-icon"><?= admin_icon('save') ?><span>Simpan Nomor WhatsApp</span></button>
                         </form>
+
+                        <!-- Live WhatsApp Simulator & Test Link -->
+                        <div class="simulator-wrapper simulator-wrapper-spaced">
+                            <div class="simulator-header">
+                                <span>📱 Simulasi Tombol WhatsApp di Website</span>
+                                <small>Live Preview</small>
+                            </div>
+                            <div class="wa-simulator-card">
+                                <div class="wa-sim-bubble">
+                                    <div class="wa-sim-icon"><?= admin_icon('external') ?></div>
+                                    <div class="wa-sim-text">
+                                        <strong>Pesan via WhatsApp</strong>
+                                        <span id="wa-sim-number"><?= htmlspecialchars($current_wa ?: 'Belum diatur') ?></span>
+                                    </div>
+                                </div>
+                                <a id="wa-sim-test-link" href="https://wa.me/<?= htmlspecialchars(preg_replace('/[^0-9]/', '', (string)$current_wa)) ?>" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-secondary btn-with-icon" title="Uji tautan WhatsApp">
+                                    <?= admin_icon('external') ?><span>Uji Chat</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Box Panduan WhatsApp -->
+                        <div class="slider-spec-guide">
+                            <div class="slider-spec-title">
+                                <span>💡 Panduan WhatsApp Ideal:</span>
+                            </div>
+                            <ul class="slider-spec-list">
+                                <li><strong>Awalan 62</strong>: Gunakan <code>628...</code> agar tautan otomatis berfungsi di semua perangkat.</li>
+                                <li><strong>Format Otomatis</strong>: Pengunjung yang mengklik tombol akan langsung diarahkan ke pesan draft dengan nama produk.</li>
+                            </ul>
+                        </div>
                     </section>
-                    <section class="settings-panel">
-                        <h3>Info Footer</h3>
-                        <p class="settings-copy">Informasi yang tampil di footer website.</p>
-                        <form action="" method="post" data-submit-lock>
+
+                    <!-- Kolom Kanan: Info Footer & Live Preview -->
+                    <section class="settings-panel slider-gallery-panel">
+                        <div class="slider-panel-header">
+                            <h3>Info Footer &amp; Media Sosial</h3>
+                            <p class="settings-copy">Informasi kontak, jam operasional, dan tautan sosial yang tampil di bagian bawah website.</p>
+                        </div>
+                        <form action="" method="post" data-submit-lock id="footer-info-form">
                             <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
-                            <div class="form-group"><label>Instagram URL</label><input type="text" name="footer_instagram" value="<?= htmlspecialchars($current_footer['instagram']) ?>" placeholder="https://instagram.com/..."></div>
-                            <div class="form-group"><label>Facebook URL</label><input type="text" name="footer_facebook" value="<?= htmlspecialchars($current_footer['facebook']) ?>" placeholder="https://facebook.com/..."></div>
-                            <div class="form-group"><label>TikTok URL</label><input type="text" name="footer_tiktok" value="<?= htmlspecialchars($current_footer['tiktok']) ?>" placeholder="https://tiktok.com/@..."></div>
-                            <div class="form-group"><label>Jam Operasional</label><input type="text" name="footer_hours" value="<?= htmlspecialchars($current_footer['hours']) ?>" placeholder="Senin-Sabtu 09:00-17:00"></div>
-                            <div class="form-group"><label>Alamat</label><textarea name="footer_address" rows="2"><?= htmlspecialchars($current_footer['address']) ?></textarea></div>
-                            <div class="form-group"><label>Email</label><input type="email" name="footer_email" value="<?= htmlspecialchars($current_footer['email']) ?>" placeholder="info@alfikitchen.com"></div>
-                            <div class="form-group"><label>Link Google Maps</label><input type="text" name="footer_maps" value="<?= htmlspecialchars($current_footer['maps']) ?>" placeholder="https://maps.google.com/..."></div>
-                            <button type="submit" name="save_footer_info" class="btn btn-primary btn-with-icon"><?= admin_icon('save') ?>Simpan Info Footer</button>
+                            
+                            <div class="settings-group-title"><span>Media Sosial</span></div>
+                            <div class="form-group"><label for="footer-ig-input">Instagram URL</label><input type="text" id="footer-ig-input" name="footer_instagram" value="<?= htmlspecialchars($current_footer['instagram']) ?>" placeholder="https://instagram.com/..." class="form-control"></div>
+                            <div class="form-group"><label for="footer-fb-input">Facebook URL</label><input type="text" id="footer-fb-input" name="footer_facebook" value="<?= htmlspecialchars($current_footer['facebook']) ?>" placeholder="https://facebook.com/..." class="form-control"></div>
+                            <div class="form-group"><label for="footer-tt-input">TikTok URL</label><input type="text" id="footer-tt-input" name="footer_tiktok" value="<?= htmlspecialchars($current_footer['tiktok']) ?>" placeholder="https://tiktok.com/@..." class="form-control"></div>
+
+                            <div class="settings-group-title"><span>Operasional &amp; Lokasi</span></div>
+                            <div class="form-group"><label for="footer-hours-input">Jam Operasional</label><input type="text" id="footer-hours-input" name="footer_hours" value="<?= htmlspecialchars($current_footer['hours']) ?>" placeholder="Senin-Sabtu 09:00-17:00" class="form-control"></div>
+                            <div class="form-group"><label for="footer-addr-input">Alamat Toko</label><textarea id="footer-addr-input" name="footer_address" rows="2" class="form-control"><?= htmlspecialchars($current_footer['address']) ?></textarea></div>
+                            <div class="form-group"><label for="footer-email-input">Email</label><input type="email" id="footer-email-input" name="footer_email" value="<?= htmlspecialchars($current_footer['email']) ?>" placeholder="info@alfikitchen.com" class="form-control"></div>
+                            <div class="form-group"><label for="footer-maps-input">Link Google Maps</label><input type="text" id="footer-maps-input" name="footer_maps" value="<?= htmlspecialchars($current_footer['maps']) ?>" placeholder="https://maps.google.com/..." class="form-control"></div>
+
+                            <button type="submit" name="save_footer_info" class="btn btn-primary btn-with-icon"><?= admin_icon('save') ?><span>Simpan Info Footer</span></button>
                         </form>
+
+                        <!-- Live Footer Preview Bar -->
+                        <div class="simulator-wrapper simulator-wrapper-spaced">
+                            <div class="simulator-header">
+                                <span>🖥️ Pratinjau Footer Website</span>
+                                <small>Live Preview</small>
+                            </div>
+                            <div class="footer-simulator-card">
+                                <div class="sim-footer-hours" id="sim-footer-hours"><?= htmlspecialchars($current_footer['hours'] ?: 'Jam Operasional: Belum diisi') ?></div>
+                                <div class="sim-footer-addr" id="sim-footer-addr"><?= htmlspecialchars($current_footer['address'] ?: 'Alamat toko belum diisi') ?></div>
+                                <div class="sim-footer-links">
+                                    <span class="sim-badge<?= !empty($current_footer['instagram']) ? ' is-active' : '' ?>" id="sim-badge-ig">Instagram</span>
+                                    <span class="sim-badge<?= !empty($current_footer['facebook']) ? ' is-active' : '' ?>" id="sim-badge-fb">Facebook</span>
+                                    <span class="sim-badge<?= !empty($current_footer['tiktok']) ? ' is-active' : '' ?>" id="sim-badge-tt">TikTok</span>
+                                </div>
+                            </div>
+                        </div>
                     </section>
                 </div>
             </div>
@@ -494,117 +555,168 @@ if (isset($_GET['tab'])) {
                 $latestRestoreImages = get_latest_restore_activity(null, 'images');
                 ?>
                 <div class="settings-grid">
-                    <section class="settings-panel">
-                        <h3>Unduh Backup Data &amp; Gambar</h3>
-                        <p class="settings-copy">Anda bisa mengekspor database (.sql) dan seluruh gambar produk (.zip) ke laptop Anda.</p>
-                        <div class="settings-actions">
-                            <a href="export_db.php" class="btn btn-backup-database btn-with-icon" data-download-status data-loading-label="Menyiapkan backup database..."><?= admin_icon('database') ?>Backup Database</a>
-                            <a href="export_images.php" class="btn btn-backup-images btn-with-icon" data-download-status data-loading-label="Menyiapkan backup gambar..."><?= admin_icon('image') ?>Backup Semua Gambar</a>
+                    <!-- Kolom Kiri: Ekspor Cadangan Data & Kesehatan Skema -->
+                    <section class="settings-panel slider-upload-panel">
+                        <div class="slider-panel-header">
+                            <h3>Cadangkan Data &amp; Status Skema</h3>
+                            <p class="settings-copy">Unduh salinan cadangan database dan seluruh foto produk untuk penyimpanan aman di laptop Anda.</p>
                         </div>
-                    </section>
-
-                    <section class="settings-panel">
-                        <h3>Versi &amp; Migrasi Database</h3>
-                        <p class="settings-copy">
-                            Sistem migrasi skema database otomatis. Anda dapat menerapkan pembaruan struktur tabel langsung dari panel admin ini tanpa harus membuka phpMyAdmin cPanel.
-                        </p>
-                        <div class="migration-status">
-                            <div class="migration-status-version">
-                                <strong>Versi Skema Terakhir:</strong> <code><?= htmlspecialchars($lastApplied ?? 'Belum ada migrasi tercatat') ?></code>
+                        
+                        <!-- Quick Backup Cards -->
+                        <div class="backup-cards-grid">
+                            <div class="backup-card">
+                                <div class="backup-card-head">
+                                    <div class="backup-card-icon"><?= admin_icon('database') ?></div>
+                                    <div class="backup-card-info">
+                                        <strong>Backup Database (.sql)</strong>
+                                        <span>Katalog, varian, dan data HPP</span>
+                                    </div>
+                                </div>
+                                <a href="export_db.php" class="btn btn-backup-database btn-sm btn-with-icon" data-download-status data-loading-label="Menyiapkan backup database...">
+                                    <?= admin_icon('database') ?><span>Unduh .SQL</span>
+                                </a>
                             </div>
-                            <div>
+                            <div class="backup-card">
+                                <div class="backup-card-head">
+                                    <div class="backup-card-icon"><?= admin_icon('image') ?></div>
+                                    <div class="backup-card-info">
+                                        <strong>Backup Gambar (.zip)</strong>
+                                        <span>Seluruh foto di uploads/</span>
+                                    </div>
+                                </div>
+                                <a href="export_images.php" class="btn btn-backup-images btn-sm btn-with-icon" data-download-status data-loading-label="Menyiapkan backup gambar...">
+                                    <?= admin_icon('image') ?><span>Unduh .ZIP</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Database Schema Card -->
+                        <div class="db-schema-card">
+                            <div class="db-schema-header">
+                                <div>
+                                    <strong>Versi Skema Terakhir:</strong>
+                                    <div class="db-schema-ver"><code><?= htmlspecialchars($lastApplied ?? 'v05_hpp.sql') ?></code></div>
+                                </div>
                                 <?php if (empty($pendingMigrations)): ?>
-                                    <span class="migration-status-ok"><?= admin_icon('check') ?>Database up-to-date (Semua versi migrasi sudah aktif)</span>
+                                    <span class="db-health-badge is-healthy"><?= admin_icon('check') ?>Up to Date</span>
                                 <?php else: ?>
-                                    <span class="migration-status-pending">Ada <?= count($pendingMigrations) ?> migrasi yang belum diterapkan:</span>
-                                    <ul class="migration-status-list">
-                                        <?php foreach ($pendingMigrations as $p): ?>
-                                            <li><code><?= htmlspecialchars($p) ?></code></li>
-                                        <?php endforeach; ?>
-                                    </ul>
+                                    <span class="db-health-badge is-pending">Perlu Update (<?= count($pendingMigrations) ?>)</span>
                                 <?php endif; ?>
                             </div>
+                            <p class="settings-copy db-schema-copy">Sistem migrasi skema database otomatis langsung dari panel admin tanpa phpMyAdmin cPanel.</p>
+                            
+                            <?php if (empty($pendingMigrations)): ?>
+                                <div class="migration-status-ok"><?= admin_icon('check') ?>Database up-to-date (Semua versi migrasi sudah aktif)</div>
+                            <?php else: ?>
+                                <span class="migration-status-pending">Ada <?= count($pendingMigrations) ?> migrasi yang belum diterapkan:</span>
+                                <ul class="migration-status-list">
+                                    <?php foreach ($pendingMigrations as $p): ?>
+                                        <li><code><?= htmlspecialchars($p) ?></code></li>
+                                    <?php endforeach; ?>
+                                </ul>
+                                <form action="" method="post" class="form-spaced" data-submit-lock>
+                                    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
+                                    <button type="submit" name="run_migrations" class="btn btn-primary btn-with-icon" onclick="return confirm('Terapkan migrasi database sekarang?')"><?= admin_icon('check') ?><span>Jalankan Migrasi</span></button>
+                                </form>
+                            <?php endif; ?>
                         </div>
-                        <?php if (!empty($pendingMigrations)): ?>
-                        <form action="" method="post" class="form-spaced" data-submit-lock>
-                            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
-                            <button type="submit" name="run_migrations" class="btn btn-primary btn-with-icon" onclick="return confirm('Terapkan migrasi database sekarang?')"><?= admin_icon('check') ?>Jalankan Migrasi</button>
-                        </form>
-                        <?php endif; ?>
+
+                        <!-- Box Panduan Backup -->
+                        <div class="slider-spec-guide">
+                            <div class="slider-spec-title">
+                                <span>💡 Panduan Backup Aman:</span>
+                            </div>
+                            <ul class="slider-spec-list">
+                                <li><strong>Rutin Cadangkan</strong>: Unduh backup minimal sekali seminggu atau sebelum memperbarui resep masakan.</li>
+                                <li><strong>Simpan di Luar Server</strong>: Simpan file backup di drive laptop atau Google Drive Anda.</li>
+                            </ul>
+                        </div>
                     </section>
 
-                    <section class="settings-panel">
-                        <h3>Restore Database (.sql)</h3>
-                        <p class="settings-copy">
-                            Pulihkan database dari file backup <code>.sql</code>. Sistem wajib memverifikasi kesesuaian versi skema sebelum mengeksekusi restore.
-                        </p>
-                        <div class="alert alert-error hpp-slim-alert">
-                            <span class="hpp-slim-alert-icon"><?= admin_icon('info') ?></span>
-                            <span class="hpp-slim-alert-text">PERINGATAN: Seluruh data katalog, varian, dan resep saat ini akan ditimpa oleh data file backup.</span>
+                    <!-- Kolom Kanan: Pemulihan Data & Gambar (Restore) -->
+                    <section class="settings-panel slider-gallery-panel">
+                        <div class="slider-panel-header">
+                            <h3>Pemulihan Data &amp; Gambar (Restore)</h3>
+                            <p class="settings-copy">Pulihkan data database atau berkas foto produk jika terjadi kendala pada website.</p>
                         </div>
-                        <form action="restore_db.php" method="post" enctype="multipart/form-data" data-submit-lock onsubmit="return confirm('PERINGATAN: Seluruh data saat ini akan digantikan oleh isi file backup database. Tindakan ini tidak dapat dibatalkan.\n\nPastikan versi skema backup sama dengan versi sistem saat ini (<?= htmlspecialchars($lastApplied ?? 'v05_hpp.sql') ?>).\n\nLanjutkan restore database?')">
-                            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
-                            <div class="form-group">
-                                <label for="restore-sql-file">Pilih File Backup (.sql)</label>
-                                <input type="file" id="restore-sql-file" name="backup_file" accept=".sql" required class="form-control">
-                                <small class="hpp-help-text">Maksimal 10 MB. Versi skema aktif saat ini: <strong><?= htmlspecialchars($lastApplied ?? 'v05_hpp.sql') ?></strong></small>
-                            </div>
-                            <button type="submit" class="btn btn-danger btn-with-icon" data-loading-label="Memverifikasi &amp; me-restore...">
-                                <?= admin_icon('upload') ?><span>Restore Database</span>
-                            </button>
-                        </form>
-                        <?php if ($latestRestoreDb): ?>
-                            <div class="restore-status-box <?= $latestRestoreDb['status'] === 'success' ? 'is-success' : 'is-error' ?>" role="status">
-                                <div class="restore-status-header">
-                                    <strong>Riwayat Restore Database Terakhir</strong>
-                                    <span class="restore-status-time"><?= htmlspecialchars($latestRestoreDb['formatted_date'], ENT_QUOTES, 'UTF-8') ?></span>
-                                </div>
-                                <div class="restore-status-body <?= $latestRestoreDb['status'] === 'success' ? 'is-success' : 'is-error' ?>">
-                                    <?= admin_icon($latestRestoreDb['status'] === 'success' ? 'check' : 'info') ?>
-                                    <span>
-                                        <?php if ($latestRestoreDb['file']): ?>
-                                            <code><?= htmlspecialchars($latestRestoreDb['file'], ENT_QUOTES, 'UTF-8') ?></code> &mdash;
-                                        <?php endif; ?>
-                                        <?= htmlspecialchars($latestRestoreDb['summary'], ENT_QUOTES, 'UTF-8') ?>
-                                    </span>
-                                </div>
-                            </div>
-                        <?php endif; ?>
-                    </section>
 
-                    <section class="settings-panel">
-                        <h3>Restore Gambar (.zip)</h3>
-                        <p class="settings-copy">
-                            Ekstrak dan pulihkan file gambar produk, slider beranda, dan logo dari file arsip <code>.zip</code> hasil backup ke folder <code>uploads/</code>.
-                        </p>
-                        <form action="restore_images.php" method="post" enctype="multipart/form-data" data-submit-lock onsubmit="return confirm('Ekstrak dan pulihkan file gambar dari file arsip ZIP ini ke folder uploads?')">
-                            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
-                            <div class="form-group">
-                                <label for="restore-images-file">Pilih File Arsip Gambar (.zip)</label>
-                                <input type="file" id="restore-images-file" name="images_zip" accept=".zip,application/zip" required class="form-control">
-                                <small class="hpp-help-text">Maksimal 50 MB. Hanya file gambar (.jpg, .png, .webp, .svg, .gif) yang akan diekstrak.</small>
+                        <!-- Restore Database (.sql) -->
+                        <div class="restore-card">
+                            <div class="restore-card-header">
+                                <h4>Restore Database (.sql)</h4>
+                                <span class="restore-limit-badge">Maks. 10 MB</span>
                             </div>
-                            <button type="submit" class="btn btn-secondary btn-with-icon" data-loading-label="Mengekstrak gambar...">
-                                <?= admin_icon('upload') ?><span>Restore Gambar</span>
-                            </button>
-                        </form>
-                        <?php if ($latestRestoreImages): ?>
-                            <div class="restore-status-box <?= $latestRestoreImages['status'] === 'success' ? 'is-success' : 'is-error' ?>" role="status">
-                                <div class="restore-status-header">
-                                    <strong>Riwayat Restore Gambar Terakhir</strong>
-                                    <span class="restore-status-time"><?= htmlspecialchars($latestRestoreImages['formatted_date'], ENT_QUOTES, 'UTF-8') ?></span>
-                                </div>
-                                <div class="restore-status-body <?= $latestRestoreImages['status'] === 'success' ? 'is-success' : 'is-error' ?>">
-                                    <?= admin_icon($latestRestoreImages['status'] === 'success' ? 'check' : 'info') ?>
-                                    <span>
-                                        <?php if ($latestRestoreImages['file']): ?>
-                                            <code><?= htmlspecialchars($latestRestoreImages['file'], ENT_QUOTES, 'UTF-8') ?></code> &mdash;
-                                        <?php endif; ?>
-                                        <?= htmlspecialchars($latestRestoreImages['summary'], ENT_QUOTES, 'UTF-8') ?>
-                                    </span>
-                                </div>
+                            <p class="settings-copy">Pulihkan database dari file backup <code>.sql</code>. Sistem wajib memverifikasi kesesuaian versi skema sebelum mengeksekusi restore.</p>
+                            <div class="alert alert-error hpp-slim-alert">
+                                <span class="hpp-slim-alert-icon"><?= admin_icon('info') ?></span>
+                                <span class="hpp-slim-alert-text">PERINGATAN: Seluruh data katalog, varian, dan resep saat ini akan ditimpa oleh data file backup.</span>
                             </div>
-                        <?php endif; ?>
+                            <form action="restore_db.php" method="post" enctype="multipart/form-data" data-submit-lock onsubmit="return confirm('PERINGATAN: Seluruh data saat ini akan digantikan oleh isi file backup database. Tindakan ini tidak dapat dibatalkan.\n\nPastikan versi skema backup sama dengan versi sistem saat ini (<?= htmlspecialchars($lastApplied ?? 'v05_hpp.sql') ?>).\n\nLanjutkan restore database?')">
+                                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
+                                <div class="form-group">
+                                    <label for="restore-sql-file">Pilih File Backup (.sql)</label>
+                                    <input type="file" id="restore-sql-file" name="backup_file" accept=".sql" required class="form-control">
+                                    <small class="hpp-help-text">Maksimal 10 MB. Versi skema aktif saat ini: <strong><?= htmlspecialchars($lastApplied ?? 'v05_hpp.sql') ?></strong></small>
+                                </div>
+                                <button type="submit" class="btn btn-danger btn-with-icon" data-loading-label="Memverifikasi &amp; me-restore...">
+                                    <?= admin_icon('upload') ?><span>Restore Database</span>
+                                </button>
+                            </form>
+                            <?php if ($latestRestoreDb): ?>
+                                <div class="restore-status-box <?= $latestRestoreDb['status'] === 'success' ? 'is-success' : 'is-error' ?>" role="status">
+                                    <div class="restore-status-header">
+                                        <strong>Riwayat Restore Database Terakhir</strong>
+                                        <span class="restore-status-time"><?= htmlspecialchars($latestRestoreDb['formatted_date'], ENT_QUOTES, 'UTF-8') ?></span>
+                                    </div>
+                                    <div class="restore-status-body <?= $latestRestoreDb['status'] === 'success' ? 'is-success' : 'is-error' ?>">
+                                        <?= admin_icon($latestRestoreDb['status'] === 'success' ? 'check' : 'info') ?>
+                                        <span>
+                                            <?php if ($latestRestoreDb['file']): ?>
+                                                <code><?= htmlspecialchars($latestRestoreDb['file'], ENT_QUOTES, 'UTF-8') ?></code> &mdash;
+                                            <?php endif; ?>
+                                            <?= htmlspecialchars($latestRestoreDb['summary'], ENT_QUOTES, 'UTF-8') ?>
+                                        </span>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+
+                        <!-- Restore Gambar (.zip) -->
+                        <div class="restore-card restore-card-spaced">
+                            <div class="restore-card-header">
+                                <h4>Restore Gambar (.zip)</h4>
+                                <span class="restore-limit-badge">Maks. 50 MB</span>
+                            </div>
+                            <p class="settings-copy">Ekstrak dan pulihkan file gambar produk, slider beranda, dan logo dari file arsip <code>.zip</code> hasil backup ke folder <code>uploads/</code>.</p>
+                            <form action="restore_images.php" method="post" enctype="multipart/form-data" data-submit-lock onsubmit="return confirm('Ekstrak dan pulihkan file gambar dari file arsip ZIP ini ke folder uploads?')">
+                                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
+                                <div class="form-group">
+                                    <label for="restore-images-file">Pilih File Arsip Gambar (.zip)</label>
+                                    <input type="file" id="restore-images-file" name="images_zip" accept=".zip,application/zip" required class="form-control">
+                                    <small class="hpp-help-text">Maksimal 50 MB. Hanya file gambar (.jpg, .png, .webp, .svg, .gif) yang akan diekstrak.</small>
+                                </div>
+                                <button type="submit" class="btn btn-secondary btn-with-icon" data-loading-label="Mengekstrak gambar...">
+                                    <?= admin_icon('upload') ?><span>Restore Gambar</span>
+                                </button>
+                            </form>
+                            <?php if ($latestRestoreImages): ?>
+                                <div class="restore-status-box <?= $latestRestoreImages['status'] === 'success' ? 'is-success' : 'is-error' ?>" role="status">
+                                    <div class="restore-status-header">
+                                        <strong>Riwayat Restore Gambar Terakhir</strong>
+                                        <span class="restore-status-time"><?= htmlspecialchars($latestRestoreImages['formatted_date'], ENT_QUOTES, 'UTF-8') ?></span>
+                                    </div>
+                                    <div class="restore-status-body <?= $latestRestoreImages['status'] === 'success' ? 'is-success' : 'is-error' ?>">
+                                        <?= admin_icon($latestRestoreImages['status'] === 'success' ? 'check' : 'info') ?>
+                                        <span>
+                                            <?php if ($latestRestoreImages['file']): ?>
+                                                <code><?= htmlspecialchars($latestRestoreImages['file'], ENT_QUOTES, 'UTF-8') ?></code> &mdash;
+                                            <?php endif; ?>
+                                            <?= htmlspecialchars($latestRestoreImages['summary'], ENT_QUOTES, 'UTF-8') ?>
+                                        </span>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+                        </div>
                     </section>
                 </div>
             </div>
@@ -612,16 +724,98 @@ if (isset($_GET['tab'])) {
             <!-- Tab 4: Keamanan Akun -->
             <div id="tab-keamanan" class="settings-tab-pane" role="tabpanel" aria-labelledby="tab-btn-keamanan"<?= $activeTab === 'tab-keamanan' ? '' : ' hidden' ?>>
                 <div class="settings-grid">
-                    <section class="settings-panel">
-                        <h3>Ubah Password Admin</h3>
-                        <form action="" method="post" data-submit-lock>
+                    <!-- Kolom Kiri: Formulir Ubah Password -->
+                    <section class="settings-panel slider-upload-panel">
+                        <div class="slider-panel-header">
+                            <h3>Ubah Password Admin</h3>
+                            <p class="settings-copy">Perbarui kata sandi akun administrator untuk menjaga keamanan toko online Anda.</p>
+                        </div>
+                        <form action="" method="post" data-submit-lock id="change-password-form">
                             <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
+                            
                             <div class="form-group">
-                                <label>Password Baru</label>
-                                <input type="password" name="new_password" placeholder="Minimal 6 karakter" required minlength="6">
+                                <label for="new-password-input">Password Baru</label>
+                                <div class="password-input-wrapper">
+                                    <input type="password" id="new-password-input" name="new_password" placeholder="Minimal 6 karakter" required minlength="6" class="form-control" autocomplete="new-password">
+                                    <button type="button" class="btn-toggle-password" id="btn-toggle-pwd" aria-label="Tampilkan atau sembunyikan password" title="Lihat password">
+                                        👁️
+                                    </button>
+                                </div>
+                                <div class="pwd-strength-container" id="pwd-strength-box" hidden>
+                                    <div class="pwd-strength-bar">
+                                        <div class="pwd-strength-meter" id="pwd-meter"></div>
+                                    </div>
+                                    <span class="pwd-strength-label" id="pwd-label">Kekuatan: Lemah</span>
+                                </div>
                             </div>
-                            <button type="submit" name="change_password" class="btn btn-secondary btn-with-icon"><?= admin_icon('key') ?>Perbarui Password</button>
+
+                            <div class="form-group">
+                                <label for="confirm-password-input">Konfirmasi Password Baru</label>
+                                <input type="password" id="confirm-password-input" placeholder="Ketik ulang password baru" class="form-control" autocomplete="new-password">
+                                <small id="pwd-match-hint" class="settings-hint"></small>
+                            </div>
+
+                            <button type="submit" name="change_password" id="btn-submit-password" class="btn btn-secondary btn-with-icon">
+                                <?= admin_icon('key') ?><span>Perbarui Password</span>
+                            </button>
                         </form>
+
+                        <div class="slider-spec-guide spec-guide-spaced">
+                            <div class="slider-spec-title">
+                                <span>💡 Tips Kata Sandi yang Kuat:</span>
+                            </div>
+                            <ul class="slider-spec-list">
+                                <li><strong>Minimal 6 Karakter</strong>: Disarankan kombinasi huruf besar, kecil, dan angka.</li>
+                                <li><strong>Keunikan</strong>: Hindari menggunakan kata umum atau tanggal lahir.</li>
+                            </ul>
+                        </div>
+                    </section>
+
+                    <!-- Kolom Kanan: Ringkasan Sesi & Keamanan -->
+                    <section class="settings-panel slider-gallery-panel">
+                        <div class="slider-panel-header">
+                            <h3>Ringkasan Status Keamanan</h3>
+                            <p class="settings-copy">Informasi sesi akun yang aktif dan mekanisme proteksi sistem Alfi Kitchen.</p>
+                        </div>
+
+                        <div class="security-overview-card">
+                            <div class="sec-item">
+                                <div class="sec-icon-ok"><?= admin_icon('check') ?></div>
+                                <div class="sec-info">
+                                    <strong>Pengguna Aktif:</strong>
+                                    <span><?= htmlspecialchars($_SESSION['admin_user'] ?? 'Administrator') ?></span>
+                                </div>
+                            </div>
+                            <div class="sec-item">
+                                <div class="sec-icon-ok"><?= admin_icon('check') ?></div>
+                                <div class="sec-info">
+                                    <strong>Batas Timeout Sesi:</strong>
+                                    <span>1.800 detik (30 Menit) otomatis logout jika idle</span>
+                                </div>
+                            </div>
+                            <div class="sec-item">
+                                <div class="sec-icon-ok"><?= admin_icon('check') ?></div>
+                                <div class="sec-info">
+                                    <strong>Proteksi Formulir (CSRF Token):</strong>
+                                    <span>Aktif memvalidasi setiap pengiriman formulir POST</span>
+                                </div>
+                            </div>
+                            <div class="sec-item">
+                                <div class="sec-icon-ok"><?= admin_icon('check') ?></div>
+                                <div class="sec-info">
+                                    <strong>Keamanan Cookie Sesi:</strong>
+                                    <span>HttpOnly + SameSite=Lax (Aman dari serangan XSS)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="sec-audit-box">
+                            <div class="sec-audit-header">
+                                <strong>Log Aktivitas Administrator</strong>
+                                <a href="activity_log.php" class="btn btn-sm btn-secondary btn-with-icon"><?= admin_icon('log') ?><span>Lihat Log Lengkap</span></a>
+                            </div>
+                            <p class="settings-copy sec-copy-spaced">Seluruh riwayat login, perubahan profil, dan aktivitas data dicatat secara otomatis dalam sistem.</p>
+                        </div>
                     </section>
                 </div>
             </div>
@@ -663,142 +857,34 @@ if (isset($_GET['tab'])) {
             switchTab(hash);
         }
 
-        // Slider Drag & Drop + Instant Live Preview
-        var dropzone = document.getElementById('hero-dropzone');
-        var fileInput = document.getElementById('hero-file-input');
-        var promptArea = document.getElementById('hero-dropzone-prompt');
-        var previewArea = document.getElementById('hero-preview-area');
-        var previewImg = document.getElementById('hero-preview-img');
-        var previewFilename = document.getElementById('hero-preview-filename');
-        var resetBtn = document.getElementById('hero-preview-reset-btn');
-
-        if (dropzone && fileInput) {
-            function handleFile(file) {
-                if (!file || !file.type.match(/^image\//)) return;
-                var reader = new FileReader();
-                reader.onload = function (e) {
-                    if (previewImg) previewImg.src = e.target.result;
-                    if (previewFilename) {
-                        var sizeKb = Math.round(file.size / 1024);
-                        previewFilename.textContent = file.name + ' (' + sizeKb + ' KB)';
-                    }
-                    if (promptArea) promptArea.hidden = true;
-                    if (previewArea) previewArea.hidden = false;
-                };
-                reader.readAsDataURL(file);
-            }
-
-            fileInput.addEventListener('change', function () {
-                if (this.files && this.files[0]) {
-                    handleFile(this.files[0]);
-                }
-            });
-
-            ['dragenter', 'dragover'].forEach(function (eventName) {
-                dropzone.addEventListener(eventName, function (e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    dropzone.classList.add('is-dragover');
-                }, false);
-            });
-
-            ['dragleave', 'drop'].forEach(function (eventName) {
-                dropzone.addEventListener(eventName, function (e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    dropzone.classList.remove('is-dragover');
-                }, false);
-            });
-
-            dropzone.addEventListener('drop', function (e) {
-                var dt = e.dataTransfer;
-                if (dt && dt.files && dt.files.length > 0) {
-                    fileInput.files = dt.files;
-                    handleFile(dt.files[0]);
-                }
-            });
-
-            if (resetBtn) {
-                resetBtn.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    fileInput.value = '';
-                    if (previewImg) previewImg.src = '';
-                    if (previewArea) previewArea.hidden = true;
-                    if (promptArea) promptArea.hidden = false;
-                });
-            }
-        }
-
-        // Tab Tampilan: Logo Drag & Drop + Pre-upload Preview
-        var logoDropzone = document.getElementById('logo-dropzone');
-        var logoInput = document.getElementById('logo-file-input');
-        var logoPrompt = document.getElementById('logo-dropzone-prompt');
-        var logoPreviewArea = document.getElementById('logo-preview-area');
-        var logoPreviewImg = document.getElementById('logo-preview-img');
-        var logoPreviewFilename = document.getElementById('logo-preview-filename');
-        var logoResetBtn = document.getElementById('logo-preview-reset-btn');
-
-        if (logoDropzone && logoInput) {
-            function handleLogo(file) {
-                if (!file || file.type !== 'image/png') {
-                    alert('Format file harus berupa gambar PNG yang valid (.png)');
+        // Reusable Drag & Drop with Instant Live Preview
+        function initDropzone(dzId, inputId, promptId, prevAreaId, imgId, nameId, resetId, acceptType) {
+            var dz = document.getElementById(dzId), inp = document.getElementById(inputId);
+            var pmt = document.getElementById(promptId), prev = document.getElementById(prevAreaId);
+            var img = document.getElementById(imgId), nm = document.getElementById(nameId), rst = document.getElementById(resetId);
+            if (!dz || !inp) return;
+            function show(file) {
+                if (!file || (acceptType === 'png' ? file.type !== 'image/png' : !file.type.match(/^image\//))) {
+                    if (acceptType === 'png') alert('Format file harus berupa gambar PNG yang valid (.png)');
                     return;
                 }
-                var reader = new FileReader();
-                reader.onload = function (e) {
-                    if (logoPreviewImg) logoPreviewImg.src = e.target.result;
-                    if (logoPreviewFilename) {
-                        var sizeKb = Math.round(file.size / 1024);
-                        logoPreviewFilename.textContent = file.name + ' (' + sizeKb + ' KB)';
-                    }
-                    if (logoPrompt) logoPrompt.hidden = true;
-                    if (logoPreviewArea) logoPreviewArea.hidden = false;
+                var r = new FileReader();
+                r.onload = function(e) {
+                    if (img) img.src = e.target.result;
+                    if (nm) nm.textContent = file.name + ' (' + Math.round(file.size / 1024) + ' KB)';
+                    if (pmt) pmt.hidden = true;
+                    if (prev) prev.hidden = false;
                 };
-                reader.readAsDataURL(file);
+                r.readAsDataURL(file);
             }
-
-            logoInput.addEventListener('change', function () {
-                if (this.files && this.files[0]) {
-                    handleLogo(this.files[0]);
-                }
-            });
-
-            ['dragenter', 'dragover'].forEach(function (eventName) {
-                logoDropzone.addEventListener(eventName, function (e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    logoDropzone.classList.add('is-dragover');
-                }, false);
-            });
-
-            ['dragleave', 'drop'].forEach(function (eventName) {
-                logoDropzone.addEventListener(eventName, function (e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    logoDropzone.classList.remove('is-dragover');
-                }, false);
-            });
-
-            logoDropzone.addEventListener('drop', function (e) {
-                var dt = e.dataTransfer;
-                if (dt && dt.files && dt.files.length > 0) {
-                    logoInput.files = dt.files;
-                    handleLogo(dt.files[0]);
-                }
-            });
-
-            if (logoResetBtn) {
-                logoResetBtn.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    logoInput.value = '';
-                    if (logoPreviewImg) logoPreviewImg.src = '';
-                    if (logoPreviewArea) logoPreviewArea.hidden = true;
-                    if (logoPrompt) logoPrompt.hidden = false;
-                });
-            }
+            inp.addEventListener('change', function() { if (this.files && this.files[0]) show(this.files[0]); });
+            ['dragenter', 'dragover'].forEach(function(ev) { dz.addEventListener(ev, function(e) { e.preventDefault(); dz.classList.add('is-dragover'); }); });
+            ['dragleave', 'drop'].forEach(function(ev) { dz.addEventListener(ev, function(e) { e.preventDefault(); dz.classList.remove('is-dragover'); }); });
+            dz.addEventListener('drop', function(e) { if (e.dataTransfer && e.dataTransfer.files[0]) { inp.files = e.dataTransfer.files; show(e.dataTransfer.files[0]); } });
+            if (rst) rst.addEventListener('click', function(e) { e.preventDefault(); inp.value = ''; if (img) img.src = ''; if (prev) prev.hidden = true; if (pmt) pmt.hidden = false; });
         }
+        initDropzone('hero-dropzone', 'hero-file-input', 'hero-dropzone-prompt', 'hero-preview-area', 'hero-preview-img', 'hero-preview-filename', 'hero-preview-reset-btn', 'image');
+        initDropzone('logo-dropzone', 'logo-file-input', 'logo-dropzone-prompt', 'logo-preview-area', 'logo-preview-img', 'logo-preview-filename', 'logo-preview-reset-btn', 'png');
 
         // Live Homepage Simulator & Character Counters
         var titleInput = document.getElementById('home-title-input');
@@ -813,7 +899,6 @@ if (isset($_GET['tab'])) {
             div.textContent = text;
             return div.innerHTML.replace(/\n/g, '<br>');
         }
-
         function updateTitle() {
             if (!titleInput) return;
             var val = titleInput.value;
@@ -822,11 +907,8 @@ if (isset($_GET['tab'])) {
                 titleCounter.classList.toggle('is-warning', val.length > 120);
                 titleCounter.classList.toggle('is-max', val.length >= titleInput.maxLength);
             }
-            if (simTitle) {
-                simTitle.innerHTML = val.trim() ? escapeHtml(val) : '<em>(Judul Sambutan)</em>';
-            }
+            if (simTitle) simTitle.innerHTML = val.trim() ? escapeHtml(val) : '<em>(Judul Sambutan)</em>';
         }
-
         function updateDesc() {
             if (!descInput) return;
             var val = descInput.value;
@@ -835,19 +917,97 @@ if (isset($_GET['tab'])) {
                 descCounter.classList.toggle('is-warning', val.length > 1000);
                 descCounter.classList.toggle('is-max', val.length >= descInput.maxLength);
             }
-            if (simDesc) {
-                simDesc.innerHTML = val.trim() ? escapeHtml(val) : '<em>(Deskripsi Sambutan)</em>';
+            if (simDesc) simDesc.innerHTML = val.trim() ? escapeHtml(val) : '<em>(Deskripsi Sambutan)</em>';
+        }
+        if (titleInput) { titleInput.addEventListener('input', updateTitle); updateTitle(); }
+        if (descInput) { descInput.addEventListener('input', updateDesc); updateDesc(); }
+
+        // Live WhatsApp & Footer Simulator
+        var waInput = document.getElementById('wa-number-input');
+        var waSimNum = document.getElementById('wa-sim-number');
+        var waTestLink = document.getElementById('wa-sim-test-link');
+        if (waInput) {
+            waInput.addEventListener('input', function() {
+                var num = this.value.replace(/[^0-9]/g, '');
+                if (waSimNum) waSimNum.textContent = num ? num : 'Belum diatur';
+                if (waTestLink) waTestLink.href = 'https://wa.me/' + num;
+            });
+        }
+        var ftHours = document.getElementById('footer-hours-input');
+        var ftAddr = document.getElementById('footer-addr-input');
+        var ftIg = document.getElementById('footer-ig-input');
+        var ftFb = document.getElementById('footer-fb-input');
+        var ftTt = document.getElementById('footer-tt-input');
+        function updateFooterSim() {
+            var sh = document.getElementById('sim-footer-hours'), sa = document.getElementById('sim-footer-addr');
+            if (sh && ftHours) sh.textContent = ftHours.value.trim() || 'Jam Operasional: Belum diisi';
+            if (sa && ftAddr) sa.textContent = ftAddr.value.trim() || 'Alamat toko belum diisi';
+            var bIg = document.getElementById('sim-badge-ig'), bFb = document.getElementById('sim-badge-fb'), bTt = document.getElementById('sim-badge-tt');
+            if (bIg && ftIg) bIg.classList.toggle('is-active', ftIg.value.trim().length > 0);
+            if (bFb && ftFb) bFb.classList.toggle('is-active', ftFb.value.trim().length > 0);
+            if (bTt && ftTt) bTt.classList.toggle('is-active', ftTt.value.trim().length > 0);
+        }
+        [ftHours, ftAddr, ftIg, ftFb, ftTt].forEach(function(el) { if (el) el.addEventListener('input', updateFooterSim); });
+
+        // Password Show/Hide Toggle & Strength Meter
+        var pwdInput = document.getElementById('new-password-input');
+        var pwdToggle = document.getElementById('btn-toggle-pwd');
+        var pwdBox = document.getElementById('pwd-strength-box');
+        var pwdMeter = document.getElementById('pwd-meter');
+        var pwdLabel = document.getElementById('pwd-label');
+        var confirmPwd = document.getElementById('confirm-password-input');
+        var matchHint = document.getElementById('pwd-match-hint');
+
+        if (pwdToggle && pwdInput) {
+            pwdToggle.addEventListener('click', function() {
+                var isPwd = pwdInput.type === 'password';
+                pwdInput.type = isPwd ? 'text' : 'password';
+                if (confirmPwd) confirmPwd.type = pwdInput.type;
+                pwdToggle.textContent = isPwd ? '🔒' : '👁️';
+            });
+        }
+        function checkMatch() {
+            if (!confirmPwd || !pwdInput || !matchHint) return;
+            if (!confirmPwd.value) { matchHint.textContent = ''; return; }
+            if (confirmPwd.value === pwdInput.value) {
+                matchHint.textContent = '✓ Password cocok';
+                matchHint.style.color = '#278347';
+            } else {
+                matchHint.textContent = '⚠ Konfirmasi password belum sama';
+                matchHint.style.color = '#e53e3e';
             }
         }
-
-        if (titleInput) {
-            titleInput.addEventListener('input', updateTitle);
-            updateTitle();
+        if (pwdInput) {
+            pwdInput.addEventListener('input', function() {
+                var val = this.value;
+                if (!val) { if (pwdBox) pwdBox.hidden = true; checkMatch(); return; }
+                if (pwdBox) pwdBox.hidden = false;
+                var score = 0;
+                if (val.length >= 6) score++;
+                if (val.length >= 10) score++;
+                if (/[A-Z]/.test(val) && /[a-z]/.test(val)) score++;
+                if (/[0-9]/.test(val)) score++;
+                if (/[^A-Za-z0-9]/.test(val)) score++;
+                if (pwdMeter && pwdLabel) {
+                    pwdMeter.className = 'pwd-strength-meter';
+                    if (score <= 2) {
+                        pwdMeter.classList.add('is-weak');
+                        pwdLabel.textContent = 'Kekuatan: Lemah';
+                        pwdLabel.style.color = '#e53e3e';
+                    } else if (score <= 3) {
+                        pwdMeter.classList.add('is-medium');
+                        pwdLabel.textContent = 'Kekuatan: Cukup Baik';
+                        pwdLabel.style.color = '#dd6b20';
+                    } else {
+                        pwdMeter.classList.add('is-strong');
+                        pwdLabel.textContent = 'Kekuatan: Sangat Kuat';
+                        pwdLabel.style.color = '#38a169';
+                    }
+                }
+                checkMatch();
+            });
         }
-        if (descInput) {
-            descInput.addEventListener('input', updateDesc);
-            updateDesc();
-        }
+        if (confirmPwd) confirmPwd.addEventListener('input', checkMatch);
     });
     </script>
 </body>

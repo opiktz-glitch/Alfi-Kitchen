@@ -666,3 +666,112 @@ td:has(.thumb-hero) {
 .dashboard-activity-table table {
   min-width: 0;
 }
+
+
+/* ==========================================================================
+   Tab Settings: Kontak, Database, & Keamanan Components
+   ========================================================================== */
+.settings-group-title {
+  display: flex; align-items: center; gap: 10px; margin: 18px 0 12px;
+  font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--accent);
+}
+.settings-group-title::after { content: ''; flex: 1; height: 1px; background: var(--line); }
+
+/* WhatsApp Simulator Card */
+.wa-simulator-card {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 14px 16px; border: 1px solid #c8ecd5; border-radius: 12px; background: #f0faf3; margin-bottom: 16px; flex-wrap: wrap;
+}
+.wa-sim-bubble { display: flex; align-items: center; gap: 12px; }
+.wa-sim-icon {
+  width: 40px; height: 40px; border-radius: 50%; background: #25D366; color: #fff;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 3px 8px rgba(37, 211, 102, 0.3);
+}
+.wa-sim-icon svg, .wa-sim-icon .admin-icon { width: 20px; height: 20px; }
+.wa-sim-text { display: flex; flex-direction: column; }
+.wa-sim-text strong { font-size: 0.88rem; color: #125e2e; }
+.wa-sim-text span { font-size: 0.78rem; color: #278347; font-family: monospace; }
+
+/* Footer Simulator Card */
+.footer-simulator-card {
+  padding: 16px; border: 1px solid var(--line); border-radius: 12px; background: #2b2623; color: #e5ded6;
+}
+.sim-footer-hours { font-size: 0.82rem; font-weight: 600; color: #ffd8a8; margin-bottom: 4px; }
+.sim-footer-addr { font-size: 0.78rem; color: #b5aba1; line-height: 1.4; margin-bottom: 10px; }
+.sim-footer-links { display: flex; gap: 6px; flex-wrap: wrap; }
+.sim-badge {
+  display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; font-weight: 600;
+  background: #3e3732; color: #c9bfb5; transition: all 0.2s ease;
+}
+.sim-badge.is-active { background: #4a2810; color: #ffc99c; border: 1px solid #783815; }
+
+/* Database: Backup Cards */
+.backup-cards-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 18px; }
+@media (min-width: 600px) { .backup-cards-grid { grid-template-columns: 1fr 1fr; } }
+.backup-card {
+  display: flex; flex-direction: column; justify-content: space-between; gap: 12px;
+  padding: 14px; border: 1px solid var(--line); border-radius: 10px; background: #fdfbf8; transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.backup-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04); }
+.backup-card-head { display: flex; align-items: center; gap: 10px; }
+.backup-card-icon {
+  width: 36px; height: 36px; border-radius: 8px; background: #f3eae0; color: #7b4317;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.backup-card-icon .admin-icon { width: 18px; height: 18px; }
+.backup-card-info strong { display: block; font-size: 0.85rem; color: var(--text); }
+.backup-card-info span { display: block; font-size: 0.74rem; color: var(--muted); line-height: 1.35; }
+
+/* Database Schema Status Card */
+.db-schema-card { padding: 16px; border: 1px solid var(--line); border-radius: 10px; background: #fff; margin-bottom: 16px; }
+.db-schema-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.db-schema-ver { font-size: 0.78rem; color: var(--muted); margin-top: 3px; }
+.db-health-badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 12px; font-size: 0.72rem; font-weight: 700; }
+.db-health-badge.is-healthy { background: #eaf5ed; color: #176532; }
+.db-health-badge.is-healthy .admin-icon { width: 12px; height: 12px; }
+.db-health-badge.is-pending { background: #fef3c7; color: #92400e; }
+
+/* Restore Cards */
+.restore-card { padding: 16px; border: 1px solid var(--line); border-radius: 10px; background: #fff; }
+.restore-card-header { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+.restore-card-header h4 { margin: 0; font-size: 0.95rem; color: var(--text); }
+.restore-limit-badge { font-size: 0.72rem; font-weight: 600; padding: 2px 8px; border-radius: 10px; background: #f1ede8; color: var(--muted); }
+
+/* Password Toggle & Strength Meter */
+.password-input-wrapper { position: relative; display: flex; align-items: center; }
+.password-input-wrapper input { padding-right: 44px; }
+.btn-toggle-password {
+  position: absolute; right: 6px; background: transparent; border: none; cursor: pointer;
+  padding: 6px 8px; font-size: 1rem; color: var(--muted); border-radius: 4px; line-height: 1;
+}
+.btn-toggle-password:hover { color: var(--text); background: rgba(0, 0, 0, 0.05); }
+.pwd-strength-container { margin-top: 8px; }
+.pwd-strength-bar { height: 4px; background: #e9e4df; border-radius: 2px; overflow: hidden; margin-bottom: 4px; }
+.pwd-strength-meter { height: 100%; width: 0%; transition: width 0.3s ease, background-color 0.3s ease; }
+.pwd-strength-meter.is-weak { width: 33%; background: #e53e3e; }
+.pwd-strength-meter.is-medium { width: 66%; background: #dd6b20; }
+.pwd-strength-meter.is-strong { width: 100%; background: #38a169; }
+.pwd-strength-label { font-size: 0.72rem; font-weight: 600; color: var(--muted); }
+
+/* Security Overview Cards */
+.security-overview-card {
+  display: flex; flex-direction: column; gap: 10px; padding: 16px;
+  border: 1px solid var(--line); border-radius: 10px; background: #fdfbf8; margin-bottom: 16px;
+}
+.sec-item { display: flex; align-items: flex-start; gap: 10px; }
+.sec-icon-ok {
+  width: 22px; height: 22px; border-radius: 50%; background: #eaf5ed; color: #176532;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px;
+}
+.sec-icon-ok .admin-icon { width: 12px; height: 12px; }
+.sec-info { display: flex; flex-direction: column; font-size: 0.78rem; }
+.sec-info strong { color: var(--text); }
+.sec-info span { color: var(--muted); }
+.sec-audit-box { padding: 14px; border: 1px solid var(--line); border-radius: 10px; background: #fff; margin-bottom: 16px; }
+.sec-audit-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.sec-audit-header strong { font-size: 0.85rem; }
+.simulator-wrapper-spaced { margin-top: 18px; }
+.restore-card-spaced { margin-top: 16px; }
+.spec-guide-spaced { margin-top: 18px; }
+.sec-copy-spaced { margin: 8px 0 0; }
+.db-schema-copy { margin: 8px 0 10px; }

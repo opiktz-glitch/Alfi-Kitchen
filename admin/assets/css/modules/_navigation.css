@@ -576,11 +576,18 @@
 }
 .admin-bottom-nav { display: none; }
 
-/* === Tab Slider Beranda (Visual Grid & Drag-Drop UI) === */
+/* === Tab Settings (Visual Grid & Laptop Layouts) === */
 @media (min-width: 992px) {
   .settings-grid-slider,
-  .settings-grid-tampilan {
-    grid-template-columns: 360px minmax(0, 1fr) !important;
+  .settings-grid-tampilan,
+  #tab-kontak .settings-grid,
+  #tab-keamanan .settings-grid {
+    grid-template-columns: 380px minmax(0, 1fr) !important;
+    gap: 24px !important;
+    align-items: start !important;
+  }
+  #tab-database .settings-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr) !important;
     gap: 24px !important;
     align-items: start !important;
   }

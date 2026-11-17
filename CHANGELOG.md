@@ -7,6 +7,21 @@ bukan penanda rilis atau versi aplikasi.
 ## 2026-11-17
 
 ### Added
+- **Penyelarasan UI Tab Kontak, Database, dan Keamanan Versi Laptop ([admin/settings.php](file:///c:/xampp/htdocs/Alfi_Kitchen/admin/settings.php))**:
+  - **Tab Kontak & WhatsApp (`#tab-kontak`)**:
+    - Layout 2 kolom laptop seimbang (`#tab-kontak .settings-grid`): formulir WhatsApp di kiri dan formulir info footer terorganisir di kanan.
+    - Menambahkan **Live WhatsApp Simulator Card** (`.wa-simulator-card`) yang mensimulasikan tombol chat mengambang website secara realtime beserta tombol uji coba tautan chat (`https://wa.me/`).
+    - Menambahkan pengelompokan formulir footer (*Media Sosial* & *Operasional & Lokasi*) dan **Live Footer Simulator Bar** (`.footer-simulator-card`) yang memperlihatkan preview jam operasional, alamat, dan badge status sosmed aktif saat diketik.
+  - **Tab Database & Backup (`#tab-database`)**:
+    - Layout 2 kolom terstruktur (`#tab-database .settings-grid`): kolom kiri untuk pencadangan data & kesehatan skema, kolom kanan untuk pemulihan data (restore).
+    - Menambahkan **Quick Backup Cards** (`.backup-cards-grid`) dengan kartu visual modern untuk unduh Database `.sql` dan arsip gambar `.zip`.
+    - Menambahkan **Database Health & Schema Card** (`.db-schema-card`) dengan badge status kesehatan database (`Up to Date` / `Perlu Update`), versi skema aktif (`v05_hpp.sql`), dan tombol aksi satu-klik jika terdapat migrasi skema yang tertunda.
+    - Menata ulang kartu **Restore Database** dan **Restore Gambar** dengan header batas ukuran berkas, alert peringatan tegas, dan riwayat restore terpadu.
+  - **Tab Keamanan Akun (`#tab-keamanan`)**:
+    - Layout 2 kolom seimbang (`#tab-keamanan .settings-grid`): formulir ganti password di kiri dan ringkasan audit keamanan akun di kanan.
+    - Menambahkan tombol **Show/Hide Password** (`👁️` / `🔒`), kolom konfirmasi password dengan validasi kesesuaian realtime, serta **Live Password Strength Meter** (`.pwd-strength-bar`) dinamis (Lemah / Cukup Baik / Sangat Kuat).
+    - Menambahkan **Security Overview Card** (`.security-overview-card`) yang menampilkan ringkasan username login aktif, batas timeout sesi (30 menit idle), proteksi CSRF formulir, dan keamanan cookie HttpOnly/SameSite, serta tautan cepat ke log aktivitas admin.
+  - Modul CSS terpusat di [admin/assets/css/modules/_components.css](file:///c:/xampp/htdocs/Alfi_Kitchen/admin/assets/css/modules/_components.css) dan [_navigation.css](file:///c:/xampp/htdocs/Alfi_Kitchen\admin/assets/css/modules/_navigation.css) tanpa inline style dan tetap menjaga seluruh berkas di bawah 1.000 baris.
 - **Optimasi UI Tab Logo & Konten Homepage Versi Laptop (Opsi A) ([admin/settings.php](file:///c:/xampp/htdocs/Alfi_Kitchen/admin/settings.php#tab-tampilan))**:
   - Restrukturisasi tata letak layar laptop/desktop menjadi layout asimetris 360px : 1fr (`.settings-grid-tampilan`), menyeimbangkan kolom branding toko di kiri dan formulir konten sambutan di kanan.
   - Menambahkan **Modern Drag & Drop Zone Logo** (`.hero-dropzone` / `#logo-dropzone`) dengan validasi khusus file PNG murni, efek *hover/dragover* dinamis, dan panduan spesifikasi logo (rasio 1:1, latar transparan).
