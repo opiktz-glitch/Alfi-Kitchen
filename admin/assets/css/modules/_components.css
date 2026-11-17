@@ -584,27 +584,35 @@ td:has(.thumb-hero) {
 }
 .dashboard-section {
   min-width: 0;
+  padding: 24px 26px;
 }
 .dashboard-section-heading {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 16px;
+  gap: 14px;
+  margin-bottom: 20px;
+  padding-top: 2px;
 }
 .dashboard-section-heading h3 {
   margin: 0 0 5px;
+  font-size: 1.08rem;
+  font-weight: 750;
+  color: #4a2810;
+  letter-spacing: -0.015em;
+  line-height: 1.25;
 }
 .dashboard-section-heading p,
 .dashboard-empty {
   margin: 0;
   color: var(--muted);
-  font-size: 0.86rem;
+  font-size: 0.82rem;
+  line-height: 1.4;
 }
 .dashboard-shortcuts {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
 }
 .dashboard-shortcut-card {
   display: flex;
@@ -858,3 +866,6 @@ td:has(.thumb-hero) {
 .activity-badge.badge-danger { background: #fff5f5; color: #c53030; border: 1px solid #fed7d7; }
 .activity-badge.badge-neutral { background: #edf2f7; color: #4a5568; border: 1px solid #e2e8f0; }
 .activity-time-cell { font-variant-numeric: tabular-nums; font-size: 0.78rem; white-space: nowrap; color: var(--muted); }
+@media (max-width: 768px) {
+  .dashboard-section { padding: 16px 14px; }
+}
