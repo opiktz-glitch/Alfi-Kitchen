@@ -23,6 +23,20 @@ if ($hppReady) {
     }
 }
 
+// Data Status Toko
+$currentWa = '';
+try {
+    $stmt = $pdo->query("SELECT setting_value FROM settings WHERE setting_key = 'whatsapp_number' LIMIT 1");
+    $currentWa = (string) $stmt->fetchColumn();
+} catch (Exception $e) {}
+
+$heroCount = 0;
+try {
+    $heroCount = (int) $pdo->query('SELECT COUNT(*) FROM hero_images')->fetchColumn();
+} catch (Exception $e) {}
+
+$hasLogo = file_exists(uploads_directory() . '/logo.png');
+
 $recentActivities = [];
 $logFile = __DIR__ . '/../logs/admin_activity.log';
 if (is_readable($logFile)) {
@@ -40,6 +54,15 @@ if (is_readable($logFile)) {
             ];
         }
     }
+}
+
+function get_action_badge_class(string $action): string {
+    $act = strtoupper($action);
+    if (str_contains($act, 'LOGIN')) return 'badge-login';
+    if (str_contains($act, 'ADD') || str_contains($act, 'CREATE') || str_contains($act, 'RESTORE')) return 'badge-success';
+    if (str_contains($act, 'UPDATE') || str_contains($act, 'EDIT') || str_contains($act, 'CHANGE') || str_contains($act, 'MIGRATE')) return 'badge-warning';
+    if (str_contains($act, 'DELETE') || str_contains($act, 'REMOVE') || str_contains($act, 'CLEAR')) return 'badge-danger';
+    return 'badge-neutral';
 }
 ?>
 <!DOCTYPE html>
@@ -64,106 +87,204 @@ if (is_readable($logFile)) {
             </header>
             <main class="admin-container admin-dashboard">
                 <?php include __DIR__ . '/flash_message.php'; ?>
-                <?php if ($staleRecipeCount > 0): ?>
-                    <div class="alert alert-warning dashboard-alert" role="alert">
-                        <div class="dashboard-alert-text">
-                            <strong>Penyesuaian Biaya Resep:</strong> Ada <?= $staleRecipeCount ?> resep yang harga bahan bakunya berubah di Master Bahan. Silakan tinjau kalkulasi HPP.
+
+                <!-- Welcome Card -->
+                <section class="dashboard-welcome-card">
+                    <div class="dashboard-welcome-content">
+                        <div class="dashboard-welcome-text">
+                            <h3>Selamat Datang, <?= htmlspecialchars($_SESSION['admin_user'] ?? 'Administrator') ?> 👋</h3>
+                            <p>Ringkasan status katalog dan aktivitas operasional toko Alfi Kitchen hari ini.</p>
                         </div>
-                        <a href="hpp_recipes.php" class="btn btn-secondary btn-sm btn-with-icon"><?= admin_icon('calculator') ?><span>Tinjau Resep</span></a>
+                        <div class="dashboard-welcome-pills">
+                            <span class="welcome-pill"><span class="pill-dot is-online"></span> Toko Online Aktif</span>
+                            <span class="welcome-pill"><?= number_format($variantCount) ?> Varian Terdaftar</span>
+                            <?php if ($staleRecipeCount > 0): ?>
+                                <span class="welcome-pill is-alert">⚠ <?= $staleRecipeCount ?> Resep Perlu Disesuaikan</span>
+                            <?php else: ?>
+                                <span class="welcome-pill is-ok">✓ HPP Terkalkulasi</span>
+                            <?php endif; ?>
+                        </div>
                     </div>
-                <?php endif; ?>
+                </section>
+
+                <!-- Ringkasan Katalog (KPI Stat Cards) -->
                 <section class="admin-dashboard-stats" aria-label="Ringkasan katalog">
                     <article class="admin-stat">
-                        <span class="admin-stat-label">Kategori produk</span>
+                        <div class="admin-stat-head">
+                            <span class="admin-stat-label">Kategori produk</span>
+                            <div class="admin-stat-icon"><?= admin_icon('manage') ?></div>
+                        </div>
                         <strong class="admin-stat-value"><?= number_format($productCount) ?></strong>
+                        <span class="dashboard-stat-meta"><?= number_format($variantCount) ?> total varian</span>
                     </article>
                     <article class="admin-stat">
-                        <span class="admin-stat-label">Varian produk</span>
+                        <div class="admin-stat-head">
+                            <span class="admin-stat-label">Varian produk</span>
+                            <div class="admin-stat-icon"><?= admin_icon('image') ?></div>
+                        </div>
                         <strong class="admin-stat-value"><?= number_format($variantCount) ?></strong>
+                        <span class="dashboard-stat-meta">Siap pesan via WhatsApp</span>
                     </article>
                     <article class="admin-stat">
-                        <span class="admin-stat-label">Resep HPP</span>
+                        <div class="admin-stat-head">
+                            <span class="admin-stat-label">Resep HPP</span>
+                            <div class="admin-stat-icon"><?= admin_icon('calculator') ?></div>
+                        </div>
                         <strong class="admin-stat-value"><?= $recipeCount === null ? '—' : number_format($recipeCount) ?></strong>
-                        <?php if (!$hppReady): ?><small class="dashboard-stat-note">Migrasi HPP belum diterapkan</small><?php endif; ?>
+                        <?php if (!$hppReady): ?>
+                            <small class="dashboard-stat-note">Migrasi HPP belum diterapkan</small>
+                        <?php elseif ($staleRecipeCount > 0): ?>
+                            <span class="dashboard-stat-meta is-warning">⚠ <?= $staleRecipeCount ?> perlu update harga</span>
+                        <?php else: ?>
+                            <span class="dashboard-stat-meta is-ok">✓ Biaya terhitung akurat</span>
+                        <?php endif; ?>
                     </article>
                     <article class="admin-stat">
-                        <span class="admin-stat-label">Master bahan</span>
+                        <div class="admin-stat-head">
+                            <span class="admin-stat-label">Master bahan</span>
+                            <div class="admin-stat-icon"><?= admin_icon('database') ?></div>
+                        </div>
                         <strong class="admin-stat-value"><?= $ingredientCount === null ? '—' : number_format($ingredientCount) ?></strong>
+                        <span class="dashboard-stat-meta">Bahan baku terdaftar</span>
                     </article>
                 </section>
 
-                <section class="admin-card dashboard-section" aria-labelledby="dashboard-shortcuts-title">
-                    <div class="dashboard-section-heading">
-                        <div>
-                            <h3 id="dashboard-shortcuts-title">Akses cepat</h3>
-                            <p>Pilih bagian yang ingin Anda kelola.</p>
-                        </div>
-                    </div>
-                    <div class="dashboard-shortcuts">
-                        <a href="products.php" class="dashboard-shortcut-card">
-                            <span class="dashboard-shortcut-icon"><?= admin_icon('manage') ?></span>
-                            <span class="dashboard-shortcut-copy">
-                                <strong>Kelola Kategori &amp; Varian</strong>
-                                <small>Atur kategori produk beserta variannya.</small>
-                            </span>
-                            <?= admin_icon('external') ?>
-                        </a>
-                        <a href="add_product.php" class="dashboard-shortcut-card">
-                            <span class="dashboard-shortcut-icon"><?= admin_icon('add') ?></span>
-                            <span class="dashboard-shortcut-copy">
-                                <strong>Tambah Kategori</strong>
-                                <small>Tambahkan kelompok produk baru.</small>
-                            </span>
-                            <?= admin_icon('external') ?>
-                        </a>
-                        <a href="hpp_recipes.php" class="dashboard-shortcut-card">
-                            <span class="dashboard-shortcut-icon"><?= admin_icon('calculator') ?></span>
-                            <span class="dashboard-shortcut-copy">
-                                <strong>Kelola Resep HPP</strong>
-                                <small>Periksa biaya dan kalkulasi resep.</small>
-                            </span>
-                            <?= admin_icon('external') ?>
-                        </a>
-                        <a href="hpp_ingredients.php" class="dashboard-shortcut-card">
-                            <span class="dashboard-shortcut-icon"><?= admin_icon('manage') ?></span>
-                            <span class="dashboard-shortcut-copy">
-                                <strong>Kelola Master Bahan</strong>
-                                <small>Perbarui bahan dan harga satuannya.</small>
-                            </span>
-                            <?= admin_icon('external') ?>
-                        </a>
-                    </div>
-                </section>
+                <!-- Grid 2 Kolom Laptop: Aksi & Alur Kerja (Kiri) vs Status Toko & Log (Kanan) -->
+                <div class="dashboard-grid">
+                    <!-- Kolom Kiri -->
+                    <div class="dashboard-col-main">
+                        <?php if ($staleRecipeCount > 0): ?>
+                            <div class="alert alert-warning dashboard-alert" role="alert">
+                                <div class="dashboard-alert-text">
+                                    <strong>Penyesuaian Biaya Resep:</strong> Ada <?= $staleRecipeCount ?> resep yang harga bahan bakunya berubah di Master Bahan. Silakan tinjau kalkulasi HPP.
+                                </div>
+                                <a href="hpp_recipes.php" class="btn btn-secondary btn-sm btn-with-icon"><?= admin_icon('calculator') ?><span>Tinjau Resep</span></a>
+                            </div>
+                        <?php endif; ?>
 
-                <section class="admin-card dashboard-section" aria-labelledby="dashboard-activity-title">
-                    <div class="dashboard-section-heading">
-                        <div>
-                            <h3 id="dashboard-activity-title">Aktivitas terbaru</h3>
-                            <p>Lima aksi admin terakhir yang tercatat.</p>
-                        </div>
-                        <a href="activity_log.php" class="btn btn-cancel btn-with-icon"><?= admin_icon('log') ?>Lihat Semua</a>
+                        <section class="admin-card dashboard-section" aria-labelledby="dashboard-shortcuts-title">
+                            <div class="dashboard-section-heading">
+                                <div>
+                                    <h3 id="dashboard-shortcuts-title">Akses cepat</h3>
+                                    <p>Pilih bagian yang ingin Anda kelola.</p>
+                                </div>
+                            </div>
+                            <div class="dashboard-shortcuts">
+                                <a href="products.php" class="dashboard-shortcut-card">
+                                    <span class="dashboard-shortcut-icon"><?= admin_icon('manage') ?></span>
+                                    <span class="dashboard-shortcut-copy">
+                                        <strong>Kelola Kategori &amp; Varian</strong>
+                                        <small>Atur kategori produk beserta variannya.</small>
+                                    </span>
+                                    <?= admin_icon('external') ?>
+                                </a>
+                                <a href="add_product.php" class="dashboard-shortcut-card">
+                                    <span class="dashboard-shortcut-icon"><?= admin_icon('add') ?></span>
+                                    <span class="dashboard-shortcut-copy">
+                                        <strong>Tambah Kategori</strong>
+                                        <small>Tambahkan kelompok produk baru.</small>
+                                    </span>
+                                    <?= admin_icon('external') ?>
+                                </a>
+                                <a href="hpp_recipes.php" class="dashboard-shortcut-card">
+                                    <span class="dashboard-shortcut-icon"><?= admin_icon('calculator') ?></span>
+                                    <span class="dashboard-shortcut-copy">
+                                        <strong>Kelola Resep HPP</strong>
+                                        <small>Periksa biaya dan kalkulasi resep.</small>
+                                    </span>
+                                    <?= admin_icon('external') ?>
+                                </a>
+                                <a href="hpp_ingredients.php" class="dashboard-shortcut-card">
+                                    <span class="dashboard-shortcut-icon"><?= admin_icon('manage') ?></span>
+                                    <span class="dashboard-shortcut-copy">
+                                        <strong>Kelola Master Bahan</strong>
+                                        <small>Perbarui bahan dan harga satuannya.</small>
+                                    </span>
+                                    <?= admin_icon('external') ?>
+                                </a>
+                            </div>
+                        </section>
                     </div>
-                    <?php if ($recentActivities === []): ?>
-                        <p class="dashboard-empty">Belum ada aktivitas yang tercatat.</p>
-                    <?php else: ?>
-                        <div class="table-responsive dashboard-activity-table">
-                            <table>
-                                <thead>
-                                    <tr><th>Waktu</th><th>Aksi</th><th>Detail</th></tr>
-                                </thead>
-                                <tbody>
-                                    <?php foreach ($recentActivities as $activity): ?>
-                                        <tr>
-                                            <td class="table-cell-center"><?= htmlspecialchars($activity['time'], ENT_QUOTES, 'UTF-8') ?></td>
-                                            <td class="table-cell-center"><?= htmlspecialchars($activity['action'], ENT_QUOTES, 'UTF-8') ?></td>
-                                            <td><?= htmlspecialchars($activity['details'], ENT_QUOTES, 'UTF-8') ?></td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                </tbody>
-                            </table>
-                        </div>
-                    <?php endif; ?>
-                </section>
+
+                    <!-- Kolom Kanan -->
+                    <div class="dashboard-col-side">
+                        <!-- Widget Ringkasan Status Toko -->
+                        <section class="admin-card dashboard-section">
+                            <div class="dashboard-section-heading">
+                                <div>
+                                    <h3>Status Sistem &amp; Toko</h3>
+                                    <p>Kondisi fitur utama website Alfi Kitchen.</p>
+                                </div>
+                                <a href="settings.php" class="btn btn-sm btn-secondary btn-with-icon"><?= admin_icon('settings') ?><span>Pengaturan</span></a>
+                            </div>
+                            <div class="dashboard-health-list">
+                                <div class="health-item">
+                                    <div class="health-item-icon health-wa"><?= admin_icon('external') ?></div>
+                                    <div class="health-item-info">
+                                        <strong>WhatsApp Pemesanan</strong>
+                                        <span><?= htmlspecialchars($currentWa ?: 'Belum diatur') ?></span>
+                                    </div>
+                                    <?php if ($currentWa): ?>
+                                        <span class="health-status-badge is-ok">Aktif</span>
+                                    <?php else: ?>
+                                        <span class="health-status-badge is-warning">Perlu Diisi</span>
+                                    <?php endif; ?>
+                                </div>
+                                <div class="health-item">
+                                    <div class="health-item-icon health-slider"><?= admin_icon('slider') ?></div>
+                                    <div class="health-item-info">
+                                        <strong>Slider Beranda</strong>
+                                        <span><?= $heroCount ?> Banner Promosi Aktif</span>
+                                    </div>
+                                    <span class="health-status-badge is-ok">Normal</span>
+                                </div>
+                                <div class="health-item">
+                                    <div class="health-item-icon health-logo"><?= admin_icon('image') ?></div>
+                                    <div class="health-item-info">
+                                        <strong>Identitas Logo Toko</strong>
+                                        <span><?= $hasLogo ? 'logo.png terpasang' : 'Logo default sistem' ?></span>
+                                    </div>
+                                    <span class="health-status-badge is-ok"><?= $hasLogo ? 'Kustom' : 'Default' ?></span>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Aktivitas Terbaru -->
+                        <section class="admin-card dashboard-section" aria-labelledby="dashboard-activity-title">
+                            <div class="dashboard-section-heading">
+                                <div>
+                                    <h3 id="dashboard-activity-title">Aktivitas terbaru</h3>
+                                    <p>Lima aksi admin terakhir yang tercatat.</p>
+                                </div>
+                                <a href="activity_log.php" class="btn btn-cancel btn-with-icon"><?= admin_icon('log') ?>Lihat Semua</a>
+                            </div>
+                            <?php if ($recentActivities === []): ?>
+                                <p class="dashboard-empty">Belum ada aktivitas yang tercatat.</p>
+                            <?php else: ?>
+                                <div class="table-responsive dashboard-activity-table">
+                                    <table>
+                                        <thead>
+                                            <tr><th>Waktu</th><th>Aksi</th><th>Detail</th></tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($recentActivities as $activity): ?>
+                                                <tr>
+                                                    <td class="table-cell-center activity-time-cell"><?= htmlspecialchars($activity['time'], ENT_QUOTES, 'UTF-8') ?></td>
+                                                    <td class="table-cell-center">
+                                                        <span class="activity-badge <?= get_action_badge_class($activity['action']) ?>">
+                                                            <?= htmlspecialchars($activity['action'], ENT_QUOTES, 'UTF-8') ?>
+                                                        </span>
+                                                    </td>
+                                                    <td><?= htmlspecialchars($activity['details'], ENT_QUOTES, 'UTF-8') ?></td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            <?php endif; ?>
+                        </section>
+                    </div>
+                </div>
             </main>
         </div>
     </div>

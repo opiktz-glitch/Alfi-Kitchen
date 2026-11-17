@@ -7,6 +7,13 @@ bukan penanda rilis atau versi aplikasi.
 ## 2026-11-17
 
 ### Added
+- **Optimasi UI Dashboard Admin Versi Laptop Sesuai Standar Baru ([admin/dashboard.php](file:///c:/xampp/htdocs/Alfi_Kitchen/admin/dashboard.php))**:
+  - Menambahkan **Hero Welcome Card** (`.dashboard-welcome-card`) dengan sapaan personal dinamis untuk administrator, indikator pulse status toko online, jumlah varian siap dipesan, dan status kalkulasi HPP.
+  - Memperbarui kartu metrik katalog (`.admin-stat`) dengan ikon tematik representatif dan catatan metadata ringkas di bawah angka.
+  - Menerapkan **Tata Letak 2 Kolom Seimbang di Laptop** (`.dashboard-grid`):
+    - **Kolom Kiri**: Kotak peringatan HPP (jika ada harga bahan baku yang berubah) dan 4 kartu akses cepat operasional (`.dashboard-shortcut-card`).
+    - **Kolom Kanan**: Widget **Status Sistem & Toko** (`.dashboard-health-list`) yang memonitor kelayakan WhatsApp pemesanan, jumlah banner slider aktif, dan logo toko, serta kartu **Aktivitas Terbaru** dengan badge kode warna aksi (`LOGIN`, `ADD`, `UPDATE`, `DELETE`) dan format waktu tabular yang rapi.
+  - Modul CSS terpusat di [admin/assets/css/modules/_components.css](file:///c:/xampp/htdocs/Alfi_Kitchen/admin/assets/css/modules/_components.css) tanpa inline style dan responsif otomatis di layar ponsel.
 - **Penyelarasan UI Tab Kontak, Database, dan Keamanan Versi Laptop ([admin/settings.php](file:///c:/xampp/htdocs/Alfi_Kitchen/admin/settings.php))**:
   - **Tab Kontak & WhatsApp (`#tab-kontak`)**:
     - Layout 2 kolom laptop seimbang (`#tab-kontak .settings-grid`): formulir WhatsApp di kiri dan formulir info footer terorganisir di kanan.

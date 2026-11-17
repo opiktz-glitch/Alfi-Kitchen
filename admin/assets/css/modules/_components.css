@@ -1,4 +1,4 @@
-﻿/* === Module: _components.css === */
+/* === Module: _components.css === */
 /* === Sticky table header + scroll hint === */
 .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; position: relative; }
 .table-responsive::after { content: ''; position: absolute; top: 0; right: 0; bottom: 0; width: 12px; pointer-events: none; background: linear-gradient(to left, rgba(0,0,0,0.06), transparent); opacity: 0; transition: opacity 0.2s ease; }
@@ -775,3 +775,86 @@ td:has(.thumb-hero) {
 .spec-guide-spaced { margin-top: 18px; }
 .sec-copy-spaced { margin: 8px 0 0; }
 .db-schema-copy { margin: 8px 0 10px; }
+
+/* ==========================================================================
+   Dashboard Modern Components & Layout
+   ========================================================================== */
+.dashboard-welcome-card {
+  padding: 18px 20px; border: 1px solid #f0ddc8; border-radius: 12px;
+  background: linear-gradient(135deg, #fffaf5 0%, #fff3e6 100%); box-shadow: 0 2px 8px rgba(92, 51, 23, 0.04);
+}
+.dashboard-welcome-content {
+  display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap;
+}
+.dashboard-welcome-text h3 {
+  margin: 0 0 4px; font-size: 1.15rem; font-weight: 750; color: #4a2810; letter-spacing: -0.015em;
+}
+.dashboard-welcome-text p {
+  margin: 0; font-size: 0.82rem; color: var(--muted);
+}
+.dashboard-welcome-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+.welcome-pill {
+  display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 20px;
+  background: #fff; border: 1px solid #eedecb; font-size: 0.74rem; font-weight: 600; color: #5a3c24;
+}
+.welcome-pill.is-alert { background: #fffaf0; border-color: #fbd38d; color: #c05621; }
+.welcome-pill.is-ok { background: #f0fff4; border-color: #9ae6b4; color: #276749; }
+.pill-dot { width: 7px; height: 7px; border-radius: 50%; }
+.pill-dot.is-online { background: #38a169; box-shadow: 0 0 0 2px rgba(56, 161, 105, 0.2); }
+
+.admin-stat-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.admin-stat-icon {
+  width: 32px; height: 32px; border-radius: 8px; background: #f9ede0; color: #8a4913;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.admin-stat-icon .admin-icon { width: 16px; height: 16px; }
+.dashboard-stat-meta { font-size: 0.74rem; color: var(--muted); line-height: 1.3; }
+.dashboard-stat-meta.is-warning { color: #c05621; font-weight: 600; }
+.dashboard-stat-meta.is-ok { color: #276749; font-weight: 600; }
+
+.dashboard-grid {
+  display: grid; grid-template-columns: 1fr; gap: 16px; align-items: start;
+}
+@media (min-width: 992px) {
+  .dashboard-grid {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) !important;
+    gap: 20px !important;
+  }
+}
+.dashboard-col-main,
+.dashboard-col-side { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+
+/* Store Health Widget */
+.dashboard-health-list { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+.health-item {
+  display: flex; align-items: center; gap: 12px; padding: 10px 12px; border: 1px solid var(--line);
+  border-radius: 9px; background: #faf7f4; transition: transform 0.12s ease;
+}
+.health-item:hover { transform: translateX(2px); background: #fff; }
+.health-item-icon {
+  width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.health-item-icon.health-wa { background: #e6f9ed; color: #1f914b; }
+.health-item-icon.health-slider { background: #fff2e6; color: #b85d14; }
+.health-item-icon.health-logo { background: #f2eaff; color: #6b3bb8; }
+.health-item-icon .admin-icon { width: 17px; height: 17px; }
+.health-item-info { min-width: 0; flex: 1; }
+.health-item-info strong { display: block; font-size: 0.82rem; color: var(--text); }
+.health-item-info span { display: block; font-size: 0.74rem; color: var(--muted); }
+.health-status-badge {
+  font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 10px;
+}
+.health-status-badge.is-ok { background: #eaf5ed; color: #176532; }
+.health-status-badge.is-warning { background: #fef3c7; color: #92400e; }
+
+/* Action Badges in Recent Activity */
+.activity-badge {
+  display: inline-block; padding: 2px 6px; border-radius: 5px; font-size: 0.7rem;
+  font-weight: 700; font-family: monospace; letter-spacing: 0.02em;
+}
+.activity-badge.badge-login { background: #ebf4ff; color: #2b6cb0; border: 1px solid #bee3f8; }
+.activity-badge.badge-success { background: #eaf5ed; color: #176532; border: 1px solid #c6f6d5; }
+.activity-badge.badge-warning { background: #fffaf0; color: #c05621; border: 1px solid #feebc8; }
+.activity-badge.badge-danger { background: #fff5f5; color: #c53030; border: 1px solid #fed7d7; }
+.activity-badge.badge-neutral { background: #edf2f7; color: #4a5568; border: 1px solid #e2e8f0; }
+.activity-time-cell { font-variant-numeric: tabular-nums; font-size: 0.78rem; white-space: nowrap; color: var(--muted); }
