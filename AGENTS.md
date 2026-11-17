@@ -45,6 +45,20 @@
 - Menangani gambar: gunakan `upload_helper.php` dan `delete_uploaded_image()`.
 - Membuat tautan WhatsApp: gunakan `format_whatsapp_number()` / `whatsapp_url()` dari `includes/seo_helpers.php`.
 
+## Standar Patokan UI Admin (Design System Benchmark)
+Desain pada `admin/settings.php` (Tab Slider, Tampilan, Kontak, Database, dan Keamanan) menjadi **patokan standar antarmuka (UI/UX) resmi** untuk seluruh panel admin Alfi Kitchen ke depannya:
+1. **Tata Letak 2 Kolom Seimbang di Laptop (>= 992px)**:
+   - **Kolom Kiri**: Formulir aksi input yang terfokus, bersih, dan dilengkapi kotak panduan rekomendasi (*Spec Guide Box* `.slider-spec-guide` dengan ikon 💡 berlatar lembut).
+   - **Kolom Kanan**: Galeri visual (*visual cards*), kartu ringkasan status sistem (*overview/health card*), atau simulator langsung (*live preview*) yang langsung bereaksi terhadap input pengguna.
+2. **Interaktivitas Cepat & Umpan Balik Visual Langsung (Live Feedback)**:
+   - Area unggah berkas menggunakan *Drag & Drop Zone* (`.hero-dropzone`) dengan *instant pre-upload preview* menggunakan JavaScript `FileReader` sebelum formulir disimpan.
+   - Textarea/input panjang dilengkapi *Live Character Counter* (`.char-counter`) dengan penanda warna peringatan (*warning/danger*).
+   - Formulir kata sandi menyertakan tombol *Show/Hide Password* (`👁️`/`🔒`), pengecekan kecocokan konfirmasi otomatis, dan *Password Strength Meter* dinamis.
+   - Simulasi tampilan nyata (*Live Simulator Card*) seperti simulator kartu sambutan beranda, simulasi tombol chat WhatsApp, dan simulator footer website.
+3. **Disiplin Gaya & Penataan Kode**:
+   - Seluruh styling harus dimasukkan ke modul CSS di `admin/assets/css/modules/` (`_components.css`, `_navigation.css`, dll.). Dilarang keras menggunakan atribut `style="..."` inline pada elemen markup admin.
+   - Pertahankan batas maksimal panjang berkas: seluruh berkas kode (PHP/CSS/JS) harus selalu dijaga di bawah 1.000 baris.
+
 ## Tindak lanjut yang diketahui
 - Lihat `docs/ROADMAP.md` untuk temuan berdasarkan prioritas, termasuk transport deployment terenkripsi, versi PHP yang didukung, batas sumber daya pemrosesan gambar, dan validasi password di server.
 - Pembatasan ukuran upload sudah diterapkan; jangan cantumkan lagi sebagai pekerjaan tertunda.
@@ -52,6 +66,7 @@
 
 ## Larangan
 - Jangan meng-commit `.env`, `config.php`, atau gambar hasil upload.
-- Jangan menambahkan blok `<style>` inline di admin; gunakan `admin/assets/css/admin.css` atau modul-modul terstrukturnya di `admin/assets/css/modules/`.
+- Jangan menambahkan blok `<style>` inline maupun atribut `style="..."` di admin; gunakan `admin/assets/css/admin.css` atau modul-modul terstrukturnya di `admin/assets/css/modules/`.
+- Jangan melakukan refactoring kode atas inisiatif sendiri saat melakukan pembaruan/update; refactor kode hanya dikerjakan apabila ada perintah eksplisit dari pengguna.
 - Jangan melewati pemeriksaan autentikasi atau CSRF.
 - Jangan menggunakan Swiper; slider native telah menggantikannya.
