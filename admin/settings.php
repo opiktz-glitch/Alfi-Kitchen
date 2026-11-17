@@ -356,38 +356,122 @@ if (isset($_GET['tab'])) {
 
             <!-- Tab 3: Logo & Konten -->
             <div id="tab-tampilan" class="settings-tab-pane" role="tabpanel" aria-labelledby="tab-btn-tampilan"<?= $activeTab === 'tab-tampilan' ? '' : ' hidden' ?>>
-                <div class="settings-grid">
-                    <section class="settings-panel">
-                        <h3>Pengaturan Logo</h3>
-                        <?php if(file_exists(uploads_directory() . '/logo.png')): ?>
-                            <img src="../uploads/logo.png?v=<?= time() ?>" class="current-logo" alt="Logo Saat Ini">
+                <div class="settings-grid settings-grid-tampilan">
+                    <!-- Kolom Kiri: Pengaturan Logo -->
+                    <section class="settings-panel slider-upload-panel">
+                        <div class="slider-panel-header">
+                            <h3>Pengaturan Logo Toko</h3>
+                            <p class="settings-copy">Logo ini digunakan sebagai identitas toko pada floating logo beranda dan header dokumen.</p>
+                        </div>
+
+                        <?php
+                        $logoFile = uploads_directory() . '/logo.png';
+                        $hasLogo = file_exists($logoFile);
+                        ?>
+                        <?php if ($hasLogo): ?>
+                            <div class="logo-active-card">
+                                <div class="logo-active-avatar">
+                                    <img src="../uploads/logo.png?v=<?= filemtime($logoFile) ?>" alt="Logo Saat Ini">
+                                </div>
+                                <div class="logo-active-info">
+                                    <span class="logo-active-badge">✓ Logo Aktif</span>
+                                    <span class="logo-active-meta">Format: PNG murni (logo.png)</span>
+                                </div>
+                            </div>
                         <?php endif; ?>
 
-                        <form action="" method="post" enctype="multipart/form-data" data-submit-lock>
+                        <form action="" method="post" enctype="multipart/form-data" data-submit-lock id="logo-upload-form">
                             <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
-                            <div class="form-group">
-                                <label for="logo-file">Upload Logo Baru (Format PNG, Rekomendasi Rasio 1:1)</label>
-                                <input type="file" id="logo-file" name="logo" accept="image/png" required>
-                                <small class="settings-hint">Format yang didukung: <strong>PNG</strong> (.png), ukuran maksimal 5 MB.</small>
+                            
+                            <!-- Modern Drag & Drop Zone Logo -->
+                            <div class="hero-dropzone" id="logo-dropzone" tabindex="0" role="button" aria-label="Pilih atau seret file logo PNG ke sini">
+                                <input type="file" id="logo-file-input" name="logo" class="hero-file-input" accept="image/png" required>
+                                <div class="hero-dropzone-content" id="logo-dropzone-prompt">
+                                    <div class="hero-dropzone-icon">
+                                        <?= admin_icon('image') ?>
+                                    </div>
+                                    <div class="hero-dropzone-text">
+                                        <strong>Pilih atau seret logo PNG ke sini</strong>
+                                        <span>Format: PNG murni (.png), maks. 5 MB</span>
+                                    </div>
+                                </div>
+
+                                <!-- Pre-upload Live Preview Area -->
+                                <div class="hero-preview-area" id="logo-preview-area" hidden>
+                                    <div class="logo-active-avatar logo-preview-avatar">
+                                        <img id="logo-preview-img" src="" alt="Pratinjau Logo Baru">
+                                    </div>
+                                    <div class="hero-preview-meta">
+                                        <span id="logo-preview-filename" class="hero-preview-filename"></span>
+                                        <button type="button" class="btn btn-secondary btn-sm" id="logo-preview-reset-btn">Ganti Foto</button>
+                                    </div>
+                                </div>
                             </div>
-                            <button type="submit" class="btn btn-primary btn-with-icon"><?= admin_icon('save') ?>Simpan Logo</button>
+
+                            <button type="submit" class="btn btn-primary btn-with-icon btn-upload-slider">
+                                <?= admin_icon('save') ?><span>Simpan Logo PNG</span>
+                            </button>
                         </form>
+
+                        <!-- Box Panduan Spesifikasi Logo -->
+                        <div class="slider-spec-guide">
+                            <div class="slider-spec-title">
+                                <span>💡 Panduan Logo Ideal:</span>
+                            </div>
+                            <ul class="slider-spec-list">
+                                <li><strong>Format Wajib</strong>: Khusus file gambar PNG murni (disimpan sebagai <code>logo.png</code>).</li>
+                                <li><strong>Rasio 1:1</strong>: Bentuk persegi atau lingkaran (rekomendasi minimal 512 × 512 px).</li>
+                                <li><strong>Transparansi</strong>: Gunakan latar belakang transparan agar menyatu indah dengan warna latar beranda.</li>
+                            </ul>
+                        </div>
                     </section>
-                    <section class="settings-panel">
-                        <h3>Konten Sambutan Homepage</h3>
-                        <p class="settings-copy">Ubah judul dan deskripsi yang tampil di halaman utama.</p>
-                        <form action="" method="post" data-submit-lock>
+
+                    <!-- Kolom Kanan: Konten Sambutan & Live Simulator -->
+                    <section class="settings-panel slider-gallery-panel">
+                        <div class="slider-panel-header">
+                            <h3>Konten Sambutan Homepage</h3>
+                            <p class="settings-copy">Ubah judul dan deskripsi pembuka yang dilihat pengunjung pada kolom kiri beranda.</p>
+                        </div>
+
+                        <form action="" method="post" data-submit-lock id="home-content-form">
                             <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token(), ENT_QUOTES, 'UTF-8') ?>">
+                            
                             <div class="form-group">
-                                <label for="home-title">Judul</label>
-                                <textarea id="home-title" name="home_title" rows="2" maxlength="160" required><?= htmlspecialchars($current_home_title, ENT_QUOTES, 'UTF-8') ?></textarea>
+                                <label for="home-title-input">Judul Sambutan</label>
+                                <textarea id="home-title-input" name="home_title" rows="2" maxlength="160" required><?= htmlspecialchars($current_home_title, ENT_QUOTES, 'UTF-8') ?></textarea>
+                                <div class="field-meta">
+                                    <span id="title-counter" class="char-counter">0 / 160</span>
+                                    <small class="settings-hint">Ideal 30–60 karakter untuk judul menarik</small>
+                                </div>
                             </div>
+
                             <div class="form-group">
-                                <label for="home-description">Deskripsi</label>
-                                <textarea id="home-description" name="home_description" rows="5" maxlength="1200" required><?= htmlspecialchars($current_home_description, ENT_QUOTES, 'UTF-8') ?></textarea>
+                                <label for="home-desc-input">Deskripsi Sambutan</label>
+                                <textarea id="home-desc-input" name="home_description" rows="5" maxlength="1200" required><?= htmlspecialchars($current_home_description, ENT_QUOTES, 'UTF-8') ?></textarea>
+                                <div class="field-meta">
+                                    <span id="desc-counter" class="char-counter">0 / 1200</span>
+                                    <small class="settings-hint">Ideal 150–300 karakter untuk narasi pembuka</small>
+                                </div>
                             </div>
-                            <button type="submit" name="save_home_content" class="btn btn-primary btn-with-icon"><?= admin_icon('save') ?>Simpan Konten Homepage</button>
+
+                            <button type="submit" name="save_home_content" class="btn btn-primary btn-with-icon">
+                                <?= admin_icon('save') ?><span>Simpan Konten Homepage</span>
+                            </button>
                         </form>
+
+                        <div class="section-hr"></div>
+
+                        <!-- Homepage Mini Simulator (Realtime Live Preview) -->
+                        <div class="simulator-wrapper">
+                            <div class="simulator-header">
+                                <span>📱 Simulasi Tampilan di Beranda (Live Preview)</span>
+                                <small>Teks ter-update seketika saat Anda mengetik</small>
+                            </div>
+                            <div class="home-simulator-card" aria-live="polite">
+                                <h4 id="sim-title" class="sim-title"><?= nl2br(htmlspecialchars($current_home_title, ENT_QUOTES, 'UTF-8')) ?></h4>
+                                <p id="sim-desc" class="sim-desc"><?= nl2br(htmlspecialchars($current_home_description, ENT_QUOTES, 'UTF-8')) ?></p>
+                            </div>
+                        </div>
                     </section>
                 </div>
             </div>
@@ -644,6 +728,125 @@ if (isset($_GET['tab'])) {
                     if (promptArea) promptArea.hidden = false;
                 });
             }
+        }
+
+        // Tab Tampilan: Logo Drag & Drop + Pre-upload Preview
+        var logoDropzone = document.getElementById('logo-dropzone');
+        var logoInput = document.getElementById('logo-file-input');
+        var logoPrompt = document.getElementById('logo-dropzone-prompt');
+        var logoPreviewArea = document.getElementById('logo-preview-area');
+        var logoPreviewImg = document.getElementById('logo-preview-img');
+        var logoPreviewFilename = document.getElementById('logo-preview-filename');
+        var logoResetBtn = document.getElementById('logo-preview-reset-btn');
+
+        if (logoDropzone && logoInput) {
+            function handleLogo(file) {
+                if (!file || file.type !== 'image/png') {
+                    alert('Format file harus berupa gambar PNG yang valid (.png)');
+                    return;
+                }
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    if (logoPreviewImg) logoPreviewImg.src = e.target.result;
+                    if (logoPreviewFilename) {
+                        var sizeKb = Math.round(file.size / 1024);
+                        logoPreviewFilename.textContent = file.name + ' (' + sizeKb + ' KB)';
+                    }
+                    if (logoPrompt) logoPrompt.hidden = true;
+                    if (logoPreviewArea) logoPreviewArea.hidden = false;
+                };
+                reader.readAsDataURL(file);
+            }
+
+            logoInput.addEventListener('change', function () {
+                if (this.files && this.files[0]) {
+                    handleLogo(this.files[0]);
+                }
+            });
+
+            ['dragenter', 'dragover'].forEach(function (eventName) {
+                logoDropzone.addEventListener(eventName, function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    logoDropzone.classList.add('is-dragover');
+                }, false);
+            });
+
+            ['dragleave', 'drop'].forEach(function (eventName) {
+                logoDropzone.addEventListener(eventName, function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    logoDropzone.classList.remove('is-dragover');
+                }, false);
+            });
+
+            logoDropzone.addEventListener('drop', function (e) {
+                var dt = e.dataTransfer;
+                if (dt && dt.files && dt.files.length > 0) {
+                    logoInput.files = dt.files;
+                    handleLogo(dt.files[0]);
+                }
+            });
+
+            if (logoResetBtn) {
+                logoResetBtn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    logoInput.value = '';
+                    if (logoPreviewImg) logoPreviewImg.src = '';
+                    if (logoPreviewArea) logoPreviewArea.hidden = true;
+                    if (logoPrompt) logoPrompt.hidden = false;
+                });
+            }
+        }
+
+        // Live Homepage Simulator & Character Counters
+        var titleInput = document.getElementById('home-title-input');
+        var descInput = document.getElementById('home-desc-input');
+        var titleCounter = document.getElementById('title-counter');
+        var descCounter = document.getElementById('desc-counter');
+        var simTitle = document.getElementById('sim-title');
+        var simDesc = document.getElementById('sim-desc');
+
+        function escapeHtml(text) {
+            var div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML.replace(/\n/g, '<br>');
+        }
+
+        function updateTitle() {
+            if (!titleInput) return;
+            var val = titleInput.value;
+            if (titleCounter) {
+                titleCounter.textContent = val.length + ' / ' + titleInput.maxLength;
+                titleCounter.classList.toggle('is-warning', val.length > 120);
+                titleCounter.classList.toggle('is-max', val.length >= titleInput.maxLength);
+            }
+            if (simTitle) {
+                simTitle.innerHTML = val.trim() ? escapeHtml(val) : '<em>(Judul Sambutan)</em>';
+            }
+        }
+
+        function updateDesc() {
+            if (!descInput) return;
+            var val = descInput.value;
+            if (descCounter) {
+                descCounter.textContent = val.length + ' / ' + descInput.maxLength;
+                descCounter.classList.toggle('is-warning', val.length > 1000);
+                descCounter.classList.toggle('is-max', val.length >= descInput.maxLength);
+            }
+            if (simDesc) {
+                simDesc.innerHTML = val.trim() ? escapeHtml(val) : '<em>(Deskripsi Sambutan)</em>';
+            }
+        }
+
+        if (titleInput) {
+            titleInput.addEventListener('input', updateTitle);
+            updateTitle();
+        }
+        if (descInput) {
+            descInput.addEventListener('input', updateDesc);
+            updateDesc();
         }
     });
     </script>

@@ -7,6 +7,13 @@ bukan penanda rilis atau versi aplikasi.
 ## 2026-11-17
 
 ### Added
+- **Optimasi UI Tab Logo & Konten Homepage Versi Laptop (Opsi A) ([admin/settings.php](file:///c:/xampp/htdocs/Alfi_Kitchen/admin/settings.php#tab-tampilan))**:
+  - Restrukturisasi tata letak layar laptop/desktop menjadi layout asimetris 360px : 1fr (`.settings-grid-tampilan`), menyeimbangkan kolom branding toko di kiri dan formulir konten sambutan di kanan.
+  - Menambahkan **Modern Drag & Drop Zone Logo** (`.hero-dropzone` / `#logo-dropzone`) dengan validasi khusus file PNG murni, efek *hover/dragover* dinamis, dan panduan spesifikasi logo (rasio 1:1, latar transparan).
+  - Menambahkan **Instant Pre-Upload Logo Preview**: logo PNG yang dipilih seketika tampil dalam frame avatar lingkaran 1:1 sebelum tombol simpan ditekan, lengkap dengan nama berkas dan tombol ganti foto.
+  - Kartu **Avatar Logo Aktif** (`.logo-active-card`): menampilkan logo aktif saat ini dalam frame melingkar berbayangan khas *floating logo* beranda dengan status badge `✓ Logo Aktif`.
+  - Menambahkan **Homepage Welcome Card Simulator** (`.home-simulator-card`): kotak simulasi mini beranda yang melakukan sinkronisasi *realtime* detik per detik saat judul dan deskripsi diketik di formulir.
+  - Menambahkan **Live Character Counter** pada textarea judul (`0 / 160`) dan deskripsi (`0 / 1200`) dengan highlight peringatan warna saat mendekati batas maksimal.
 - **Optimasi UI Tab Slider Beranda Versi Laptop (Opsi A) ([admin/settings.php](file:///c:/xampp/htdocs/Alfi_Kitchen/admin/settings.php#tab-slider))**:
   - Restrukturisasi tata letak layar laptop/desktop menjadi layout asimetris 360px : 1fr (`.settings-grid-slider`), memberikan ruang pandang yang jauh lebih luas dan proporsional untuk banner promosi.
   - Mengganti format tabel teks standar menjadi **Galeri Kartu Banner Visual (16:9)** (`.hero-cards-grid`) lengkap dengan badge urutan slide (`★ Slide #1 (Utama)`, `Slide #2`, dst.), nama berkas, dan tombol hapus terintegrasi.

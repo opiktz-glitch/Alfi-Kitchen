@@ -578,7 +578,8 @@
 
 /* === Tab Slider Beranda (Visual Grid & Drag-Drop UI) === */
 @media (min-width: 992px) {
-  .settings-grid-slider {
+  .settings-grid-slider,
+  .settings-grid-tampilan {
     grid-template-columns: 360px minmax(0, 1fr) !important;
     gap: 24px !important;
     align-items: start !important;
@@ -876,4 +877,107 @@
   margin: 0;
   font-size: 0.84rem;
   color: var(--muted);
+}
+
+/* === Tab Logo & Konten Homepage === */
+.logo-active-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fcf8f3;
+  margin-bottom: 16px;
+}
+.logo-active-avatar {
+  position: relative;
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  box-shadow: 0 4px 12px rgba(232, 147, 90, 0.25);
+  background: #fff8ef;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.logo-active-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.logo-preview-avatar {
+  margin: 0 auto 10px;
+}
+.logo-active-info {
+  min-width: 0;
+  flex: 1;
+}
+.logo-active-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 12px;
+  background: #eaf5ed;
+  color: #176532;
+  font-size: 0.72rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.logo-active-meta {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+.field-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 5px;
+  font-size: 0.74rem;
+}
+.char-counter {
+  font-weight: 600;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.char-counter.is-warning { color: #c05621; }
+.char-counter.is-max { color: #c53030; font-weight: 700; }
+
+/* Homepage Welcome Card Simulator */
+.simulator-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+.simulator-header span { font-size: 0.82rem; font-weight: 700; color: #783815; }
+.simulator-header small { font-size: 0.74rem; color: var(--muted); }
+.home-simulator-card {
+  background: var(--card, #fff1de);
+  border: 1px solid var(--line, #f0ddc0);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 6px 20px rgba(232, 147, 90, 0.08);
+  min-height: 130px;
+}
+.home-simulator-card .sim-title {
+  font-size: 1.55rem;
+  line-height: 1.18;
+  margin: 0 0 12px;
+  font-weight: 800;
+  color: var(--fg, #4a3728);
+}
+.home-simulator-card .sim-desc {
+  color: var(--muted, #5c4a3d);
+  font-size: 0.95rem;
+  margin: 0;
+  line-height: 1.65;
+  max-width: 50ch;
 }
