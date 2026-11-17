@@ -1,6 +1,7 @@
 <?php
 require 'auth_check.php';
 require_once __DIR__ . '/../includes/bootstrap.php';
+require_once __DIR__ . '/helpers/db_helper.php';
 require 'csrf_check.php';
 
 $productCount = (int) $pdo->query('SELECT COUNT(*) FROM products')->fetchColumn();
