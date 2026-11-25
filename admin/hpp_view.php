@@ -105,26 +105,15 @@ if ($costPerJar <= 0) {
     $costPerJar = (int) ceil($roundedTotal / $yieldJars);
 }
 
-// Skenario Margin Standar (50%, 75%, 100%, 200%)
-$marginPercentages = [50, 75, 100, 200];
-$targetMargin = (float) ($recipe['target_margin_percent'] ?? 0);
-if ($targetMargin > 0 && !in_array((int) round($targetMargin), $marginPercentages, true)) {
-    $marginPercentages[] = round($targetMargin, 1);
-    sort($marginPercentages);
-}
-
-$scenarios = [];
-foreach ($marginPercentages as $pct) {
-    $profit = round($roundedTotal * ($pct / 100));
-    $batchPrice = $roundedTotal + $profit;
-    $jarPrice = round($batchPrice / $yieldJars);
-    $scenarios[] = [
-        'percent' => $pct,
-        'profit' => $profit,
-        'batch_price' => $batchPrice,
-        'jar_price' => $jarPrice,
-        'is_target' => (abs($pct - $targetMargin) < 0.01),
-    ];
+$linkedPrice = null;
+$linkedProductItemId = (int) ($recipe['product_item_id'] ?? 0);
+if ($linkedProductItemId > 0) {
+    $priceStmt = $pdo->prepare('SELECT price FROM product_items WHERE id = ? LIMIT 1');
+    $priceStmt->execute([$linkedProductItemId]);
+    $rawPrice = $priceStmt->fetchColumn();
+    if ($rawPrice !== false) {
+        $linkedPrice = (int) $rawPrice;
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -264,40 +253,16 @@ foreach ($marginPercentages as $pct) {
                                 <td><strong>Harga per kemasan (1 resep = <?= $yieldJars ?> kemasan)</strong></td>
                                 <td class="num-col">Rp <?= format_decimal($costPerJar, 0) ?></td>
                             </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Bagian 4: Simulasi Rencana Margin & Harga Jual -->
-                <div class="hpp-sheet-section-header">
-                    <h3 class="hpp-sheet-section-title">Rencana Margin &amp; Rekomendasi Harga Jual</h3>
-                </div>
-                <div class="table-responsive">
-                    <table class="hpp-sheet-table hpp-sheet-margin-table">
-                        <thead>
-                            <tr>
-                                <th>Rencana Margin</th>
-                                <th class="num-col">Perkiraan Laba (Rp)</th>
-                                <th class="num-col">Harga Jual 1 Resep (Rp)</th>
-                                <th class="num-col th-jar-price">Harga / Kemasan (Rp)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($scenarios as $sc): ?>
-                                <tr class="<?= $sc['is_target'] ? 'row-selected-margin' : '' ?>">
-                                    <td>
-                                        <strong><?= $sc['percent'] ?>%</strong>
-                                        <?php if ($sc['is_target']): ?>
-                                            <span class="hpp-target-tag">Target Toko</span>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td class="num-col"><?= format_decimal($sc['profit'], 0) ?></td>
-                                    <td class="num-col"><?= format_decimal($sc['batch_price'], 0) ?></td>
-                                    <td class="num-col hpp-jar-price-cell">
-                                        <strong>Rp <?= format_decimal($sc['jar_price'], 0) ?></strong>
+                            <?php if ($linkedPrice !== null): ?>
+                                <?php $actualProfit = $linkedPrice - $costPerJar; ?>
+                                <tr>
+                                    <td><strong>Harga Jual Produk Saat Ini</strong></td>
+                                    <td class="num-col">
+                                        Rp <?= format_decimal($linkedPrice, 0) ?>
+                                        (Laba: <?= $actualProfit >= 0 ? 'Rp ' . format_decimal($actualProfit, 0) : '-Rp ' . format_decimal(abs($actualProfit), 0) ?>)
                                     </td>
                                 </tr>
-                            <?php endforeach; ?>
+                            <?php endif; ?>
                         </tbody>
                     </table>
                 </div>

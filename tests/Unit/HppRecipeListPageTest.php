@@ -65,7 +65,8 @@ class HppRecipeListPageTest extends TestCase
         $this->assertStringContainsString('Bahan Baku', $viewPage);
         $this->assertStringContainsString('Operasional', $viewPage);
         $this->assertStringContainsString('Pembulatan (Harga 1 Resep)', $viewPage);
-        $this->assertStringContainsString('Rencana Margin', $viewPage);
+        $this->assertStringContainsString('Harga per kemasan', $viewPage);
+        $this->assertStringNotContainsString('Rencana Margin', $viewPage);
         $this->assertStringContainsString('window.print()', $viewPage);
         $this->assertStringContainsString('hpp-mobile-bottom-bar', $viewPage);
         $this->assertStringContainsString('mobile-only', $viewPage);
