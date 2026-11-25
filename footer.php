@@ -14,18 +14,25 @@ $fi = $fi_stmt->fetchAll(PDO::FETCH_KEY_PAIR);
 <footer class="site-footer">
   <div class="footer-inner">
     <div class="footer-col footer-brand">
-      <?php if(file_exists(__DIR__ . '/uploads/logo.png')): ?>
-        <img src="uploads/logo.png?v=<?= time() ?>" class="footer-logo" alt="Alfi Kitchen">
-      <?php else: ?>
+      <?php
+      $footerLogoFile = __DIR__ . '/uploads/logo.png';
+      $footerFallbackLogo = require __DIR__ . '/includes/fallback_logo.php';
+      $footerLogoSrc = file_exists($footerLogoFile) ? 'uploads/logo.png?v=' . filemtime($footerLogoFile) : $footerFallbackLogo;
+      ?>
+      <img src="<?= htmlspecialchars($footerLogoSrc, ENT_QUOTES, 'UTF-8') ?>" class="footer-logo" width="72" height="72" alt="Alfi Kitchen" loading="lazy">
+      <div class="footer-brand-copy">
         <span class="footer-brand-text">Alfi Kitchen</span>
-      <?php endif; ?>
+        <p class="footer-tagline">Puding, dessert, dan salad buah buatan rumahan dari bahan pilihan.</p>
+      </div>
     </div>
     <div class="footer-col footer-links">
+      <h3 class="footer-heading">Informasi</h3>
       <a href="about.php">Tentang Kami</a>
       <a href="privacy.php">Kebijakan Privasi</a>
       <a href="terms.php">Syarat & Ketentuan</a>
     </div>
     <div class="footer-col footer-contact">
+      <h3 class="footer-heading">Kontak &amp; Jam</h3>
       <?php if (!empty($fi['footer_hours'])): ?>
         <div class="footer-item"><span class="footer-label">Jam:</span> <span><?= htmlspecialchars($fi['footer_hours']) ?></span></div>
       <?php endif; ?>
@@ -40,15 +47,18 @@ $fi = $fi_stmt->fetchAll(PDO::FETCH_KEY_PAIR);
       <?php endif; ?>
     </div>
     <div class="footer-col footer-social">
-      <?php if (!empty($fi['footer_instagram'])): ?>
-        <a href="<?= htmlspecialchars($fi['footer_instagram']) ?>" target="_blank" rel="noopener" class="footer-social-link instagram" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="17.5" x2="19.18" y2="19.18"/></svg></a>
-      <?php endif; ?>
-      <?php if (!empty($fi['footer_facebook'])): ?>
-        <a href="<?= htmlspecialchars($fi['footer_facebook']) ?>" target="_blank" rel="noopener" class="footer-social-link facebook" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
-      <?php endif; ?>
-      <?php if (!empty($fi['footer_tiktok'])): ?>
-        <a href="<?= htmlspecialchars($fi['footer_tiktok']) ?>" target="_blank" rel="noopener" class="footer-social-link tiktok" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.19 11.2c.36-.2.59-.53.59-.95v-1c0-.8-.4-1.57-1.08-2.03-1.26-.84-3.32-.52-4.59 1.53C14.28 10.34 14 11.08 14 12c0 .94-.28 1.67-.69 2.18-1.34 1.68-1.94 3.67-1.04 4.89.83 1.14 3.06 1.62 4.33 1s1.5-.7 1.72-1c.61-.8.8-2.06.47-3.15-.4-1.33-1-2.3-1.87-3.02-.64-.53-.83-1.5-.56-2.26.4-1.03 1.67-1.76 2.68-1.4z"/></svg></a>
-      <?php endif; ?>
+      <h3 class="footer-heading">Ikuti Kami</h3>
+      <div class="footer-social-links">
+        <?php if (!empty($fi['footer_instagram'])): ?>
+          <a href="<?= htmlspecialchars($fi['footer_instagram']) ?>" target="_blank" rel="noopener" class="footer-social-link instagram" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="17.5" x2="19.18" y2="19.18"/></svg></a>
+        <?php endif; ?>
+        <?php if (!empty($fi['footer_facebook'])): ?>
+          <a href="<?= htmlspecialchars($fi['footer_facebook']) ?>" target="_blank" rel="noopener" class="footer-social-link facebook" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+        <?php endif; ?>
+        <?php if (!empty($fi['footer_tiktok'])): ?>
+          <a href="<?= htmlspecialchars($fi['footer_tiktok']) ?>" target="_blank" rel="noopener" class="footer-social-link tiktok" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.19 11.2c.36-.2.59-.53.59-.95v-1c0-.8-.4-1.57-1.08-2.03-1.26-.84-3.32-.52-4.59 1.53C14.28 10.34 14 11.08 14 12c0 .94-.28 1.67-.69 2.18-1.34 1.68-1.94 3.67-1.04 4.89.83 1.14 3.06 1.62 4.33 1s1.5-.7 1.72-1c.61-.8.8-2.06.47-3.15-.4-1.33-1-2.3-1.87-3.02-.64-.53-.83-1.5-.56-2.26.4-1.03 1.67-1.76 2.68-1.4z"/></svg></a>
+        <?php endif; ?>
+      </div>
     </div>
   </div>
   <div class="footer-bottom">
