@@ -272,7 +272,7 @@ $escape = static function ($value): string {
                             <input id="ingredient-form-name" type="text" name="name" maxlength="120" required value="<?= $escape($formValues['name'] ?? '') ?>">
                         </div>
                         <div class="form-group">
-                            <label for="ingredient-form-pack-size">Isi Kemasan <span class="field-info-tip" tabindex="0" data-tip="Contoh: 1000 atau 0,5 (maks. 3 angka di belakang koma)" aria-label="Contoh: 1000 atau 0,5 (maks. 3 angka di belakang koma)">i</span></label>
+                            <label for="ingredient-form-pack-size">Isi Kemasan <span class="field-info-tip" tabindex="0" data-tip="Contoh: 1000 atau 0,5 (maks. 3 angka di belakang koma)" title="Contoh: 1000 atau 0,5 (maks. 3 angka di belakang koma)" aria-label="Contoh: 1000 atau 0,5 (maks. 3 angka di belakang koma)"><?= admin_icon('info') ?></span></label>
                             <input id="ingredient-form-pack-size" type="text" name="pack_size" inputmode="decimal" pattern="[0-9]+([.,][0-9]{1,3})?" required value="<?= $escape($cleanPackSize($formValues['pack_size'] ?? '')) ?>">
                         </div>
                         <div class="form-group">

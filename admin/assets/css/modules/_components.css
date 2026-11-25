@@ -885,11 +885,12 @@ td:has(.thumb-hero) {
 /* Info Tooltip Icon & Search Icon */
 .field-info-tip {
   position: relative; display: inline-flex; align-items: center; justify-content: center;
-  width: 16px; height: 16px; margin-left: 5px; border-radius: 50%;
-  background: #efe4d6; color: #6e4420; font-size: 0.68rem; font-weight: 700; font-style: normal;
-  line-height: 1; cursor: help; vertical-align: middle; user-select: none;
+  width: 18px; height: 18px; margin-left: 4px; border-radius: 50%;
+  background: transparent; color: #8c5a2b; line-height: 1;
+  cursor: help; vertical-align: middle; user-select: none; flex-shrink: 0;
 }
-.field-info-tip:hover, .field-info-tip:focus-visible { background: #dfc8ac; outline: none; }
+.field-info-tip .admin-icon { width: 15px; height: 15px; display: block; }
+.field-info-tip:hover, .field-info-tip:focus-visible { background: #efe4d6; color: #5c3412; outline: none; }
 .field-info-tip::after {
   content: attr(data-tip); position: absolute; left: 50%; bottom: calc(100% + 7px);
   transform: translateX(-50%); width: max-content; max-width: 240px; padding: 6px 10px;

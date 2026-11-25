@@ -407,7 +407,7 @@ $csrfToken = generate_csrf_token();
 
                     <section class="form-card hpp-materials-card">
                         <div class="hpp-editor-section-heading">
-                            <h3>Bahan <span class="field-info-tip" tabindex="0" data-tip="Ketik nama bahan master pada kolom tambah cepat di bawah lalu tekan Enter." aria-label="Ketik nama bahan master pada kolom tambah cepat di bawah lalu tekan Enter.">i</span></h3>
+                            <h3>Bahan</h3>
                             <a href="hpp_ingredients.php" target="_blank" class="hpp-link-subtle" title="Buka Master Bahan di tab baru"><?= admin_icon('manage') ?> <span>Master Bahan</span></a>
                         </div>
 
@@ -424,6 +424,7 @@ $csrfToken = generate_csrf_token();
                                 <input type="text" id="quick-ingredient-input" list="master-ingredients-datalist" aria-label="Cari bahan master untuk tambah cepat" autocomplete="off">
                             </div>
                             <button type="button" class="btn btn-secondary btn-sm btn-with-icon" id="btn-quick-add"><?= admin_icon('add') ?><span>Tambah Cepat</span></button>
+                            <span class="field-info-tip" tabindex="0" data-tip="Ketik nama bahan master lalu tekan Enter atau klik Tambah Cepat." title="Ketik nama bahan master lalu tekan Enter atau klik Tambah Cepat." aria-label="Ketik nama bahan master lalu tekan Enter atau klik Tambah Cepat."><?= admin_icon('info') ?></span>
                         </div>
 
                         <div class="hpp-table-header hpp-materials-header" aria-hidden="true">
