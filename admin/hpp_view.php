@@ -261,7 +261,7 @@ foreach ($marginPercentages as $pct) {
                                 <td class="num-col">Rp <?= format_decimal($roundedTotal, 0) ?></td>
                             </tr>
                             <tr class="row-highlight">
-                                <td><strong>Harga per jar (1 resep = <?= $yieldJars ?> jar)</strong></td>
+                                <td><strong>Harga per kemasan (1 resep = <?= $yieldJars ?> kemasan)</strong></td>
                                 <td class="num-col">Rp <?= format_decimal($costPerJar, 0) ?></td>
                             </tr>
                         </tbody>

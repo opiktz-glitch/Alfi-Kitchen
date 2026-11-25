@@ -112,7 +112,7 @@ $items = $stmt->fetchAll();
                     <input type="text" name="name" required>
                 </div>
                 <div class="form-group">
-                    <label>Harga (Rp)</label>
+                    <label>Harga (Rp) <span class="field-info-tip" tabindex="0" data-tip="Ketik angka saja tanpa titik atau Rp (mis. 15000)." title="Ketik angka saja tanpa titik atau Rp (mis. 15000)." aria-label="Ketik angka saja tanpa titik atau Rp (mis. 15000)."><?= admin_icon('info') ?></span></label>
                     <input type="number" name="price" required>
                 </div>
                 <div class="form-group form-span-full">

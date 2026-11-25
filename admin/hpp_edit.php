@@ -391,11 +391,11 @@ $csrfToken = generate_csrf_token();
                                 <input id="recipe-variant" type="text" name="variant" maxlength="40" value="<?= $escape($value('variant')) ?>">
                             </div>
                             <div class="form-group hpp-strip-yield">
-                                <label for="recipe-yield">Jumlah Porsi / Kemasan</label>
+                                <label for="recipe-yield">Jumlah Porsi / Kemasan <span class="field-info-tip" tabindex="0" data-tip="Jumlah jar atau porsi yang dihasilkan dalam 1 kali resep (mis. 8)." title="Jumlah jar atau porsi yang dihasilkan dalam 1 kali resep (mis. 8)." aria-label="Jumlah jar atau porsi yang dihasilkan dalam 1 kali resep (mis. 8)."><?= admin_icon('info') ?></span></label>
                                 <input id="recipe-yield" type="number" name="yield_jars" min="1" max="200" step="1" required value="<?= $escape($value('yield_jars', '1')) ?>">
                             </div>
                             <div class="form-group hpp-strip-jar-ml">
-                                <label for="recipe-jar-ml">Ukuran (ml/g)</label>
+                                <label for="recipe-jar-ml">Ukuran (ml/g) <span class="field-info-tip" tabindex="0" data-tip="Opsional — volume atau berat per kemasan (mis. 200)." title="Opsional — volume atau berat per kemasan (mis. 200)." aria-label="Opsional — volume atau berat per kemasan (mis. 200)."><?= admin_icon('info') ?></span></label>
                                 <input id="recipe-jar-ml" type="number" name="jar_ml" min="1" max="32767" step="1" value="<?= $escape($value('jar_ml')) ?>">
                             </div>
                             <div class="form-group hpp-strip-note">
@@ -488,7 +488,7 @@ $csrfToken = generate_csrf_token();
                             <div><span>Biaya operasional</span><strong data-total-operational>Rp 0</strong></div>
                             <div><span>Total biaya aktual</span><strong data-total-actual>Rp 0</strong></div>
                             <div><span>HPP resep (dibulatkan ke atas)</span><strong data-hpp-recipe>Rp 0</strong></div>
-                            <div><span>HPP per jar</span><strong data-hpp-per-jar>Rp 0</strong></div>
+                            <div><span>HPP per kemasan</span><strong data-hpp-per-jar>Rp 0</strong></div>
                         </div>
                         <div class="hpp-scenarios-heading">
                             <span>Skenario Markup &amp; Rekomendasi Harga</span>
@@ -608,13 +608,13 @@ $csrfToken = generate_csrf_token();
                                 <dd>Rp <?= format_decimal(ceil((float) $applyPreview['new_price']), 0) ?></dd>
                             </div>
                             <div>
-                                <dt>HPP per jar</dt>
+                                <dt>HPP per kemasan</dt>
                                 <dd>Rp <?= format_decimal(ceil((float) $applyPreview['hpp_per_jar']), 0) ?></dd>
                             </div>
                         </dl>
                         <?php if ($applyPreview['below_hpp']): ?>
                             <div class="alert alert-error" role="alert">
-                                Harga baru berada di bawah HPP per jar. Peringatan ini bersifat informatif; harga tetap hanya berubah jika Anda mengonfirmasi.
+                                Harga baru berada di bawah HPP per kemasan. Peringatan ini bersifat informatif; harga tetap hanya berubah jika Anda mengonfirmasi.
                             </div>
                         <?php endif; ?>
                         <form method="post" action="hpp_edit.php?id=<?= (int) $recipeId ?>" class="hpp-confirm-price-actions" data-submit-lock>
@@ -674,7 +674,7 @@ $csrfToken = generate_csrf_token();
                             <label class="hpp-row-label">Jenis perhitungan</label>
                             <select name="costs[__INDEX__][calc_type]" data-cost-type>
                                 <option value="pct_bahan">Persentase dari total bahan (%)</option>
-                                <option value="per_jar">Biaya per jar (Rp)</option>
+                                <option value="per_jar">Biaya per kemasan (Rp)</option>
                                 <option value="flat">Biaya tetap per resep (Rp)</option>
                             </select>
                         </div>

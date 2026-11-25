@@ -96,7 +96,7 @@ $recipes = $schemaReady ? hpp_get_recipe_list($pdo) : [];
                             <thead>
                                 <tr>
                                     <th>Nama resep / varian</th>
-                                    <th>HPP per jar</th>
+                                    <th>HPP per kemasan</th>
                                     <th>Harga jual saat ini</th>
                                     <th>Status bahan</th>
                                     <th>Aksi</th>
@@ -132,7 +132,7 @@ $recipes = $schemaReady ? hpp_get_recipe_list($pdo) : [];
                                                 </small>
                                             <?php endif; ?>
                                         </td>
-                                        <td data-label="HPP per jar" class="table-cell-center">Rp <?= format_decimal(ceil((float) $recipe['hpp_per_jar']), 0) ?></td>
+                                        <td data-label="HPP per kemasan" class="table-cell-center">Rp <?= format_decimal(ceil((float) $recipe['hpp_per_jar']), 0) ?></td>
                                         <td data-label="Harga jual saat ini" class="table-cell-center">
                                             <?php if ($recipe['public_price'] !== null): ?>
                                                 Rp <?= format_decimal(ceil((float) $recipe['public_price']), 0) ?>

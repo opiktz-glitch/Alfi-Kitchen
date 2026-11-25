@@ -14,7 +14,7 @@ class HppRecipeListPageTest extends TestCase
         $this->assertStringContainsString("require 'csrf_check.php'", $page);
         $this->assertStringContainsString('Lihat Website', $page);
         $this->assertStringContainsString('name="csrf_token"', $page);
-        $this->assertStringContainsString('HPP per jar', $page);
+        $this->assertStringContainsString('HPP per kemasan', $page);
         $this->assertStringContainsString('Harga jual saat ini', $page);
         $this->assertStringContainsString('Harga bahan berubah', $page);
         $this->assertStringContainsString('hpp_get_recipe_list(', $page);
