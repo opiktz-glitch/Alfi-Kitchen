@@ -6,7 +6,7 @@
 <?php if (!empty($preloadImage)): ?>
 <link rel="preload" as="image" href="<?= htmlspecialchars($preloadImage, ENT_QUOTES, 'UTF-8') ?>" fetchpriority="high"<?php if (!empty($preloadImageSrcset)): ?> imagesrcset="<?= htmlspecialchars($preloadImageSrcset, ENT_QUOTES, 'UTF-8') ?>" imagesizes="<?= htmlspecialchars($preloadImageSizes ?? '100vw', ENT_QUOTES, 'UTF-8') ?>"<?php endif; ?>>
 <?php endif; ?>
-<meta name="theme-color" content="#fff8ef">
+<meta name="theme-color" content="#fbf1e3">
 <title><?= htmlspecialchars($pageTitle ?? 'Alfi Kitchen — Landing Page', ENT_QUOTES, 'UTF-8') ?></title>
 <meta name="description" content="<?= htmlspecialchars($pageDescription ?? 'Puding, dessert, dan salad buah buatan rumahan dari Alfi Kitchen. Pesan langsung melalui WhatsApp.', ENT_QUOTES, 'UTF-8') ?>">
 <?php
@@ -91,11 +91,11 @@ $seoType = $ogType ?? 'website';
 <meta name="apple-mobile-web-app-title" content="Alfi Kitchen">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Playfair+Display:ital,wght@1,600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Playfair+Display:ital,wght@1,600&display=swap"></noscript>
+<link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap"></noscript>
 <style>
   :root{
-    --bg:#fff8ef; --fg:#4a3728; --muted:#5c4a3d; --accent:#e8935a; --card:#fff1de; --line:#f0ddc0;
+    --bg:#fbf1e3; --fg:#3b2a1e; --muted:#5e4129; --accent:#b4501a; --card:#ffffff; --line:#eedec9;
     box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
   }
   *{box-sizing:border-box; transition: all 0.2s ease;}

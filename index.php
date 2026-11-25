@@ -3,8 +3,8 @@ require_once __DIR__ . '/includes/bootstrap.php';
 $pageTitle = 'Puding, Dessert & Salad Buah Rumahan | Alfi Kitchen';
 $pageDescription = 'Pesan puding, dessert, dan salad buah rumahan dari Alfi Kitchen. Dibuat dari bahan pilihan dan dapat dipesan langsung melalui WhatsApp.';
 
-// Fetch products from database
-$stmt = $pdo->query("SELECT * FROM products ORDER BY id ASC");
+// Fetch products from database along with variant counts
+$stmt = $pdo->query("SELECT p.*, COUNT(pi.id) AS item_count FROM products p LEFT JOIN product_items pi ON pi.product_id = p.id GROUP BY p.id ORDER BY p.id ASC");
 $products = $stmt->fetchAll();
 
 // Fetch hero images
@@ -32,6 +32,7 @@ require_once __DIR__ . '/includes/seo_helpers.php';
 $waStmt = $pdo->prepare("SELECT setting_value FROM settings WHERE setting_key = 'whatsapp_number'");
 $waStmt->execute();
 $waDigits = preg_replace('/\D+/', '', (string) ($waStmt->fetchColumn() ?: ''));
+$heroWaUrl = $waDigits !== '' ? whatsapp_url($waDigits, 'Halo Alfi Kitchen, saya ingin memesan produk Anda.') : '#menu';
 
 $jsonLd = [
 	'@context' => 'https://schema.org',

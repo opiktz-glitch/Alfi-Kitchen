@@ -1,19 +1,145 @@
 <?php include 'header.php'; ?>
 
 <style>
-/* Hero Touch Slider (Native, Ultra-Lightweight & Zero Unused JS) */
-.hero.swiper {
+.home-shell {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+/* Top Navbar Minimalis */
+.home-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 0;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+}
+.home-brand {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--fg);
+  text-decoration: none;
+  letter-spacing: -0.01em;
+}
+.home-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  font-weight: 600;
+  font-size: 15px;
+}
+.home-nav-links a {
+  color: var(--fg);
+  text-decoration: none;
+}
+.home-nav-links a:hover,
+.home-nav-links a.home-nav-cta {
+  color: var(--accent);
+}
+.home-nav-links a.home-nav-cta:hover {
+  opacity: 0.85;
+}
+
+/* Hero Split (Opsi A — Krem Hangat) */
+.home-hero-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  gap: 48px;
+  align-items: center;
+  padding: 32px 0 64px;
+}
+.home-hero-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 22px;
+  min-width: 0;
+}
+.home-eyebrow {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  text-transform: uppercase;
+}
+.home-hero-copy h1 {
+  margin: 0;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(2.15rem, 4.8vw, 60px);
+  line-height: 1.05;
+  font-weight: 700;
+  color: var(--fg);
+}
+.home-hero-copy p {
+  margin: 0;
+  font-size: clamp(1rem, 1.4vw, 18px);
+  line-height: 1.7;
+  color: var(--muted);
+  max-width: 46ch;
+}
+.home-hero-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.home-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent);
+  color: #fff;
+  padding: 15px 28px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 15px;
+  text-decoration: none;
+  box-shadow: 0 8px 20px rgba(180, 80, 26, 0.22);
+}
+.home-btn-primary:hover {
+  background: #9c4314;
+  transform: translateY(-2px);
+}
+.home-btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--fg);
+  color: var(--fg);
+  padding: 13px 26px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 15px;
+  text-decoration: none;
+  background: transparent;
+}
+.home-btn-outline:hover {
+  background: var(--fg);
+  color: var(--bg);
+}
+
+/* Right Hero Slider Frame + Floating Badge */
+.home-hero-media {
+  position: relative;
+  min-width: 0;
+}
+.home-hero-media .hero.swiper {
   position: relative;
   overflow: hidden;
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  max-height: 520px;
-  background: #f7e6d2;
+  width: 100% !important;
+  height: 480px;
+  max-height: none;
+  margin: 0 !important;
+  border-radius: 32px;
+  background: #f4cf9f;
   touch-action: pan-y pinch-zoom;
   user-select: none;
   cursor: grab;
+  box-shadow: 0 18px 40px rgba(59, 42, 30, 0.12);
 }
-.hero.swiper:active {
+.home-hero-media .hero.swiper:active {
   cursor: grabbing;
 }
 .hero .swiper-wrapper {
@@ -29,9 +155,24 @@
   height: 100%;
   position: relative;
 }
+.hero .swiper-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.home-hero-media .floating-logo {
+  top: 16px;
+  left: 16px;
+  width: 64px;
+  height: 64px;
+  border: 2px solid #fff;
+  background: var(--accent);
+  box-shadow: 0 4px 14px rgba(59, 42, 30, 0.25);
+}
 .hero .swiper-pagination {
   position: absolute;
-  bottom: 14px;
+  bottom: 16px;
   left: 0;
   width: 100%;
   display: flex;
@@ -45,9 +186,9 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.6);
-  border: 1px solid rgba(0, 0, 0, 0.15);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+  background: rgba(255, 255, 255, 0.7);
+  border: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   cursor: pointer;
   transition: all 0.3s ease;
   padding: 0;
@@ -56,88 +197,230 @@
 .hero .swiper-pagination-bullet-active {
   background: #ffffff;
   width: 24px;
-  border-radius: 12px;
+  border-radius: 4px;
+}
+.home-fresh-badge {
+  position: absolute;
+  left: -16px;
+  bottom: 32px;
+  z-index: 25;
+  background: #fff;
+  color: var(--fg);
+  padding: 12px 20px;
+  border-radius: 999px;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: 20px;
+  box-shadow: 0 10px 26px rgba(59, 42, 30, 0.14);
+  pointer-events: none;
+}
+
+/* Section Produk */
+.home-products-section {
+  padding-bottom: 64px;
+}
+.home-products-heading {
+  margin: 0 0 24px;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(1.7rem, 3vw, 34px);
+  font-weight: 700;
+  color: var(--fg);
+}
+.home-product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+}
+.home-product-card {
+  background: #fff;
+  border-radius: 24px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  box-shadow: 0 6px 20px rgba(59, 42, 30, 0.04);
+}
+.home-product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 30px rgba(59, 42, 30, 0.09);
+}
+.home-product-card:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+.home-product-thumb {
+  height: 180px;
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #f9dcc0;
+}
+.home-product-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.home-product-thumb .ph {
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+}
+.home-product-card h3 {
+  margin: 16px 8px 6px;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--fg);
+}
+.home-product-card p {
+  margin: 0 8px 8px;
+  color: var(--muted);
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 860px) {
+  .home-hero-split {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding: 20px 0 48px;
+  }
+  .home-hero-media .hero.swiper {
+    height: auto;
+    aspect-ratio: 4 / 3;
+    max-height: 440px;
+  }
+  .home-fresh-badge {
+    left: 12px;
+    bottom: 20px;
+    font-size: 17px;
+    padding: 9px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .home-shell {
+    padding: 0 20px;
+  }
+  .home-nav {
+    padding: 18px 0;
+  }
+  .home-brand {
+    font-size: 22px;
+  }
+  .home-nav-links {
+    gap: 18px;
+    font-size: 14px;
+  }
+  .home-hero-media .hero.swiper {
+    border-radius: 24px;
+  }
+  .home-product-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
 }
 </style>
 
-<div class="hero swiper mySwiper" id="heroSlider" aria-roledescription="carousel" aria-label="Slider Promo">
-  <div class="swiper-wrapper" id="heroWrapper">
-      <?php if (!empty($hero_images)): ?>
-          <?php foreach ($hero_images as $index => $img): ?>
-              <?php
-              $heroFile = urlencode($img['image']);
-              $heroSrc420 = 'thumb.php?file=' . $heroFile . '&w=420&q=65';
-              $heroSrc640 = 'thumb.php?file=' . $heroFile . '&w=640&q=65';
-              $heroSrc800 = 'thumb.php?file=' . $heroFile . '&w=800&q=68';
-              ?>
-              <div class="swiper-slide">
+<div class="home-shell">
+  <nav class="home-nav" aria-label="Navigasi Utama">
+    <a href="index.php" class="home-brand">Alfi Kitchen</a>
+    <div class="home-nav-links">
+      <a href="#menu">Menu</a>
+      <a href="about.php">Tentang</a>
+      <a href="<?= htmlspecialchars($heroWaUrl ?? '#menu', ENT_QUOTES, 'UTF-8') ?>"<?= !empty($waDigits) ? ' target="_blank" rel="noopener noreferrer"' : '' ?> class="home-nav-cta">Pesan</a>
+    </div>
+  </nav>
+
+  <main>
+    <section class="home-hero-split" aria-label="Perkenalan Alfi Kitchen">
+      <div class="home-hero-copy">
+        <span class="home-eyebrow">PUDING · DESSERT · SALAD BUAH</span>
+        <h1><?= nl2br(htmlspecialchars($homeTitle, ENT_QUOTES, 'UTF-8')) ?></h1>
+        <p><?= nl2br(htmlspecialchars($homeDescription, ENT_QUOTES, 'UTF-8')) ?></p>
+        <div class="home-hero-actions">
+          <a href="<?= htmlspecialchars($heroWaUrl ?? '#menu', ENT_QUOTES, 'UTF-8') ?>"<?= !empty($waDigits) ? ' target="_blank" rel="noopener noreferrer"' : '' ?> class="home-btn-primary">Pesan via WhatsApp</a>
+          <a href="#menu" class="home-btn-outline">Lihat Menu</a>
+        </div>
+      </div>
+
+      <div class="home-hero-media">
+        <div class="hero swiper mySwiper" id="heroSlider" aria-roledescription="carousel" aria-label="Slider Promo">
+          <div class="swiper-wrapper" id="heroWrapper">
+            <?php if (!empty($hero_images)): ?>
+              <?php foreach ($hero_images as $index => $img): ?>
+                <?php
+                $heroFile = urlencode($img['image']);
+                $heroSrc420 = 'thumb.php?file=' . $heroFile . '&w=420&q=65';
+                $heroSrc640 = 'thumb.php?file=' . $heroFile . '&w=640&q=65';
+                $heroSrc800 = 'thumb.php?file=' . $heroFile . '&w=800&q=68';
+                ?>
+                <div class="swiper-slide">
                   <img src="<?= $heroSrc640 ?>"
                        srcset="<?= $heroSrc420 ?> 420w, <?= $heroSrc640 ?> 640w, <?= $heroSrc800 ?> 800w"
-                       sizes="(max-width: 480px) 100vw, (max-width: 768px) 640px, 800px"
+                       sizes="(max-width: 480px) 100vw, (max-width: 860px) 640px, 540px"
                        alt="Promo produk Alfi Kitchen: puding, dessert, dan salad buah rumahan"
                        width="800" height="450"
                        <?= $index === 0 ? 'fetchpriority="high"' : 'loading="lazy"' ?>
-                       decoding="async"
-                       style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                       decoding="async">
+                </div>
+              <?php endforeach; ?>
+            <?php else: ?>
+              <div class="swiper-slide">
+                <img src="thumb.php?file=hero.jpg&w=640&q=65"
+                     srcset="thumb.php?file=hero.jpg&w=420&q=65 420w, thumb.php?file=hero.jpg&w=640&q=65 640w, thumb.php?file=hero.jpg&w=800&q=68 800w"
+                     sizes="(max-width: 480px) 100vw, (max-width: 860px) 640px, 540px"
+                     alt="Puding, dessert, dan salad buah rumahan Alfi Kitchen"
+                     width="800" height="450"
+                     fetchpriority="high"
+                     decoding="async">
               </div>
-          <?php endforeach; ?>
-      <?php else: ?>
-          <div class="swiper-slide">
-              <img src="thumb.php?file=hero.jpg&w=640&q=65"
-                   srcset="thumb.php?file=hero.jpg&w=420&q=65 420w, thumb.php?file=hero.jpg&w=640&q=65 640w, thumb.php?file=hero.jpg&w=800&q=68 800w"
-                   sizes="(max-width: 480px) 100vw, (max-width: 768px) 640px, 800px"
-                   alt="Puding, dessert, dan salad buah rumahan Alfi Kitchen"
-                   width="800" height="450"
-                   fetchpriority="high"
-                   decoding="async"
-                   style="width: 100%; height: 100%; object-fit: cover; display: block;">
+            <?php endif; ?>
           </div>
-      <?php endif; ?>
-  </div>
-  
-  <!-- Logo Melayang (Floating) -->
-  <?php
-  $logo_path = 'uploads/logo.png';
-  $logo_file = __DIR__ . '/../' . $logo_path;
-  // Pakai filemtime (bukan time()) agar logo tetap bisa di-cache browser/CDN
-  $fallbackLogo = require __DIR__ . '/../includes/fallback_logo.php';
-  $logo_src = file_exists($logo_file) ? 'uploads/logo.png?v=' . filemtime($logo_file) : $fallbackLogo;
-  ?>
-  <a href="index.php" class="floating-logo" title="Alfi Kitchen">
-      <img src="<?= $logo_src ?>" width="75" height="75" alt="Alfi Kitchen Logo">
-  </a>
 
-  <!-- Navigasi pagination bullet -->
-  <div class="swiper-pagination" id="heroPagination"></div>
-</div>
+          <?php
+          $logo_path = 'uploads/logo.png';
+          $logo_file = __DIR__ . '/../' . $logo_path;
+          $fallbackLogo = require __DIR__ . '/../includes/fallback_logo.php';
+          $logo_src = file_exists($logo_file) ? 'uploads/logo.png?v=' . filemtime($logo_file) : $fallbackLogo;
+          ?>
+          <a href="index.php" class="floating-logo" title="Alfi Kitchen">
+            <img src="<?= $logo_src ?>" width="64" height="64" alt="Alfi Kitchen Logo">
+          </a>
 
-<main class="welcome-split">
-  <div class="col-text">
-    <h1><?= nl2br(htmlspecialchars($homeTitle, ENT_QUOTES, 'UTF-8')) ?></h1>
-    <p><?= nl2br(htmlspecialchars($homeDescription, ENT_QUOTES, 'UTF-8')) ?></p>
-  </div>
-  <div class="col-product" id="menu">
-    <h2 class="col-product-title">Produk Kami</h2>
-    <div class="product-list">
+          <div class="swiper-pagination" id="heroPagination"></div>
+        </div>
+
+        <span class="home-fresh-badge">Always Fresh</span>
+      </div>
+    </section>
+
+    <section class="home-products-section" id="menu" aria-labelledby="home-products-heading">
+      <h2 class="home-products-heading" id="home-products-heading">Pilihan dari Alfi Kitchen</h2>
       <?php if (empty($products)): ?>
         <p class="product-list-empty">Produk sedang disiapkan. Silakan kembali lagi nanti.</p>
       <?php else: ?>
-        <?php foreach($products as $p): ?>
-        <a href="produk/<?= htmlspecialchars(ensure_product_slug($pdo, $p), ENT_QUOTES, 'UTF-8') ?>" class="pl-item" style="text-decoration:none; color:inherit;">
-          <?php if(!empty($p['image'])): ?>
-              <img class="ph" src="thumb.php?file=<?= urlencode($p['image']) ?>&w=80&q=65" width="70" height="70" alt="<?= htmlspecialchars($p['name']) ?>" loading="lazy" decoding="async" style="object-fit:cover;">
-          <?php else: ?>
-              <div class="ph <?= htmlspecialchars($p['image_class'] ?? 'a') ?>"></div>
-          <?php endif; ?>
-          <div class="pl-info" style="font-weight:600; font-size:1.05rem;">
-            <span><?= htmlspecialchars($p['name']) ?></span>
-          </div>
-        </a>
-        <?php endforeach; ?>
+        <div class="home-product-grid">
+          <?php foreach ($products as $p): ?>
+            <?php $itemCount = (int) ($p['item_count'] ?? 0); ?>
+            <a href="produk/<?= htmlspecialchars(ensure_product_slug($pdo, $p), ENT_QUOTES, 'UTF-8') ?>" class="home-product-card">
+              <div class="home-product-thumb">
+                <?php if (!empty($p['image'])): ?>
+                  <img src="thumb.php?file=<?= urlencode($p['image']) ?>&w=480&q=75" width="480" height="320" alt="<?= htmlspecialchars($p['name'], ENT_QUOTES, 'UTF-8') ?>" loading="lazy" decoding="async">
+                <?php else: ?>
+                  <div class="ph <?= htmlspecialchars($p['image_class'] ?? 'a', ENT_QUOTES, 'UTF-8') ?>"></div>
+                <?php endif; ?>
+              </div>
+              <h3><?= htmlspecialchars($p['name'], ENT_QUOTES, 'UTF-8') ?></h3>
+              <p><?= $itemCount > 0 ? $itemCount . ' varian pilihan buatan rumahan.' : 'Sajian buatan rumahan dari bahan pilihan.' ?></p>
+            </a>
+          <?php endforeach; ?>
+        </div>
       <?php endif; ?>
-    </div>
-  </div>
-</main>
+    </section>
+  </main>
+</div>
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
