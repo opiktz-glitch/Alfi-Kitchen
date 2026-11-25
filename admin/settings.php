@@ -229,7 +229,7 @@ if (isset($_GET['tab'])) {
                             <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
                             <div class="form-group">
                                 <label for="wa-number-input">Nomor WhatsApp</label>
-                                <input type="text" id="wa-number-input" name="whatsapp_number" value="<?= htmlspecialchars($current_wa) ?>" placeholder="Contoh: 6281234567890" required class="form-control">
+                                <input type="text" id="wa-number-input" name="whatsapp_number" value="<?= htmlspecialchars($current_wa) ?>" required class="form-control">
                                 <small class="settings-hint">Gunakan format internasional tanpa + atau spasi (contoh: <code>6281234567890</code>)</small>
                             </div>
                             <button type="submit" name="save_whatsapp" class="btn btn-save-whatsapp btn-with-icon"><?= admin_icon('save') ?><span>Simpan Nomor WhatsApp</span></button>
@@ -277,15 +277,15 @@ if (isset($_GET['tab'])) {
                             <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
                             
                             <div class="settings-group-title"><span>Media Sosial</span></div>
-                            <div class="form-group"><label for="footer-ig-input">Instagram URL</label><input type="text" id="footer-ig-input" name="footer_instagram" value="<?= htmlspecialchars($current_footer['instagram']) ?>" placeholder="https://instagram.com/..." class="form-control"></div>
-                            <div class="form-group"><label for="footer-fb-input">Facebook URL</label><input type="text" id="footer-fb-input" name="footer_facebook" value="<?= htmlspecialchars($current_footer['facebook']) ?>" placeholder="https://facebook.com/..." class="form-control"></div>
-                            <div class="form-group"><label for="footer-tt-input">TikTok URL</label><input type="text" id="footer-tt-input" name="footer_tiktok" value="<?= htmlspecialchars($current_footer['tiktok']) ?>" placeholder="https://tiktok.com/@..." class="form-control"></div>
+                            <div class="form-group"><label for="footer-ig-input">Instagram URL <span class="field-info-tip" tabindex="0" data-tip="Masukkan tautan profil lengkap diawali https://instagram.com/..." aria-label="Masukkan tautan profil lengkap diawali https://instagram.com/...">i</span></label><input type="text" id="footer-ig-input" name="footer_instagram" value="<?= htmlspecialchars($current_footer['instagram']) ?>" class="form-control"></div>
+                            <div class="form-group"><label for="footer-fb-input">Facebook URL</label><input type="text" id="footer-fb-input" name="footer_facebook" value="<?= htmlspecialchars($current_footer['facebook']) ?>" class="form-control"></div>
+                            <div class="form-group"><label for="footer-tt-input">TikTok URL</label><input type="text" id="footer-tt-input" name="footer_tiktok" value="<?= htmlspecialchars($current_footer['tiktok']) ?>" class="form-control"></div>
 
                             <div class="settings-group-title"><span>Operasional &amp; Lokasi</span></div>
-                            <div class="form-group"><label for="footer-hours-input">Jam Operasional</label><input type="text" id="footer-hours-input" name="footer_hours" value="<?= htmlspecialchars($current_footer['hours']) ?>" placeholder="Senin-Sabtu 09:00-17:00" class="form-control"></div>
+                            <div class="form-group"><label for="footer-hours-input">Jam Operasional <span class="field-info-tip" tabindex="0" data-tip="Contoh: Senin–Sabtu 09:00–17:00" aria-label="Contoh: Senin–Sabtu 09:00–17:00">i</span></label><input type="text" id="footer-hours-input" name="footer_hours" value="<?= htmlspecialchars($current_footer['hours']) ?>" class="form-control"></div>
                             <div class="form-group"><label for="footer-addr-input">Alamat Toko</label><textarea id="footer-addr-input" name="footer_address" rows="2" class="form-control"><?= htmlspecialchars($current_footer['address']) ?></textarea></div>
-                            <div class="form-group"><label for="footer-email-input">Email</label><input type="email" id="footer-email-input" name="footer_email" value="<?= htmlspecialchars($current_footer['email']) ?>" placeholder="info@alfikitchen.com" class="form-control"></div>
-                            <div class="form-group"><label for="footer-maps-input">Link Google Maps</label><input type="text" id="footer-maps-input" name="footer_maps" value="<?= htmlspecialchars($current_footer['maps']) ?>" placeholder="https://maps.google.com/..." class="form-control"></div>
+                            <div class="form-group"><label for="footer-email-input">Email</label><input type="email" id="footer-email-input" name="footer_email" value="<?= htmlspecialchars($current_footer['email']) ?>" class="form-control"></div>
+                            <div class="form-group"><label for="footer-maps-input">Link Google Maps <span class="field-info-tip" tabindex="0" data-tip="Tempel tautan lokasi dari Google Maps (https://maps.google.com/...)" aria-label="Tempel tautan lokasi dari Google Maps">i</span></label><input type="text" id="footer-maps-input" name="footer_maps" value="<?= htmlspecialchars($current_footer['maps']) ?>" class="form-control"></div>
 
                             <button type="submit" name="save_footer_info" class="btn btn-primary btn-with-icon"><?= admin_icon('save') ?><span>Simpan Info Footer</span></button>
                         </form>
@@ -736,9 +736,9 @@ if (isset($_GET['tab'])) {
                             <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
                             
                             <div class="form-group">
-                                <label for="new-password-input">Password Baru</label>
+                                <label for="new-password-input">Password Baru <span class="field-info-tip" tabindex="0" data-tip="Minimal 6 karakter. Disarankan kombinasi huruf besar, kecil, dan angka." aria-label="Minimal 6 karakter. Disarankan kombinasi huruf besar, kecil, dan angka.">i</span></label>
                                 <div class="password-input-wrapper">
-                                    <input type="password" id="new-password-input" name="new_password" placeholder="Minimal 6 karakter" required minlength="6" class="form-control" autocomplete="new-password">
+                                    <input type="password" id="new-password-input" name="new_password" required minlength="6" class="form-control" autocomplete="new-password">
                                     <button type="button" class="btn-toggle-password" id="btn-toggle-pwd" aria-label="Tampilkan atau sembunyikan password" title="Lihat password">
                                         👁️
                                     </button>
@@ -753,7 +753,7 @@ if (isset($_GET['tab'])) {
 
                             <div class="form-group">
                                 <label for="confirm-password-input">Konfirmasi Password Baru</label>
-                                <input type="password" id="confirm-password-input" placeholder="Ketik ulang password baru" class="form-control" autocomplete="new-password">
+                                <input type="password" id="confirm-password-input" class="form-control" autocomplete="new-password">
                                 <small id="pwd-match-hint" class="settings-hint"></small>
                             </div>
 

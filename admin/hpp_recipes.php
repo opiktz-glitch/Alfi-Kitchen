@@ -82,7 +82,8 @@ $recipes = $schemaReady ? hpp_get_recipe_list($pdo) : [];
                 <?php else: ?>
                     <div class="master-toolbar">
                         <div class="master-search">
-                            <input type="search" id="recipe-search" placeholder="Cari resep atau varian..." class="form-control form-control-sm" autocomplete="off">
+                            <span class="master-search-icon" aria-hidden="true"><?= admin_icon('search') ?></span>
+                            <input type="search" id="recipe-search" aria-label="Cari resep atau varian" class="form-control form-control-sm" autocomplete="off">
                         </div>
                         <div class="master-toolbar-actions">
                             <a href="hpp_edit.php" class="btn btn-primary btn-sm btn-with-icon">

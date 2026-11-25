@@ -243,7 +243,8 @@ $escape = static function ($value): string {
                 ?>
                 <div class="master-toolbar">
                     <div class="master-search">
-                        <input type="search" id="ingredient-search" placeholder="Cari nama bahan atau catatan..." class="form-control form-control-sm" autocomplete="off">
+                        <span class="master-search-icon" aria-hidden="true"><?= admin_icon('search') ?></span>
+                        <input type="search" id="ingredient-search" aria-label="Cari nama bahan atau catatan" class="form-control form-control-sm" autocomplete="off">
                     </div>
                     <div class="master-toolbar-actions">
                         <button type="button" class="btn btn-primary btn-sm btn-with-icon admin-drawer-toggle" data-target="drawer-add-ingredient" id="btn-open-add-drawer" aria-expanded="<?= ($formError !== '' || $editingId > 0) ? 'true' : 'false' ?>">
@@ -268,11 +269,11 @@ $escape = static function ($value): string {
                         
                         <div class="form-group form-span-full">
                             <label for="ingredient-form-name">Nama Bahan Baku</label>
-                            <input id="ingredient-form-name" type="text" name="name" maxlength="120" required value="<?= $escape($formValues['name'] ?? '') ?>" placeholder="Bubuk Puding Coklat, Susu Evaporasi, Cup 200ml">
+                            <input id="ingredient-form-name" type="text" name="name" maxlength="120" required value="<?= $escape($formValues['name'] ?? '') ?>">
                         </div>
                         <div class="form-group">
-                            <label for="ingredient-form-pack-size">Isi Kemasan</label>
-                            <input id="ingredient-form-pack-size" type="text" name="pack_size" inputmode="decimal" pattern="[0-9]+([.,][0-9]{1,3})?" placeholder="1000 atau 0,5" required value="<?= $escape($cleanPackSize($formValues['pack_size'] ?? '')) ?>">
+                            <label for="ingredient-form-pack-size">Isi Kemasan <span class="field-info-tip" tabindex="0" data-tip="Contoh: 1000 atau 0,5 (maks. 3 angka di belakang koma)" aria-label="Contoh: 1000 atau 0,5 (maks. 3 angka di belakang koma)">i</span></label>
+                            <input id="ingredient-form-pack-size" type="text" name="pack_size" inputmode="decimal" pattern="[0-9]+([.,][0-9]{1,3})?" required value="<?= $escape($cleanPackSize($formValues['pack_size'] ?? '')) ?>">
                         </div>
                         <div class="form-group">
                             <label for="ingredient-form-unit">Satuan Dasar</label>
@@ -286,11 +287,11 @@ $escape = static function ($value): string {
                         </div>
                         <div class="form-group">
                             <label for="ingredient-form-pack-price">Harga Kemasan (Rp)</label>
-                            <input id="ingredient-form-pack-price" type="number" name="pack_price" min="0" max="2147483647" step="1" placeholder="45000" required value="<?= $escape($formValues['pack_price'] ?? '') ?>">
+                            <input id="ingredient-form-pack-price" type="number" name="pack_price" min="0" max="2147483647" step="1" required value="<?= $escape($formValues['pack_price'] ?? '') ?>">
                         </div>
                         <div class="form-group">
                             <label for="ingredient-form-note">Catatan / Merek / Toko (opsional)</label>
-                            <input id="ingredient-form-note" type="text" name="note" maxlength="255" placeholder="Merk Haan / Toko Bahan Kue" value="<?= $escape($formValues['note'] ?? '') ?>">
+                            <input id="ingredient-form-note" type="text" name="note" maxlength="255" value="<?= $escape($formValues['note'] ?? '') ?>">
                         </div>
                         <div class="form-group form-span-full admin-drawer-footer-actions">
                             <button type="button" class="btn btn-cancel btn-with-icon" id="btn-cancel-ingredient"><?= admin_icon('back') ?><span>Batal</span></button>

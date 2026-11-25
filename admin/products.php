@@ -89,7 +89,7 @@ if (!empty($productIds)) {
             <form method="GET" action="products.php" role="search" class="category-search">
                 <label for="category-search">Cari kategori</label>
                 <div class="category-search-controls">
-                    <input id="category-search" type="search" name="search" value="<?= htmlspecialchars($search, ENT_QUOTES, 'UTF-8') ?>" placeholder="Contoh: Puding">
+                    <input id="category-search" type="search" name="search" value="<?= htmlspecialchars($search, ENT_QUOTES, 'UTF-8') ?>">
                     <button type="submit" class="btn btn-secondary btn-with-icon"><?= admin_icon('search') ?>Cari</button>
                     <?php if ($search !== ''): ?>
                         <a href="products.php" class="btn btn-cancel btn-with-icon"><?= admin_icon('reset') ?>Reset</a>

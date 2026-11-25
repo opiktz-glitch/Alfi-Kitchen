@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 
                 <div class="form-group">
                     <label>Nama Kategori</label>
-                    <input type="text" name="name" required placeholder="Contoh: Kue Kering">
+                    <input type="text" name="name" required>
                 </div>
                 
                 <div class="form-group">

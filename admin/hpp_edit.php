@@ -384,30 +384,30 @@ $csrfToken = generate_csrf_token();
                         <div class="hpp-strip-header">
                             <div class="form-group hpp-strip-name">
                                 <label for="recipe-name">Nama Resep</label>
-                                <input id="recipe-name" type="text" name="name" maxlength="120" required value="<?= $escape($value('name')) ?>" placeholder="Nama resep...">
+                                <input id="recipe-name" type="text" name="name" maxlength="120" required value="<?= $escape($value('name')) ?>">
                             </div>
                             <div class="form-group hpp-strip-variant">
                                 <label for="recipe-variant">Varian</label>
-                                <input id="recipe-variant" type="text" name="variant" maxlength="40" value="<?= $escape($value('variant')) ?>" placeholder="Varian (opsional)">
+                                <input id="recipe-variant" type="text" name="variant" maxlength="40" value="<?= $escape($value('variant')) ?>">
                             </div>
                             <div class="form-group hpp-strip-yield">
                                 <label for="recipe-yield">Jumlah Porsi / Kemasan</label>
-                                <input id="recipe-yield" type="number" name="yield_jars" min="1" max="200" step="1" required value="<?= $escape($value('yield_jars', '1')) ?>" placeholder="1">
+                                <input id="recipe-yield" type="number" name="yield_jars" min="1" max="200" step="1" required value="<?= $escape($value('yield_jars', '1')) ?>">
                             </div>
                             <div class="form-group hpp-strip-jar-ml">
                                 <label for="recipe-jar-ml">Ukuran (ml/g)</label>
-                                <input id="recipe-jar-ml" type="number" name="jar_ml" min="1" max="32767" step="1" value="<?= $escape($value('jar_ml')) ?>" placeholder="Opsional">
+                                <input id="recipe-jar-ml" type="number" name="jar_ml" min="1" max="32767" step="1" value="<?= $escape($value('jar_ml')) ?>">
                             </div>
                             <div class="form-group hpp-strip-note">
                                 <label for="recipe-note">Catatan Resep (opsional)</label>
-                                <input id="recipe-note" type="text" name="note" maxlength="255" value="<?= $escape($value('note')) ?>" placeholder="Catatan internal resep...">
+                                <input id="recipe-note" type="text" name="note" maxlength="255" value="<?= $escape($value('note')) ?>">
                             </div>
                         </div>
                     </section>
 
                     <section class="form-card hpp-materials-card">
                         <div class="hpp-editor-section-heading">
-                            <h3>Bahan</h3>
+                            <h3>Bahan <span class="field-info-tip" tabindex="0" data-tip="Ketik nama bahan master pada kolom tambah cepat di bawah lalu tekan Enter." aria-label="Ketik nama bahan master pada kolom tambah cepat di bawah lalu tekan Enter.">i</span></h3>
                             <a href="hpp_ingredients.php" target="_blank" class="hpp-link-subtle" title="Buka Master Bahan di tab baru"><?= admin_icon('manage') ?> <span>Master Bahan</span></a>
                         </div>
 
@@ -421,7 +421,7 @@ $csrfToken = generate_csrf_token();
 
                         <div class="hpp-quick-add-bar">
                             <div class="hpp-quick-add-input-wrap">
-                                <input type="text" id="quick-ingredient-input" list="master-ingredients-datalist" placeholder="🔍 Ketik nama bahan master untuk tambah cepat (lalu tekan Enter)..." autocomplete="off">
+                                <input type="text" id="quick-ingredient-input" list="master-ingredients-datalist" aria-label="Cari bahan master untuk tambah cepat" autocomplete="off">
                             </div>
                             <button type="button" class="btn btn-secondary btn-sm btn-with-icon" id="btn-quick-add"><?= admin_icon('add') ?><span>Tambah Cepat</span></button>
                         </div>
@@ -496,7 +496,7 @@ $csrfToken = generate_csrf_token();
                             <div class="hpp-scenario-item hpp-scenario-custom" id="custom-scenario-item">
                                 <div class="hpp-scenario-custom-badge" title="Ketik persentase markup kustom manual">
                                     <span class="hpp-scenario-custom-sign">+</span>
-                                    <input type="number" id="custom-markup-input" class="hpp-scenario-custom-input" min="0" max="10000" step="any" placeholder="60" value="60" aria-label="Persentase markup kustom">
+                                    <input type="number" id="custom-markup-input" class="hpp-scenario-custom-input" min="0" max="10000" step="any" value="60" aria-label="Persentase markup kustom">
                                     <span class="hpp-scenario-custom-pct">%</span>
                                 </div>
                                 <div class="hpp-scenario-info">
@@ -642,17 +642,17 @@ $csrfToken = generate_csrf_token();
                             </select>
                             <input type="hidden" name="lines[__INDEX__][custom_name]" data-custom-name-hidden disabled>
                             <div class="hpp-custom-name-wrap" data-custom-group hidden>
-                                <input type="text" name="lines[__INDEX__][custom_name]" maxlength="120" data-custom-name placeholder="Nama item bebas...">
+                                <input type="text" name="lines[__INDEX__][custom_name]" maxlength="120" data-custom-name aria-label="Nama item bebas">
                                 <div class="hpp-custom-cost-wrap">
                                     <span class="hpp-custom-cost-label">Biaya satuan (Rp):</span>
-                                    <input type="text" data-custom-cost-input inputmode="decimal" maxlength="16" placeholder="0">
+                                    <input type="text" data-custom-cost-input inputmode="decimal" maxlength="16" aria-label="Biaya satuan">
                                 </div>
                             </div>
                         </div>
                         <div class="form-group hpp-cell-qty">
                             <label class="hpp-row-label">Jumlah</label>
                             <div class="hpp-qty-input-group">
-                                <input type="text" name="lines[__INDEX__][qty]" inputmode="decimal" maxlength="15" placeholder="0" data-line-qty required>
+                                <input type="text" name="lines[__INDEX__][qty]" inputmode="decimal" maxlength="15" data-line-qty required>
                                 <span class="hpp-qty-unit-badge" data-unit-badge>satuan</span>
                             </div>
                         </div>
@@ -667,7 +667,7 @@ $csrfToken = generate_csrf_token();
                     <div class="hpp-editor-row hpp-cost-row" data-cost-row>
                         <div class="form-group hpp-cell-cost-label">
                             <label class="hpp-row-label">Nama biaya</label>
-                            <input type="text" name="costs[__INDEX__][label]" maxlength="80" data-cost-label required placeholder="Nama biaya...">
+                            <input type="text" name="costs[__INDEX__][label]" maxlength="80" data-cost-label required>
                         </div>
                         <div class="form-group hpp-cell-cost-type">
                             <label class="hpp-row-label">Jenis perhitungan</label>
@@ -679,7 +679,7 @@ $csrfToken = generate_csrf_token();
                         </div>
                         <div class="form-group hpp-cell-cost-amount">
                             <label class="hpp-row-label">Nilai</label>
-                            <input type="text" name="costs[__INDEX__][amount]" inputmode="decimal" maxlength="16" data-cost-amount required placeholder="Nilai...">
+                            <input type="text" name="costs[__INDEX__][amount]" inputmode="decimal" maxlength="16" data-cost-amount required>
                         </div>
                         <div class="hpp-editor-row-total"><span>Subtotal</span><strong data-cost-total>Rp 0</strong></div>
                         <button type="button" class="btn btn-danger btn-sm btn-with-icon hpp-remove-row" data-remove-cost aria-label="Hapus biaya operasional" title="Hapus biaya operasional"><?= admin_icon('delete') ?><span>Hapus</span></button>

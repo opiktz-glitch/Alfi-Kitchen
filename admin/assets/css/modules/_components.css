@@ -881,3 +881,26 @@ td:has(.thumb-hero) {
   color: #3b2a1e; font-size: 0.68rem; font-style: italic; font-weight: 600;
   pointer-events: none;
 }
+
+/* Info Tooltip Icon & Search Icon */
+.field-info-tip {
+  position: relative; display: inline-flex; align-items: center; justify-content: center;
+  width: 16px; height: 16px; margin-left: 5px; border-radius: 50%;
+  background: #efe4d6; color: #6e4420; font-size: 0.68rem; font-weight: 700; font-style: normal;
+  line-height: 1; cursor: help; vertical-align: middle; user-select: none;
+}
+.field-info-tip:hover, .field-info-tip:focus-visible { background: #dfc8ac; outline: none; }
+.field-info-tip::after {
+  content: attr(data-tip); position: absolute; left: 50%; bottom: calc(100% + 7px);
+  transform: translateX(-50%); width: max-content; max-width: 240px; padding: 6px 10px;
+  border-radius: 7px; background: #2e2016; color: #fff; font-size: 0.74rem; font-weight: 500;
+  line-height: 1.4; white-space: normal; text-transform: none; letter-spacing: normal;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18); opacity: 0; visibility: hidden;
+  pointer-events: none; transition: opacity 0.15s ease; z-index: 40;
+}
+.field-info-tip:hover::after, .field-info-tip:focus-visible::after { opacity: 1; visibility: visible; }
+.master-search-icon {
+  position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+  width: 14px; height: 14px; color: var(--muted); pointer-events: none;
+}
+.master-search input[type="search"] { padding-left: 30px; }

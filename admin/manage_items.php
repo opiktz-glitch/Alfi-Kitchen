@@ -109,15 +109,15 @@ $items = $stmt->fetchAll();
                 <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(generate_csrf_token()) ?>">
                 <div class="form-group">
                     <label>Nama Varian/Jenis</label>
-                    <input type="text" name="name" required placeholder="Contoh: Puding Mangga">
+                    <input type="text" name="name" required>
                 </div>
                 <div class="form-group">
                     <label>Harga (Rp)</label>
-                    <input type="number" name="price" required placeholder="Contoh: 15000">
+                    <input type="number" name="price" required>
                 </div>
                 <div class="form-group form-span-full">
                     <label>Deskripsi (Opsional)</label>
-                    <textarea name="description" rows="3" placeholder="Tuliskan deskripsi singkat varian ini..."></textarea>
+                    <textarea name="description" rows="3"></textarea>
                 </div>
                 <div class="form-group form-span-full">
                     <label>Gambar <span class="text-muted">(Opsional) - Rekomendasi rasio gambar 1:1 (Persegi)</span></label>

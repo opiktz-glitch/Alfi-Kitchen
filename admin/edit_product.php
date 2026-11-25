@@ -84,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 
                 <div class="form-group">
                     <label>Nama Kategori</label>
-                    <input type="text" name="name" value="<?= htmlspecialchars($product['name']) ?>" required placeholder="Contoh: Puding">
+                    <input type="text" name="name" value="<?= htmlspecialchars($product['name']) ?>" required>
                     <?php if (!empty($product['slug'])): ?>
                         <small class="form-hint">URL permanen: <code>/produk/<?= htmlspecialchars($product['slug']) ?></code> (tidak berubah walau nama diganti)</small>
                     <?php endif; ?>
