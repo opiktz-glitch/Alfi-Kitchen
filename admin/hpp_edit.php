@@ -391,7 +391,7 @@ $csrfToken = generate_csrf_token();
                                 <input id="recipe-variant" type="text" name="variant" maxlength="40" value="<?= $escape($value('variant')) ?>">
                             </div>
                             <div class="form-group hpp-strip-yield">
-                                <label for="recipe-yield">Jumlah Porsi / Kemasan <span class="field-info-tip" tabindex="0" data-tip="Jumlah jar atau porsi yang dihasilkan dalam 1 kali resep (mis. 8)." title="Jumlah jar atau porsi yang dihasilkan dalam 1 kali resep (mis. 8)." aria-label="Jumlah jar atau porsi yang dihasilkan dalam 1 kali resep (mis. 8)."><?= admin_icon('info') ?></span></label>
+                                <label for="recipe-yield">Jumlah Porsi / Kemasan <span class="field-info-tip" tabindex="0" data-tip="Jumlah kemasan atau porsi yang dihasilkan dalam 1 kali resep (mis. 8)." title="Jumlah kemasan atau porsi yang dihasilkan dalam 1 kali resep (mis. 8)." aria-label="Jumlah kemasan atau porsi yang dihasilkan dalam 1 kali resep (mis. 8)."><?= admin_icon('info') ?></span></label>
                                 <input id="recipe-yield" type="number" name="yield_jars" min="1" max="200" step="1" required value="<?= $escape($value('yield_jars', '1')) ?>">
                             </div>
                             <div class="form-group hpp-strip-jar-ml">

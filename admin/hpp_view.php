@@ -25,7 +25,7 @@ if (!$recipe) {
 $isEmbedded = !empty($_GET['embedded']);
 $recipeTitle = trim($recipe['name'] . ($recipe['variant'] !== '' ? ' — ' . $recipe['variant'] : ''));
 $yieldJars = max(1, (int) ($recipe['yield_jars'] ?? 1));
-$yieldNote = 'Perkiraan harga untuk 1 resep jadi ' . $yieldJars . ' jar' . (!empty($recipe['notes']) ? ' (' . $recipe['notes'] . ')' : '');
+$yieldNote = 'Perkiraan harga untuk 1 resep jadi ' . $yieldJars . ' kemasan' . (!empty($recipe['notes']) ? ' (' . $recipe['notes'] . ')' : '');
 
 // Hitung total bahan baku dari baris snapshot
 $materialTotal = 0;
@@ -80,7 +80,7 @@ foreach ($recipe['costs'] as $cost) {
         $detail = format_decimal($amount, 2) . '%';
     } elseif ($calcType === 'per_jar') {
         $costSubtotal = round($yieldJars * $amount);
-        $detail = $yieldJars . ' jar @ Rp ' . format_decimal($amount, 0);
+        $detail = $yieldJars . ' kemasan @ Rp ' . format_decimal($amount, 0);
     } else {
         $costSubtotal = round($amount);
         $detail = 'Flat';
@@ -279,7 +279,7 @@ foreach ($marginPercentages as $pct) {
                                 <th>Rencana Margin</th>
                                 <th class="num-col">Perkiraan Laba (Rp)</th>
                                 <th class="num-col">Harga Jual 1 Resep (Rp)</th>
-                                <th class="num-col th-jar-price">Harga / Jar (Rp)</th>
+                                <th class="num-col th-jar-price">Harga / Kemasan (Rp)</th>
                             </tr>
                         </thead>
                         <tbody>

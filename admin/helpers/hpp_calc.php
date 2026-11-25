@@ -85,12 +85,12 @@ if (!function_exists('hpp_calculate')) {
             throw new InvalidArgumentException('Maksimal 15 baris biaya operasional per resep.');
         }
         if (!array_key_exists('yield_jars', $recipe) || !array_key_exists('round_step', $recipe)) {
-            throw new InvalidArgumentException('Jumlah jar dan langkah pembulatan wajib diisi.');
+            throw new InvalidArgumentException('Jumlah kemasan dan langkah pembulatan wajib diisi.');
         }
 
-        $yieldJars = hpp_parse_positive_integer($recipe['yield_jars'], 'Jumlah jar');
+        $yieldJars = hpp_parse_positive_integer($recipe['yield_jars'], 'Jumlah kemasan');
         if ($yieldJars > 200) {
-            throw new InvalidArgumentException('Jumlah jar maksimal 200.');
+            throw new InvalidArgumentException('Jumlah kemasan maksimal 200.');
         }
         $roundStep = hpp_parse_positive_integer($recipe['round_step'], 'Langkah pembulatan');
 
@@ -211,9 +211,9 @@ if (!function_exists('hpp_price_scenarios')) {
         if ($hppRecipe < 0 || $hppRecipe > PHP_INT_MAX) {
             throw new InvalidArgumentException('HPP resep tidak valid.');
         }
-        $yieldJars = hpp_parse_positive_integer($yieldJars, 'Jumlah jar');
+        $yieldJars = hpp_parse_positive_integer($yieldJars, 'Jumlah kemasan');
         if ($yieldJars > 200) {
-            throw new InvalidArgumentException('Jumlah jar maksimal 200.');
+            throw new InvalidArgumentException('Jumlah kemasan maksimal 200.');
         }
 
         $hppPerJar = $hppRecipe / $yieldJars;

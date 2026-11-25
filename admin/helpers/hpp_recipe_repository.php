@@ -74,9 +74,9 @@ if (!function_exists('hpp_normalize_recipe_payload')) {
         $variant = hpp_recipe_text($input['variant'] ?? '', 'Varian resep', 40, false);
         $note = hpp_recipe_text($input['note'] ?? '', 'Catatan resep', 255, false);
 
-        $yieldJars = hpp_parse_positive_integer($input['yield_jars'] ?? null, 'Jumlah jar');
+        $yieldJars = hpp_parse_positive_integer($input['yield_jars'] ?? null, 'Jumlah kemasan');
         if ($yieldJars > 200) {
-            throw new InvalidArgumentException('Jumlah jar harus antara 1 dan 200.');
+            throw new InvalidArgumentException('Jumlah kemasan harus antara 1 dan 200.');
         }
         $roundStep = hpp_parse_positive_integer($input['round_step'] ?? null, 'Langkah pembulatan');
         if ($roundStep > 2147483647) {
@@ -87,9 +87,9 @@ if (!function_exists('hpp_normalize_recipe_payload')) {
         if ($jarMlInput === '') {
             $jarMl = null;
         } else {
-            $jarMl = hpp_parse_positive_integer($jarMlInput, 'Ukuran jar');
+            $jarMl = hpp_parse_positive_integer($jarMlInput, 'Ukuran kemasan');
             if ($jarMl > 32767) {
-                throw new InvalidArgumentException('Ukuran jar harus tidak melebihi 32.767 ml.');
+                throw new InvalidArgumentException('Ukuran kemasan harus tidak melebihi 32.767 ml/g.');
             }
         }
 
