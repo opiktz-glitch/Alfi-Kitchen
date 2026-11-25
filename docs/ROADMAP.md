@@ -135,6 +135,25 @@ kembali pada konfigurasi hosting sebelum perubahan produksi.
 - [ ] **Uji pengalaman pada perangkat nyata.** Periksa keterbacaan, target
   sentuh, posisi tombol saat keyboard terbuka, dan penggunaan pada koneksi
   lambat di beberapa ukuran ponsel.
+- [ ] **Prioritaskan foto slider di layar pertama HP (*above the fold*).**
+  Pada `<= 860px` di `views/home.view.php`, pertimbangkan menempatkan `.home-hero-media`
+  lebih dulu (`order: -1`) atau meringkas jarak hero serta menyusun dua tombol CTA
+  (`Pesan via WhatsApp` dan `Lihat Menu`) sejajar 1 baris agar foto promo dan aksi
+  utama langsung terlihat tanpa scroll.
+- [ ] **Sesuaikan proporsi logo & badge di atas slider HP (`<= 480px`).**
+  Perkecil `.floating-logo` (mis. `48×48 px`) dan `.home-fresh-badge` (`14px`,
+  padding lebih ringkas) agar tidak menutupi sudut foto promo pada layar sempit.
+- [ ] **Ringkas tata letak kartu produk di HP (`<= 480px`).**
+  Ubah `.home-product-card` menjadi kartu horizontal ringkas (foto `96×96 px` di kiri,
+  judul & jumlah varian di kanan) atau grid 2 kolom agar pengunjung tidak perlu
+  scroll terlalu jauh untuk melihat seluruh kategori.
+- [ ] **Perluas area sentuh navbar HP.** Tambahkan padding vertikal pada
+  `.home-nav-links a` (`>= 40px` target sentuh) dan pertimbangkan menyembunyikan
+  tautan `Pesan` di navbar HP karena CTA WhatsApp utama sudah tampil langsung di hero.
+- [ ] **Selaraskan perataan footer di layar HP (`<= 640px`).**
+  Samakan perataan `.footer-brand` dengan kolom footer lainnya (mis. rata kiri
+  dengan logo `56×56 px` di samping nama brand & tagline) dan pertahankan jarak
+  aman bawah agar tidak tertutup tombol WhatsApp mengambang.
 
 ## P3 — UI panel admin
 

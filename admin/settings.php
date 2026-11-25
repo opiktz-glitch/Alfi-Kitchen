@@ -339,6 +339,8 @@ if (isset($_GET['tab'])) {
                                 <div class="hero-preview-area" id="hero-preview-area" hidden>
                                     <div class="hero-preview-frame">
                                         <img id="hero-preview-img" src="" alt="Pratinjau Banner Slider">
+                                        <span class="hero-safe-logo" aria-hidden="true">Logo</span>
+                                        <span class="hero-safe-fresh" aria-hidden="true">Always Fresh</span>
                                     </div>
                                     <div class="hero-preview-meta">
                                         <span id="hero-preview-filename" class="hero-preview-filename"></span>
@@ -358,9 +360,9 @@ if (isset($_GET['tab'])) {
                                 <span>💡 Panduan Banner Ideal:</span>
                             </div>
                             <ul class="slider-spec-list">
-                                <li><strong>Rasio 16:9 (Lanskap)</strong>: Sangat cocok untuk tampilan desktop maupun mobile.</li>
-                                <li><strong>Resolusi Rekomendasi</strong>: Minimal 1280 × 720 px (atau 1600 × 900 px).</li>
-                                <li><strong>Area Teks Aman</strong>: Pusatkan teks promosi di bagian tengah agar tidak terpotong logo floating di beranda.</li>
+                                <li><strong>Rasio 1:1 (Persegi) atau 4:3</strong>: Cocok untuk frame slider beranda desktop (~492 × 480 px) maupun mobile (4:3).</li>
+                                <li><strong>Resolusi Rekomendasi</strong>: Minimal 1000 × 1000 px (1:1) atau 1200 × 900 px (4:3).</li>
+                                <li><strong>Area Aman (Safe-Zone)</strong>: Pusatkan objek &amp; teks utama di tengah; hindari sudut kiri atas (logo) dan kiri bawah (badge <em>Always Fresh</em>).</li>
                             </ul>
                         </div>
                     </section>
