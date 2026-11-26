@@ -440,11 +440,32 @@ if (!function_exists('hpp_get_recipe')) {
     }
 }
 
+if (!function_exists('hpp_has_selling_price_column')) {
+    function hpp_has_selling_price_column(PDO $pdo): bool
+    {
+        $driver = $pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
+        if ($driver === 'sqlite') {
+            $cols = $pdo->query("PRAGMA table_info('hpp_recipes')")->fetchAll(PDO::FETCH_ASSOC);
+            foreach ($cols as $col) {
+                if (($col['name'] ?? '') === 'selling_price') {
+                    return true;
+                }
+            }
+            return false;
+        }
+        $stmt = $pdo->query("SHOW COLUMNS FROM hpp_recipes LIKE 'selling_price'");
+        return $stmt !== false && $stmt->fetch() !== false;
+    }
+}
+
 if (!function_exists('hpp_get_recipe_list')) {
     function hpp_get_recipe_list(PDO $pdo): array
     {
+        $hasSellingPrice = hpp_has_selling_price_column($pdo);
+        $sellingSelect = $hasSellingPrice ? 'r.selling_price, ' : 'NULL AS selling_price, ';
         $recipes = $pdo->query(
             'SELECT r.id, r.name, r.variant, r.yield_jars, r.hpp_recipe, r.hpp_per_jar, '
+            . $sellingSelect
             . 'r.product_item_id, r.updated_at, p.name AS product_name, pi.name AS item_name, '
             . 'pi.price AS public_price '
             . 'FROM hpp_recipes r '
@@ -501,9 +522,11 @@ if (!function_exists('hpp_duplicate_recipe')) {
         $pdo->beginTransaction();
         try {
             $lockClause = $pdo->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql' ? ' FOR UPDATE' : '';
+            $hasSellingPrice = hpp_has_selling_price_column($pdo);
+            $selectCols = 'name, variant, yield_jars, jar_ml, round_step, note, total_cost, hpp_recipe, hpp_per_jar'
+                . ($hasSellingPrice ? ', selling_price' : '');
             $recipeStmt = $pdo->prepare(
-                'SELECT name, variant, yield_jars, jar_ml, round_step, note, total_cost, hpp_recipe, hpp_per_jar '
-                . 'FROM hpp_recipes WHERE id = ?' . $lockClause
+                'SELECT ' . $selectCols . ' FROM hpp_recipes WHERE id = ?' . $lockClause
             );
             $recipeStmt->execute([$recipeId]);
             $recipe = $recipeStmt->fetch(PDO::FETCH_ASSOC);
@@ -511,22 +534,42 @@ if (!function_exists('hpp_duplicate_recipe')) {
                 throw new InvalidArgumentException('Resep tidak ditemukan atau sudah dihapus.');
             }
 
-            $insertRecipe = $pdo->prepare(
-                'INSERT INTO hpp_recipes '
-                . '(name, variant, yield_jars, jar_ml, round_step, note, product_item_id, total_cost, hpp_recipe, hpp_per_jar) '
-                . 'VALUES (?, ?, ?, ?, ?, ?, NULL, ?, ?, ?)'
-            );
-            $insertRecipe->execute([
-                $recipe['name'],
-                $recipe['variant'],
-                $recipe['yield_jars'],
-                $recipe['jar_ml'],
-                $recipe['round_step'],
-                $recipe['note'],
-                $recipe['total_cost'],
-                $recipe['hpp_recipe'],
-                $recipe['hpp_per_jar'],
-            ]);
+            if ($hasSellingPrice) {
+                $insertRecipe = $pdo->prepare(
+                    'INSERT INTO hpp_recipes '
+                    . '(name, variant, yield_jars, jar_ml, round_step, note, product_item_id, total_cost, hpp_recipe, hpp_per_jar, selling_price) '
+                    . 'VALUES (?, ?, ?, ?, ?, ?, NULL, ?, ?, ?, ?)'
+                );
+                $insertRecipe->execute([
+                    $recipe['name'],
+                    $recipe['variant'],
+                    $recipe['yield_jars'],
+                    $recipe['jar_ml'],
+                    $recipe['round_step'],
+                    $recipe['note'],
+                    $recipe['total_cost'],
+                    $recipe['hpp_recipe'],
+                    $recipe['hpp_per_jar'],
+                    $recipe['selling_price'],
+                ]);
+            } else {
+                $insertRecipe = $pdo->prepare(
+                    'INSERT INTO hpp_recipes '
+                    . '(name, variant, yield_jars, jar_ml, round_step, note, product_item_id, total_cost, hpp_recipe, hpp_per_jar) '
+                    . 'VALUES (?, ?, ?, ?, ?, ?, NULL, ?, ?, ?)'
+                );
+                $insertRecipe->execute([
+                    $recipe['name'],
+                    $recipe['variant'],
+                    $recipe['yield_jars'],
+                    $recipe['jar_ml'],
+                    $recipe['round_step'],
+                    $recipe['note'],
+                    $recipe['total_cost'],
+                    $recipe['hpp_recipe'],
+                    $recipe['hpp_per_jar'],
+                ]);
+            }
             $duplicateId = (int) $pdo->lastInsertId();
 
             $lineStmt = $pdo->prepare(
@@ -809,8 +852,13 @@ if (!function_exists('hpp_apply_public_price')) {
 
             $updatePrice = $pdo->prepare('UPDATE product_items SET price = ? WHERE id = ?');
             $updatePrice->execute([$price, $itemId]);
-            $updateRecipe = $pdo->prepare('UPDATE hpp_recipes SET product_item_id = ? WHERE id = ?');
-            $updateRecipe->execute([$itemId, $recipeId]);
+            if (hpp_has_selling_price_column($pdo)) {
+                $updateRecipe = $pdo->prepare('UPDATE hpp_recipes SET product_item_id = ?, selling_price = ? WHERE id = ?');
+                $updateRecipe->execute([$itemId, $price, $recipeId]);
+            } else {
+                $updateRecipe = $pdo->prepare('UPDATE hpp_recipes SET product_item_id = ? WHERE id = ?');
+                $updateRecipe->execute([$itemId, $recipeId]);
+            }
             $pdo->commit();
 
             return [
@@ -830,5 +878,45 @@ if (!function_exists('hpp_apply_public_price')) {
             }
             throw $exception;
         }
+    }
+}
+
+if (!function_exists('hpp_save_recipe_selling_price')) {
+    /**
+     * Simpan harga jual pilihan langsung pada resep tanpa menghubungkan ke produk website.
+     */
+    function hpp_save_recipe_selling_price(PDO $pdo, int $recipeId, $newPrice): array
+    {
+        if ($recipeId < 1) {
+            throw new InvalidArgumentException('ID resep tidak valid.');
+        }
+        if (!hpp_has_selling_price_column($pdo)) {
+            throw new InvalidArgumentException('Jalankan migrasi database (v06) di Pengaturan terlebih dahulu sebelum menyimpan harga jual resep.');
+        }
+        $price = hpp_public_price_input($newPrice);
+
+        $recipeStmt = $pdo->prepare('SELECT id, name, yield_jars, hpp_recipe FROM hpp_recipes WHERE id = ?');
+        $recipeStmt->execute([$recipeId]);
+        $recipe = $recipeStmt->fetch(PDO::FETCH_ASSOC);
+        if (!$recipe) {
+            throw new InvalidArgumentException('Resep tidak ditemukan atau sudah dihapus.');
+        }
+
+        $yieldJars = (int) $recipe['yield_jars'];
+        if ($yieldJars < 1) {
+            throw new InvalidArgumentException('Jumlah hasil resep tidak valid.');
+        }
+        $hppPerJar = (int) $recipe['hpp_recipe'] / $yieldJars;
+
+        $updateStmt = $pdo->prepare('UPDATE hpp_recipes SET selling_price = ? WHERE id = ?');
+        $updateStmt->execute([$price, $recipeId]);
+
+        return [
+            'recipe_id' => (int) $recipe['id'],
+            'recipe_name' => (string) $recipe['name'],
+            'selling_price' => $price,
+            'hpp_per_jar' => $hppPerJar,
+            'below_hpp' => $price < $hppPerJar,
+        ];
     }
 }

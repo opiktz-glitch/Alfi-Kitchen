@@ -136,6 +136,9 @@ $recipes = $schemaReady ? hpp_get_recipe_list($pdo) : [];
                                         <td data-label="Harga jual saat ini" class="table-cell-center">
                                             <?php if ($recipe['public_price'] !== null): ?>
                                                 Rp <?= format_decimal(ceil((float) $recipe['public_price']), 0) ?>
+                                            <?php elseif (!empty($recipe['selling_price'])): ?>
+                                                Rp <?= format_decimal(ceil((float) $recipe['selling_price']), 0) ?>
+                                                <small class="hpp-recipe-product">Harga resep (belum di website)</small>
                                             <?php else: ?>
                                                 <span class="hpp-muted-value">—</span>
                                             <?php endif; ?>

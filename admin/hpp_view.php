@@ -253,12 +253,16 @@ if ($linkedProductItemId > 0) {
                                 <td><strong>Harga per kemasan (1 resep = <?= $yieldJars ?> kemasan)</strong></td>
                                 <td class="num-col">Rp <?= format_decimal($costPerJar, 0) ?></td>
                             </tr>
-                            <?php if ($linkedPrice !== null): ?>
-                                <?php $actualProfit = $linkedPrice - $costPerJar; ?>
+                            <?php
+                            $displaySellingPrice = $linkedPrice ?? (!empty($recipe['selling_price']) ? (int) $recipe['selling_price'] : null);
+                            $sellingLabel = $linkedPrice !== null ? 'Harga Jual Produk Saat Ini' : 'Harga Jual Resep (Belum di Website)';
+                            ?>
+                            <?php if ($displaySellingPrice !== null): ?>
+                                <?php $actualProfit = $displaySellingPrice - $costPerJar; ?>
                                 <tr>
-                                    <td><strong>Harga Jual Produk Saat Ini</strong></td>
+                                    <td><strong><?= $sellingLabel ?></strong></td>
                                     <td class="num-col">
-                                        Rp <?= format_decimal($linkedPrice, 0) ?>
+                                        Rp <?= format_decimal($displaySellingPrice, 0) ?>
                                         (Laba: <?= $actualProfit >= 0 ? 'Rp ' . format_decimal($actualProfit, 0) : '-Rp ' . format_decimal(abs($actualProfit), 0) ?>)
                                     </td>
                                 </tr>

@@ -26,7 +26,7 @@ class HppRecipeRepositoryTest extends TestCase
             . 'yield_jars INTEGER NOT NULL, jar_ml INTEGER NULL, round_step INTEGER NOT NULL, note TEXT NULL, '
             . 'product_item_id INTEGER NULL UNIQUE, total_cost INTEGER NOT NULL DEFAULT 0, '
             . 'hpp_recipe INTEGER NOT NULL DEFAULT 0, hpp_per_jar INTEGER NOT NULL DEFAULT 0, '
-            . 'updated_at TEXT NULL, FOREIGN KEY (product_item_id) REFERENCES product_items(id) ON DELETE SET NULL)'
+            . 'selling_price INTEGER NULL, updated_at TEXT NULL, FOREIGN KEY (product_item_id) REFERENCES product_items(id) ON DELETE SET NULL)'
         );
         $pdo->exec(
             'CREATE TABLE hpp_recipe_lines ('
@@ -371,5 +371,31 @@ class HppRecipeRepositoryTest extends TestCase
         }
 
         $this->fail('Kesalahan penyimpanan baris biaya harus membatalkan seluruh transaksi.');
+    }
+
+    public function testSavesRecipeSellingPriceWithoutLinkingProduct(): void
+    {
+        $pdo = $this->createDatabase();
+        $saved = hpp_save_recipe($pdo, $this->recipePayload());
+        $recipeId = (int) $saved['id'];
+
+        $result = hpp_save_recipe_selling_price($pdo, $recipeId, 33500);
+
+        $this->assertSame(33500, $result['selling_price']);
+        $this->assertFalse($result['below_hpp']);
+
+        $loaded = hpp_get_recipe($pdo, $recipeId);
+        $this->assertNull($loaded['product_item_id']);
+        $this->assertSame(33500, (int) $loaded['selling_price']);
+        $this->assertSame('15000', (string) $pdo->query('SELECT price FROM product_items WHERE id = 1')->fetchColumn());
+
+        $list = hpp_get_recipe_list($pdo);
+        $this->assertSame(33500, (int) $list[0]['selling_price']);
+        $this->assertNull($list[0]['public_price']);
+
+        $dupId = hpp_duplicate_recipe($pdo, $recipeId);
+        $dup = hpp_get_recipe($pdo, $dupId);
+        $this->assertNull($dup['product_item_id']);
+        $this->assertSame(33500, (int) $dup['selling_price']);
     }
 }

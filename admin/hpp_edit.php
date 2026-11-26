@@ -167,10 +167,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             try {
                 if ($action === 'preview_apply_price') {
+                    $rawProductItemId = trim((string) ($_POST['product_item_id'] ?? ''));
+                    if ($rawProductItemId === '') {
+                        $savedPrice = hpp_save_recipe_selling_price(
+                            $pdo,
+                            $recipeId,
+                            $_POST['final_price'] ?? null
+                        );
+                        log_admin_action(
+                            'HPP_SAVE_RECIPE_PRICE',
+                            'recipe_id=' . $savedPrice['recipe_id'] . ', selling_price=' . $savedPrice['selling_price']
+                        );
+                        $flashMsg = 'Harga jual resep berhasil disimpan (Rp '
+                            . format_decimal(ceil((float) $savedPrice['selling_price']), 0)
+                            . '). Harga website tidak berubah.';
+                        if ($savedPrice['below_hpp']) {
+                            $flashMsg .= ' Catatan: harga berada di bawah HPP per kemasan.';
+                        }
+                        set_admin_flash($flashMsg);
+                        header('Location: hpp_edit.php?id=' . $recipeId);
+                        exit;
+                    }
                     $applyPreview = hpp_get_public_price_preview(
                         $pdo,
                         $recipeId,
-                        $_POST['product_item_id'] ?? null,
+                        $rawProductItemId,
                         $_POST['final_price'] ?? null
                     );
                 } else {
@@ -531,18 +552,18 @@ $csrfToken = generate_csrf_token();
 
                 <?php if ($recipe !== null): ?>
                     <section class="form-card hpp-public-price-card" data-pricing-section<?= $applyPreview === null ? ' hidden' : '' ?>>
-                        <h3>Terapkan Harga Jual ke Website</h3>
+                        <h3>Simpan / Terapkan Harga Jual</h3>
                         <p class="hpp-help-text">
-                            Penerapan memakai HPP resep tersimpan. Pilih varian dan harga final; perubahan baru dilakukan setelah Anda mengonfirmasi harga lama dan baru.
+                            Penerapan memakai HPP resep tersimpan. Anda dapat menyimpan harga di resep saja, atau memilih varian produk untuk memperbarui harga di website (dengan langkah konfirmasi).
                         </p>
                         <form method="post" action="hpp_edit.php?id=<?= (int) $recipeId ?>" class="hpp-public-price-form" data-submit-lock>
                             <input type="hidden" name="csrf_token" value="<?= $escape($csrfToken) ?>">
                             <input type="hidden" name="action" value="preview_apply_price">
                             <div class="admin-form-grid">
                                 <div class="form-group">
-                                    <label for="public-price-item">Varian produk</label>
-                                    <select id="public-price-item" name="product_item_id" required>
-                                        <option value="">Pilih varian produk</option>
+                                    <label for="public-price-item">Varian produk (opsional)</label>
+                                    <select id="public-price-item" name="product_item_id">
+                                        <option value="">Simpan di resep saja (tidak disambungkan ke produk)</option>
                                         <?php foreach ($productItems as $productItem): ?>
                                             <?php
                                             $itemId = (int) $productItem['id'];
@@ -567,7 +588,7 @@ $csrfToken = generate_csrf_token();
                                         step="1"
                                         inputmode="numeric"
                                         data-final-price
-                                        value="<?= $escape($applyFormValues['final_price'] ?? '') ?>"
+                                        value="<?= $escape($applyFormValues['final_price'] ?? ($recipe['selling_price'] ?? '')) ?>"
                                         required
                                     >
                                 </div>
@@ -576,8 +597,8 @@ $csrfToken = generate_csrf_token();
                                 <button type="button" class="btn btn-cancel" data-round-price="500">Bulatkan ke atas ke Rp 500</button>
                                 <button type="button" class="btn btn-cancel" data-round-price="1000">Bulatkan ke atas ke Rp 1.000</button>
                             </div>
-                            <p class="hpp-help-text">Pembulatan hanya mengisi harga usulan di atas. Harga website tidak berubah sampai Anda meninjau dan mengonfirmasi langkah berikutnya.</p>
-                            <button type="submit" class="btn btn-primary btn-with-icon" data-loading-label="Menyiapkan tinjauan..."><?= admin_icon('check') ?>Tinjau Perubahan Harga</button>
+                            <p class="hpp-help-text">Pembulatan hanya mengisi harga usulan di atas. Harga website tidak berubah sampai Anda memilih varian produk serta mengonfirmasi langkah berikutnya.</p>
+                            <button type="submit" class="btn btn-primary btn-with-icon" data-loading-label="Memproses harga..."><?= admin_icon('check') ?>Simpan / Tinjau Perubahan Harga</button>
                         </form>
                     </section>
                 <?php endif; ?>
