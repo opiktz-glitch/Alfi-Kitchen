@@ -265,10 +265,12 @@
   font-size: clamp(1.7rem, 3vw, 34px);
   font-weight: 700;
   color: var(--fg);
+  text-align: center;
 }
 .home-product-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 360px));
+  justify-content: center;
   gap: 24px;
 }
 .home-product-card {
@@ -357,7 +359,6 @@
     border-radius: 24px;
   }
   .home-product-grid {
-    grid-template-columns: 1fr;
     gap: 18px;
   }
 }
