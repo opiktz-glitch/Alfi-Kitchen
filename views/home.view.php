@@ -268,12 +268,16 @@
   text-align: center;
 }
 .home-product-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 360px));
+  display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   gap: 24px;
 }
 .home-product-card {
+  box-sizing: border-box;
+  flex: 0 1 calc((100% - 48px) / 3);
+  min-width: min(100%, 260px);
+  max-width: 360px;
   background: #fff;
   border-radius: 24px;
   padding: 16px;
