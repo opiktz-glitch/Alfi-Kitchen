@@ -182,6 +182,14 @@
   font-size: 22px;
   line-height: 1;
   padding: 0 0 2px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease, background 0.2s ease, transform 0.2s ease;
+}
+.hero:hover .hero-nav-btn,
+.hero:focus-within .hero-nav-btn {
+  opacity: 1;
+  pointer-events: auto;
 }
 .hero-nav-btn:hover {
   background: #fff;
