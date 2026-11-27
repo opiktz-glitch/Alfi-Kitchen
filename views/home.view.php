@@ -160,7 +160,39 @@
   height: 100%;
   object-fit: cover;
   display: block;
+  user-select: none;
+  -webkit-user-drag: none;
 }
+.hero-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 15;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.85);
+  color: var(--fg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(59, 42, 30, 0.2);
+  font-size: 22px;
+  line-height: 1;
+  padding: 0 0 2px;
+}
+.hero-nav-btn:hover {
+  background: #fff;
+  transform: translateY(-50%) scale(1.06);
+}
+.hero-nav-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.hero-nav-prev { left: 12px; }
+.hero-nav-next { right: 12px; }
 .home-hero-media .floating-logo {
   top: 16px;
   left: 16px;
@@ -362,6 +394,7 @@
                        sizes="(max-width: 480px) 100vw, (max-width: 860px) 640px, 540px"
                        alt="Promo produk Alfi Kitchen: puding, dessert, dan salad buah rumahan"
                        width="800" height="450"
+                       draggable="false"
                        <?= $index === 0 ? 'fetchpriority="high"' : 'loading="lazy"' ?>
                        decoding="async">
                 </div>
@@ -388,6 +421,11 @@
           <a href="index.php" class="floating-logo" title="Alfi Kitchen">
             <img src="<?= $logo_src ?>" width="64" height="64" alt="Alfi Kitchen Logo">
           </a>
+
+          <?php if (count($hero_images) > 1): ?>
+            <button type="button" class="hero-nav-btn hero-nav-prev" id="heroPrev" aria-label="Slide sebelumnya">&#8249;</button>
+            <button type="button" class="hero-nav-btn hero-nav-next" id="heroNext" aria-label="Slide berikutnya">&#8250;</button>
+          <?php endif; ?>
 
           <div class="swiper-pagination" id="heroPagination"></div>
         </div>
@@ -434,8 +472,29 @@ document.addEventListener("DOMContentLoaded", function() {
     if (total <= 1) return;
 
     var currentIndex = 0;
-    var startX = 0, currentX = 0, isDragging = false;
+    var startX = 0, currentX = 0, isDragging = false, justTouched = false;
     var timer = null;
+    var prevBtn = document.getElementById("heroPrev");
+    var nextBtn = document.getElementById("heroNext");
+
+    function isInteractiveTarget(el) {
+        return !!(el && el.closest && el.closest(".floating-logo, .swiper-pagination, .hero-nav-btn"));
+    }
+
+    if (prevBtn) {
+        prevBtn.addEventListener("click", function(e) {
+            e.stopPropagation();
+            goToSlide(currentIndex - 1);
+            resetTimer();
+        });
+    }
+    if (nextBtn) {
+        nextBtn.addEventListener("click", function(e) {
+            e.stopPropagation();
+            goToSlide(currentIndex + 1);
+            resetTimer();
+        });
+    }
 
     if (pagination) {
         pagination.innerHTML = "";
@@ -487,8 +546,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Touch events
     slider.addEventListener("touchstart", function(e) {
-        if (e.touches.length !== 1) return;
+        if (e.touches.length !== 1 || isInteractiveTarget(e.target)) return;
         isDragging = true;
+        justTouched = true;
         startX = e.touches[0].clientX;
         currentX = startX;
         stopTimer();
@@ -499,20 +559,22 @@ document.addEventListener("DOMContentLoaded", function() {
         currentX = e.touches[0].clientX;
     }, { passive: true });
 
-    slider.addEventListener("touchend", function() {
+    slider.addEventListener("touchend", function(e) {
         if (!isDragging) return;
         isDragging = false;
         var diff = currentX - startX;
         if (diff > 40) {
             goToSlide(currentIndex - 1);
-        } else if (diff < -40) {
+        } else if (diff < -40 || (Math.abs(diff) < 8 && !isInteractiveTarget(e.target))) {
             goToSlide(currentIndex + 1);
         }
         startTimer();
+        setTimeout(function() { justTouched = false; }, 350);
     });
 
-    // Mouse drag
+    // Mouse drag & klik gambar untuk lanjut slide
     slider.addEventListener("mousedown", function(e) {
+        if (justTouched || e.button !== 0 || isInteractiveTarget(e.target)) return;
         isDragging = true;
         startX = e.clientX;
         currentX = startX;
@@ -524,13 +586,13 @@ document.addEventListener("DOMContentLoaded", function() {
         currentX = e.clientX;
     });
 
-    window.addEventListener("mouseup", function() {
+    window.addEventListener("mouseup", function(e) {
         if (!isDragging) return;
         isDragging = false;
         var diff = currentX - startX;
         if (diff > 40) {
             goToSlide(currentIndex - 1);
-        } else if (diff < -40) {
+        } else if (diff < -40 || (Math.abs(diff) < 8 && slider.contains(e.target) && !isInteractiveTarget(e.target))) {
             goToSlide(currentIndex + 1);
         }
         startTimer();

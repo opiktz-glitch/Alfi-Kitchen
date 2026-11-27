@@ -33,6 +33,7 @@ $suiteFiles = [
     'HppRecipeEditorPageTest' => 'HppRecipeEditorPageTest.php',
     'HppRecipeListPageTest' => 'HppRecipeListPageTest.php',
     'DatabaseRestoreTest' => 'DatabaseRestoreTest.php',
+    'VisitTrackerTest' => 'VisitTrackerTest.php',
     'TestRunnerCliTest' => 'TestRunnerCliTest.php',
 ];
 

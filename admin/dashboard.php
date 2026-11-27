@@ -38,6 +38,9 @@ try {
 
 $hasLogo = file_exists(uploads_directory() . '/logo.png');
 
+require_once __DIR__ . '/../includes/visit_tracker.php';
+$visitStats = get_site_visit_summary($pdo);
+
 $recentActivities = [];
 $logFile = __DIR__ . '/../logs/admin_activity.log';
 if (is_readable($logFile)) {
@@ -209,6 +212,56 @@ function get_action_badge_class(string $action): string {
 
                     <!-- Kolom Kanan -->
                     <div class="dashboard-col-side">
+                        <!-- Widget Statistik Pengunjung -->
+                        <section class="admin-card dashboard-section" aria-labelledby="dashboard-visits-title">
+                            <div class="dashboard-section-heading">
+                                <div>
+                                    <h3 id="dashboard-visits-title">Statistik Pengunjung</h3>
+                                    <p>Rekap kunjungan website (di luar bot &amp; admin).</p>
+                                </div>
+                            </div>
+                            <?php if (!$visitStats['ready']): ?>
+                                <p class="dashboard-empty">
+                                    Jalankan migrasi database (<code>v07_site_visits.sql</code>) di
+                                    <a href="settings.php#tab-database">Pengaturan</a> untuk mulai mencatat kunjungan.
+                                </p>
+                            <?php else: ?>
+                                <div class="dashboard-visit-kpis">
+                                    <div class="visit-kpi-box">
+                                        <span class="visit-kpi-label">Hari Ini</span>
+                                        <strong class="visit-kpi-value"><?= number_format($visitStats['today']['uniques']) ?></strong>
+                                        <span class="visit-kpi-sub"><?= number_format($visitStats['today']['views']) ?> tayangan</span>
+                                    </div>
+                                    <div class="visit-kpi-box">
+                                        <span class="visit-kpi-label">7 Hari</span>
+                                        <strong class="visit-kpi-value"><?= number_format($visitStats['last_7_days']['uniques']) ?></strong>
+                                        <span class="visit-kpi-sub"><?= number_format($visitStats['last_7_days']['views']) ?> tayangan</span>
+                                    </div>
+                                    <div class="visit-kpi-box">
+                                        <span class="visit-kpi-label">30 Hari</span>
+                                        <strong class="visit-kpi-value"><?= number_format($visitStats['last_30_days']['uniques']) ?></strong>
+                                        <span class="visit-kpi-sub"><?= number_format($visitStats['last_30_days']['views']) ?> tayangan</span>
+                                    </div>
+                                </div>
+                                <?php if ($visitStats['top_pages'] === []): ?>
+                                    <p class="dashboard-empty">Belum ada kunjungan tercatat dalam 30 hari terakhir.</p>
+                                <?php else: ?>
+                                    <?php $maxPageViews = max(1, (int) $visitStats['top_pages'][0]['views']); ?>
+                                    <div class="dashboard-top-pages" aria-label="Halaman terpopuler 30 hari terakhir">
+                                        <?php foreach ($visitStats['top_pages'] as $vp): ?>
+                                            <div class="visit-page-row">
+                                                <div class="visit-page-meta">
+                                                    <strong title="<?= htmlspecialchars($vp['page_label'], ENT_QUOTES, 'UTF-8') ?>"><?= htmlspecialchars($vp['page_label'], ENT_QUOTES, 'UTF-8') ?></strong>
+                                                    <span><?= number_format($vp['views']) ?> tayangan (<?= number_format($vp['uniques']) ?> unik)</span>
+                                                </div>
+                                                <progress class="visit-page-meter" value="<?= (int) $vp['views'] ?>" max="<?= $maxPageViews ?>"></progress>
+                                            </div>
+                                        <?php endforeach; ?>
+                                    </div>
+                                <?php endif; ?>
+                            <?php endif; ?>
+                        </section>
+
                         <!-- Widget Ringkasan Status Toko -->
                         <section class="admin-card dashboard-section">
                             <div class="dashboard-section-heading">

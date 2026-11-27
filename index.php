@@ -48,4 +48,7 @@ if ($waDigits !== '') {
 	$jsonLd['telephone'] = '+' . $waDigits;
 }
 
+require_once __DIR__ . '/includes/visit_tracker.php';
+record_site_visit($pdo, 'home', 'Beranda');
+
 require 'views/home.view.php';

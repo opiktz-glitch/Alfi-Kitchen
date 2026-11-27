@@ -72,6 +72,9 @@ if ($slugParam !== '') {
 
 $pageTitle = $main_product['name'] . ' | Alfi Kitchen';
 
+require_once __DIR__ . '/includes/visit_tracker.php';
+record_site_visit($pdo, 'product:' . (int) $main_product['id'], 'Kategori: ' . (string) $main_product['name']);
+
 // Mengambil produk untuk ditampilkan di kolom (dipindah ke atas agar bisa dipakai description)
 $stmt3 = $pdo->prepare("SELECT * FROM product_items WHERE product_id = ? ORDER BY id DESC");
 $stmt3->execute([$id]);
